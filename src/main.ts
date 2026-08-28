@@ -8,7 +8,6 @@ import {
   playPcm,
 } from "./audio";
 import { analyzePcm, type DetectorResult } from "./detector";
-import { loadDetectorSuite } from "./detectors/ml-adapter";
 import { DspDetectorAdapter } from "./detectors/dsp-adapter";
 import type { DetectorAdapter, DetectorOutput } from "./detectors/types";
 import { createAcousticEvent, fuseSingleNodeEvent } from "./events";
@@ -63,85 +62,85 @@ app.innerHTML = `
         <h1>Acoustic Sensor Lab</h1>
       </div>
     </div>
-    <nav class="view-tabs" aria-label="Arbetsläge">
-      <button class="view-tab is-active" data-view="simulator" type="button">Stadssimulering</button>
-      <button class="view-tab" data-view="soundLab" type="button">Ljudlabb</button>
-      <button class="view-tab" data-view="experiment" type="button">Flertelefonstest</button>
-      <button class="view-tab" data-view="statistics" type="button">Statistik</button>
+    <nav class="view-tabs" aria-label="Workspace view">
+      <button class="view-tab is-active" data-view="simulator" type="button" aria-pressed="true">City simulation</button>
+      <button class="view-tab" data-view="soundLab" type="button" aria-pressed="false">Sound lab</button>
+      <button class="view-tab" data-view="experiment" type="button" aria-pressed="false">Multi-phone test</button>
+      <button class="view-tab" data-view="statistics" type="button" aria-pressed="false">Statistics</button>
     </nav>
     <div class="model-notice">
       <span class="notice-dot"></span>
-      Simulerad uppskattning · ej operativt system
+      Simulated estimate · not an operational system
     </div>
   </header>
 
   <section id="simulatorView" class="app-view">
   <main class="workspace">
-    <aside class="panel control-panel" aria-label="Simuleringskontroller">
+    <aside class="panel control-panel" aria-label="Simulation controls">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Scenario</p>
-          <h2>Konfiguration</h2>
+          <h2>Configuration</h2>
         </div>
         <span class="step-label">01</span>
       </div>
 
       <label class="field">
-        <span>Förinställning</span>
+        <span>Preset</span>
         <select id="scenarioSelect"></select>
       </label>
       <p id="scenarioDescription" class="field-help"></p>
 
       <div class="section-rule"></div>
-      <p class="section-kicker">Farkost</p>
+      <p class="section-kicker">Aircraft</p>
 
       <label class="field">
-        <span>Drönarprofil</span>
+        <span>Drone profile</span>
         <select id="profileSelect"></select>
       </label>
 
       <label class="range-field">
-        <span><span>Hastighet</span><output id="speedOutput"></output></span>
+        <span><span>Speed</span><output id="speedOutput"></output></span>
         <input id="speedInput" type="range" min="20" max="220" step="1" />
       </label>
       <label class="range-field">
-        <span><span>Höjd</span><output id="altitudeOutput"></output></span>
+        <span><span>Altitude</span><output id="altitudeOutput"></output></span>
         <input id="altitudeInput" type="range" min="5" max="250" step="1" />
       </label>
       <label class="range-field">
-        <span><span>RPM-förskjutning</span><output id="rpmOutput"></output></span>
+        <span><span>RPM shift</span><output id="rpmOutput"></output></span>
         <input id="rpmInput" type="range" min="-35" max="35" step="1" />
       </label>
       <label class="check-row">
-        <span>Aktiv radiolänk</span>
+        <span>Active radio link</span>
         <input id="radioActive" type="checkbox" />
       </label>
 
       <div class="section-rule"></div>
-      <p class="section-kicker">Miljö & störning</p>
+      <p class="section-kicker">Environment & interference</p>
 
       <label class="range-field">
-        <span><span>Vind</span><output id="windOutput"></output></span>
+        <span><span>Wind</span><output id="windOutput"></output></span>
         <input id="windInput" type="range" min="0" max="20" step="0.5" />
       </label>
       <label class="range-field">
-        <span><span>Bakgrundsljud</span><output id="ambientOutput"></output></span>
+        <span><span>Background noise</span><output id="ambientOutput"></output></span>
         <input id="ambientInput" type="range" min="30" max="85" step="1" />
       </label>
       <label class="range-field">
-        <span><span>Sikt</span><output id="visibilityOutput"></output></span>
+        <span><span>Visibility</span><output id="visibilityOutput"></output></span>
         <input id="visibilityInput" type="range" min="0.1" max="1" step="0.05" />
       </label>
       <label class="field">
-        <span>Akustisk attack</span>
+        <span>Acoustic attack</span>
         <select id="spoofMode">
-          <option value="none">Ingen</option>
-          <option value="replay">Replay från högtalare</option>
-          <option value="broadband">Bredbandig maskering</option>
+          <option value="none">None</option>
+          <option value="replay">Speaker replay</option>
+          <option value="broadband">Broadband masking</option>
         </select>
       </label>
       <label class="range-field">
-        <span><span>Störningsnivå</span><output id="spoofOutput"></output></span>
+        <span><span>Interference level</span><output id="spoofOutput"></output></span>
         <input id="spoofInput" type="range" min="55" max="115" step="1" />
       </label>
     </aside>
@@ -151,18 +150,18 @@ app.innerHTML = `
         <div class="transport-controls">
           <button id="playButton" class="primary-button" type="button">
             <span id="playIcon" aria-hidden="true">▶</span>
-            <span id="playLabel">Starta</span>
+            <span id="playLabel">Start</span>
           </button>
-          <button id="resetButton" class="icon-button" type="button" aria-label="Återställ scenario">↺</button>
+          <button id="resetButton" class="icon-button" type="button" aria-label="Reset scenario">↺</button>
         </div>
         <div class="toolbar-readout">
-          <span>Simtid</span>
+          <span>Simulation time</span>
           <strong id="elapsedOutput">00:00.0</strong>
         </div>
         <label class="compact-field">
-          <span>Tempo</span>
+          <span>Speed</span>
           <select id="playbackRate">
-            <option value="0.5">0,5×</option>
+            <option value="0.5">0.5×</option>
             <option value="1" selected>1×</option>
             <option value="2">2×</option>
             <option value="4">4×</option>
@@ -171,16 +170,16 @@ app.innerHTML = `
       </div>
 
       <div class="map-shell">
-        <canvas id="worldCanvas" aria-label="Karta över det simulerade skyddsområdet"></canvas>
+        <canvas id="worldCanvas" aria-label="Map of the simulated protected area"></canvas>
         <div class="map-status" id="mapStatus">
           <span class="status-pulse"></span>
-          <span id="mapStatusText">Övervakar</span>
+          <span id="mapStatusText">Monitoring</span>
         </div>
-        <div class="map-hint">Klicka på kartan för att flytta drönaren</div>
-        <div class="map-legend" aria-label="Kartförklaring">
-          <span><i class="legend-drone"></i> Drönare</span>
-          <span><i class="legend-sensor"></i> Sensornod</span>
-          <span><i class="legend-target"></i> Skyddsobjekt</span>
+        <div class="map-hint">Click the map to move the drone</div>
+        <div class="map-legend" aria-label="Map legend">
+          <span><i class="legend-drone"></i> Drone</span>
+          <span><i class="legend-sensor"></i> Sensor node</span>
+          <span><i class="legend-target"></i> Protected asset</span>
         </div>
       </div>
 
@@ -188,23 +187,23 @@ app.innerHTML = `
         <section class="subpanel signal-panel">
           <div class="subpanel-heading">
             <div>
-              <p class="eyebrow">Akustisk signatur</p>
-              <h3>Harmonisk analys</h3>
+              <p class="eyebrow">Acoustic signature</p>
+              <h3>Harmonic analysis</h3>
             </div>
             <span id="bpfBadge" class="data-badge">— Hz BPF</span>
           </div>
-          <canvas id="spectrumCanvas" aria-label="Simulerat frekvensspektrum"></canvas>
+          <canvas id="spectrumCanvas" aria-label="Simulated frequency spectrum"></canvas>
           <div class="signal-footer">
-            <span><i class="signal-key signal-key--drone"></i> Rotorsignatur</span>
-            <span><i class="signal-key signal-key--noise"></i> Brusgolv</span>
+            <span><i class="signal-key signal-key--drone"></i> Rotor signature</span>
+            <span><i class="signal-key signal-key--noise"></i> Noise floor</span>
           </div>
         </section>
 
         <section class="subpanel event-panel">
           <div class="subpanel-heading">
             <div>
-              <p class="eyebrow">Systemlogg</p>
-              <h3>Senaste händelser</h3>
+              <p class="eyebrow">System log</p>
+              <h3>Latest events</h3>
             </div>
             <span class="live-tag">Live</span>
           </div>
@@ -213,18 +212,18 @@ app.innerHTML = `
       </div>
     </section>
 
-    <aside class="panel telemetry-panel" aria-label="Sensorresultat">
+    <aside class="panel telemetry-panel" aria-label="Sensor results">
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Sensorfusion</p>
-          <h2>Lägesbild</h2>
+          <h2>Operational picture</h2>
         </div>
         <span class="step-label">02</span>
       </div>
 
       <section class="threat-card" id="threatCard">
         <div>
-          <p id="threatLabel">Ingen bekräftad signatur</p>
+          <p id="threatLabel">No confirmed signature</p>
           <strong id="fusionOutput">0%</strong>
         </div>
         <div class="confidence-ring" id="confidenceRing"><span id="ringValue">0</span></div>
@@ -232,45 +231,45 @@ app.innerHTML = `
 
       <div class="metric-grid">
         <article class="metric-card">
-          <span>Avstånd</span>
+          <span>Distance</span>
           <strong id="distanceOutput">—</strong>
-          <small>till skyddsobjekt</small>
+          <small>to protected asset</small>
         </article>
         <article class="metric-card metric-card--accent">
-          <span>Maskintid</span>
+          <span>Machine time</span>
           <strong id="marginOutput">—</strong>
-          <small>efter systemlatens</small>
+          <small>after system latency</small>
         </article>
         <article class="metric-card">
-          <span>Riktning</span>
+          <span>Bearing</span>
           <strong id="bearingOutput">—</strong>
-          <small id="bearingErrorOutput">ingen låsning</small>
+          <small id="bearingErrorOutput">no lock</small>
         </article>
         <article class="metric-card">
           <span>SNR</span>
           <strong id="snrOutput">—</strong>
-          <small>drönare mot brus</small>
+          <small>drone versus noise</small>
         </article>
       </div>
 
       <div class="section-rule"></div>
       <div class="sensor-title-row">
-        <p class="section-kicker">Sensorbidrag</p>
-        <label class="node-select">Noder <select id="sensorCount"><option>1</option><option>2</option><option>3</option></select></label>
+        <p class="section-kicker">Sensor contributions</p>
+        <label class="node-select">Nodes <select id="sensorCount"><option>1</option><option>2</option><option>3</option></select></label>
       </div>
 
       <label class="field array-field">
-        <span>Akustiskt nät</span>
+        <span>Acoustic network</span>
         <select id="arrayMode"></select>
       </label>
       <div class="array-readout">
-        <span>Tidsfel <strong id="syncOutput">—</strong></span>
-        <span>Rumsligt fel <strong id="syncDistanceOutput">—</strong></span>
+        <span>Timing error <strong id="syncOutput">—</strong></span>
+        <span>Spatial error <strong id="syncDistanceOutput">—</strong></span>
       </div>
 
       <div class="sensor-stack">
         <article class="sensor-row">
-          <label><input id="toggleAcoustic" type="checkbox" /> Akustik</label>
+          <label><input id="toggleAcoustic" type="checkbox" /> Acoustic</label>
           <strong id="acousticValue">0%</strong>
           <div class="meter"><span id="acousticMeter"></span></div>
         </article>
@@ -285,25 +284,25 @@ app.innerHTML = `
           <div class="meter"><span id="rfMeter"></span></div>
         </article>
         <article class="sensor-row">
-          <label><input id="toggleCamera" type="checkbox" /> Kamera/IR</label>
+          <label><input id="toggleCamera" type="checkbox" /> Camera/IR</label>
           <strong id="cameraValue">0%</strong>
           <div class="meter"><span id="cameraMeter"></span></div>
         </article>
       </div>
-      <p class="sensor-note">ADS‑B är ett separat flygtranspondersystem. Remote ID kan sända drönarens och, beroende på typ, kontrollstationens position via Wi‑Fi/Bluetooth.</p>
+      <p class="sensor-note">ADS-B is a separate aircraft transponder system. Remote ID can broadcast the drone position and, depending on the type, the control-station position over Wi-Fi/Bluetooth.</p>
 
       <div class="section-rule"></div>
-      <p class="section-kicker">Tidsbudget</p>
+      <p class="section-kicker">Time budget</p>
       <div class="timeline-card">
-        <div class="timeline-row"><span>Beräknad ankomst</span><strong id="etaOutput">—</strong></div>
-        <div class="timeline-row"><span>Ljudfördröjning</span><strong id="delayOutput">—</strong></div>
-        <div class="timeline-row"><span>Systemlatens</span><strong id="latencyOutput">—</strong></div>
-        <div class="timeline-row timeline-row--total"><span>Efter mänskligt beslut</span><strong id="humanMarginOutput">—</strong></div>
+        <div class="timeline-row"><span>Estimated arrival</span><strong id="etaOutput">—</strong></div>
+        <div class="timeline-row"><span>Sound delay</span><strong id="delayOutput">—</strong></div>
+        <div class="timeline-row"><span>System latency</span><strong id="latencyOutput">—</strong></div>
+        <div class="timeline-row timeline-row--total"><span>After human decision</span><strong id="humanMarginOutput">—</strong></div>
       </div>
 
       <div id="spoofAlert" class="spoof-alert" hidden>
         <span aria-hidden="true">◇</span>
-        <div><strong>Inkonsistent ljudkälla</strong><p id="spoofAlertText"></p></div>
+        <div><strong>Inconsistent sound source</strong><p id="spoofAlertText"></p></div>
       </div>
     </aside>
   </main>
@@ -311,97 +310,97 @@ app.innerHTML = `
 
   <section id="soundLabView" class="app-view lab-view" hidden>
     <div class="lab-page-heading">
-      <div><p class="eyebrow">Blind signalanalys</p><h2>Spela en ljudbild. Testa lyssnaren.</h2></div>
-      <p>Spelaren känner facit. Detektorn får bara PCM-data och kan inte läsa filnamn eller etikett.</p>
+      <div><p class="eyebrow">Blind signal analysis</p><h2>Play a sound signature. Test the listener.</h2></div>
+      <p>The player knows the ground truth. The detector receives PCM data only and cannot read filenames or labels.</p>
     </div>
     <div class="lab-layout">
       <aside class="lab-card lab-controls">
-        <p class="section-kicker">01 · Välj källa</p>
-        <label class="field"><span>Ljudprov</span><select id="labSampleSelect"></select></label>
-        <label class="field"><span>Detektor</span><select id="labDetectorSelect">
-          <option value="dsp-v1">FFT / harmonik DSP</option>
+        <p class="section-kicker">01 · Select source</p>
+        <label class="field"><span>Audio sample</span><select id="labSampleSelect"></select></label>
+        <label class="field"><span>Detector</span><select id="labDetectorSelect">
+          <option value="dsp-v1">FFT / harmonic DSP</option>
           <option value="ml-onnx-v1">Feature Conv ML</option>
         </select></label>
-        <p id="labDetectorStatus" class="field-help">Laddar detektorer…</p>
+        <p id="labDetectorStatus" class="field-help">DSP is ready. The experimental ML runtime loads only when selected.</p>
         <p id="labSampleNote" class="field-help"></p>
         <label class="range-field" id="labRpmField">
-          <span><span>RPM-förskjutning</span><output id="labRpmOutput">0%</output></span>
+          <span><span>RPM shift</span><output id="labRpmOutput">0%</output></span>
           <input id="labRpmInput" type="range" min="-30" max="30" step="1" value="0" />
         </label>
         <div class="button-stack">
-          <button id="labPlayButton" class="primary-button wide-button" type="button">▶ Spela ljudbild</button>
-          <button id="labAnalyzeButton" class="secondary-button" type="button">Analysera blint</button>
+          <button id="labPlayButton" class="primary-button wide-button" type="button">▶ Play sound signature</button>
+          <button id="labAnalyzeButton" class="secondary-button" type="button">Analyze blind</button>
         </div>
         <div class="license-box">
-          <span>Proveniens</span>
+          <span>Provenance</span>
           <strong id="labSourceLabel">—</strong>
-          <a id="labSourceLink" href="#" target="_blank" rel="noreferrer">Öppna källa</a>
+          <a id="labSourceLink" href="#" target="_blank" rel="noreferrer">Open source</a>
           <small id="labLicense">—</small>
         </div>
       </aside>
 
       <main class="lab-card lab-analysis">
         <div class="subpanel-heading">
-          <div><p class="eyebrow">Lyssnarens resultat</p><h3 id="labDetectionTitle">Väntar på analys</h3></div>
-          <span id="labDetectionBadge" class="data-badge">INGEN DATA</span>
+          <div><p class="eyebrow">Listener result</p><h3 id="labDetectionTitle">Waiting for analysis</h3></div>
+          <span id="labDetectionBadge" class="data-badge">NO DATA</span>
         </div>
-        <canvas id="labSpectrumCanvas" aria-label="FFT-spektrum från valt ljudprov"></canvas>
+        <canvas id="labSpectrumCanvas" aria-label="FFT spectrum from the selected audio sample"></canvas>
         <div class="detector-metrics">
-          <article><span>Konfidens</span><strong id="labConfidence">—</strong></article>
-          <article><span>Grundton</span><strong id="labFundamental">—</strong></article>
-          <article><span>Harmonik</span><strong id="labHarmonic">—</strong></article>
-          <article><span>Positiva fönster</span><strong id="labFrames">—</strong></article>
+          <article><span>Confidence</span><strong id="labConfidence">—</strong></article>
+          <article><span>Fundamental</span><strong id="labFundamental">—</strong></article>
+          <article><span>Harmonics</span><strong id="labHarmonic">—</strong></article>
+          <article><span>Positive windows</span><strong id="labFrames">—</strong></article>
         </div>
         <div class="classification-block">
-          <p class="section-kicker">Klassificering · topp 3</p>
-          <ol id="labClassifications" class="classification-list"><li>Ingen analys genomförd</li></ol>
+          <p class="section-kicker">Classification · top 3</p>
+          <ol id="labClassifications" class="classification-list"><li>No analysis completed</li></ol>
         </div>
       </main>
 
       <aside class="lab-card event-inspector">
-        <p class="section-kicker">02 · Metadata till backend</p>
-        <p class="sensor-note">Endast features och sannolikheter lämnar lyssnaren. Ingen PCM eller WAV ingår.</p>
+        <p class="section-kicker">02 · Metadata to backend</p>
+        <p class="sensor-note">Only features and probabilities leave the listener. No PCM or WAV data is included.</p>
         <pre id="labEventJson" class="event-json">{ }</pre>
         <div class="truth-card">
-          <span>Facit</span>
-          <strong id="labTruth">Dolt tills analys</strong>
-          <small id="labVerdict">Detektorn testas utan etikettläckage.</small>
+          <span>Ground truth</span>
+          <strong id="labTruth">Hidden until analysis</strong>
+          <small id="labVerdict">The detector is tested without label leakage.</small>
         </div>
       </aside>
     </div>
 
     <section class="lab-card live-test-card">
       <div class="subpanel-heading">
-        <div><p class="eyebrow">Telefonprov · hårdvara i loopen</p><h3>Lyssna med enhetens mikrofon</h3></div>
-        <span id="microphoneBadge" class="data-badge">REDO</span>
+        <div><p class="eyebrow">Phone test · hardware in the loop</p><h3>Listen with the device microphone</h3></div>
+        <span id="microphoneBadge" class="data-badge">READY</span>
       </div>
       <div class="live-test-grid">
         <div class="live-test-controls">
-          <p class="sensor-note">Öppna denna sida på telefonen via HTTPS. Välj facit, starta fem sekunders inspelning och spela sedan upp ett ljud från en annan enhet. Facit skickas aldrig till detektorn.</p>
-          <label class="field"><span>Facit för uppspelningen</span><select id="microphoneTruth">
-            <option value="drone">Drönarljud</option>
-            <option value="ambient">Bakgrund / störljud</option>
+          <p class="sensor-note">Open this page on the phone over HTTPS. Select the ground truth, start the five-second recording, then play audio from another device. Ground truth is never sent to the detector.</p>
+          <label class="field"><span>Playback ground truth</span><select id="microphoneTruth">
+            <option value="drone">Drone audio</option>
+            <option value="ambient">Background / interference</option>
           </select></label>
-          <button id="microphoneCaptureButton" class="primary-button wide-button" type="button">● Spela in 5 sekunder</button>
-          <p id="microphoneStatus" class="microphone-status">Ingen mikrofoninspelning genomförd.</p>
-          <small class="privacy-note">Ljudet analyseras i webbläsaren och sparas inte. Endast testresultatet ligger kvar i denna flik.</small>
+          <button id="microphoneCaptureButton" class="primary-button wide-button" type="button">● Record 5 seconds</button>
+          <p id="microphoneStatus" class="microphone-status">No microphone capture completed.</p>
+          <small class="privacy-note">Audio is analyzed in the browser and is not saved. Only the test result remains in this tab.</small>
         </div>
         <div class="live-test-results">
           <div class="live-kpis">
-            <article><span>Försök</span><strong id="microphoneTrialCount">0</strong></article>
+            <article><span>Trials</span><strong id="microphoneTrialCount">0</strong></article>
             <article><span>Recall</span><strong id="microphoneRecall">—</strong></article>
-            <article><span>Falsklarm</span><strong id="microphoneFpr">—</strong></article>
-            <article><span>Senaste RMS</span><strong id="microphoneRms">—</strong></article>
+            <article><span>False alarms</span><strong id="microphoneFpr">—</strong></article>
+            <article><span>Latest RMS</span><strong id="microphoneRms">—</strong></article>
           </div>
           <div class="table-scroll microphone-table-scroll">
             <table class="statistics-table">
-              <thead><tr><th>#</th><th>Facit</th><th>Beslut</th><th>Sannolikhet</th><th>Typ</th><th>Latens</th></tr></thead>
-              <tbody id="microphoneTrialBody"><tr><td colspan="6">Inga försök ännu</td></tr></tbody>
+              <thead><tr><th>#</th><th>Truth</th><th>Decision</th><th>Probability</th><th>Type</th><th>Latency</th></tr></thead>
+              <tbody id="microphoneTrialBody"><tr><td colspan="6">No trials yet</td></tr></tbody>
             </table>
           </div>
           <div class="microphone-actions">
-            <button id="microphoneDownloadButton" class="secondary-button" type="button" disabled>Ladda ned CSV</button>
-            <button id="microphoneResetButton" class="secondary-button" type="button" disabled>Nollställ session</button>
+            <button id="microphoneDownloadButton" class="secondary-button" type="button" disabled>Download CSV</button>
+            <button id="microphoneResetButton" class="secondary-button" type="button" disabled>Reset session</button>
           </div>
         </div>
       </div>
@@ -410,148 +409,148 @@ app.innerHTML = `
 
   <section id="experimentView" class="app-view lab-view" hidden>
     <div class="lab-page-heading">
-      <div><p class="eyebrow">Offline TDOA</p><h2>Tre lyssnare. En rörlig ljudkälla.</h2></div>
-      <p>Simulera tre separata inspelningar, korrigera telefonklockorna och lokalisera källan i 2D.</p>
+      <div><p class="eyebrow">Offline TDOA</p><h2>Three listeners. One moving sound source.</h2></div>
+      <p>Simulate three separate recordings, correct the phone clocks, and locate the source in 2D.</p>
     </div>
     <div class="experiment-layout">
       <aside class="lab-card experiment-controls">
-        <p class="section-kicker">Sessionens roller</p>
+        <p class="section-kicker">Session roles</p>
         <div class="role-list">
-          <article><i class="role-dot role-dot--source"></i><div><strong>Källtelefon</strong><small>Kalibreringssignal + drönarljud</small></div></article>
-          <article><i class="role-dot"></i><div><strong>P1–P3 Lyssnare</strong><small>PCM + lokala tidsstämplar</small></div></article>
-          <article><i class="role-dot role-dot--backend"></i><div><strong>Sammanställare</strong><small>Synkning, TDOA och spår</small></div></article>
+          <article><i class="role-dot role-dot--source"></i><div><strong>Source phone</strong><small>Calibration signal + drone audio</small></div></article>
+          <article><i class="role-dot"></i><div><strong>P1–P3 listeners</strong><small>PCM + local timestamps</small></div></article>
+          <article><i class="role-dot role-dot--backend"></i><div><strong>Aggregator</strong><small>Synchronization, TDOA, and track</small></div></article>
         </div>
-        <label class="field"><span>Källans X-position</span><input id="sourceXInput" type="number" min="0" max="700" value="390" /></label>
-        <label class="field"><span>Källans Y-position</span><input id="sourceYInput" type="number" min="0" max="420" value="220" /></label>
+        <label class="field"><span>Source X position</span><input id="sourceXInput" type="number" min="0" max="700" value="390" /></label>
+        <label class="field"><span>Source Y position</span><input id="sourceYInput" type="number" min="0" max="420" value="220" /></label>
         <div class="button-stack">
-          <button id="calibrateButton" class="secondary-button" type="button">1. Skapa & kalibrera session</button>
-          <button id="localizeButton" class="primary-button wide-button" type="button" disabled>2. Synka & lokalisera</button>
+          <button id="calibrateButton" class="secondary-button" type="button">1. Create & calibrate session</button>
+          <button id="localizeButton" class="primary-button wide-button" type="button" disabled>2. Synchronize & locate</button>
         </div>
-        <p class="sensor-note">Klicka på kartan för att flytta källans facit. Höjd lämnas okänd med tre plana noder.</p>
+        <p class="sensor-note">Click the map to move the source ground truth. Altitude remains unknown with three coplanar nodes.</p>
       </aside>
 
       <main class="lab-card experiment-map-card">
         <div class="subpanel-heading">
-          <div><p class="eyebrow">Rumskarta · meter</p><h3>Facit och akustisk uppskattning</h3></div>
-          <span id="experimentStatus" class="data-badge">EJ KALIBRERAD</span>
+          <div><p class="eyebrow">Room map · metres</p><h3>Ground truth and acoustic estimate</h3></div>
+          <span id="experimentStatus" class="data-badge">NOT CALIBRATED</span>
         </div>
-        <canvas id="experimentCanvas" aria-label="Karta över tre telefoner och ljudkälla"></canvas>
+        <canvas id="experimentCanvas" aria-label="Map of three phones and one sound source"></canvas>
         <div class="experiment-legend">
-          <span><i class="truth-dot"></i> Facit</span>
-          <span><i class="estimate-dot"></i> Uppskattning</span>
-          <span><i class="phone-dot"></i> Lyssnare</span>
+          <span><i class="truth-dot"></i> Ground truth</span>
+          <span><i class="estimate-dot"></i> Estimate</span>
+          <span><i class="phone-dot"></i> Listener</span>
         </div>
       </main>
 
       <aside class="lab-card experiment-results">
-        <p class="section-kicker">Resultat</p>
+        <p class="section-kicker">Results</p>
         <div class="result-stack">
-          <article><span>2D-fel</span><strong id="experimentError">—</strong></article>
-          <article><span>Riktning från array</span><strong id="experimentBearing">—</strong></article>
+          <article><span>2D error</span><strong id="experimentError">—</strong></article>
+          <article><span>Array bearing</span><strong id="experimentBearing">—</strong></article>
           <article><span>Residual</span><strong id="experimentResidual">—</strong></article>
-          <article><span>Höjd</span><strong id="experimentAltitude">Okänd</strong></article>
-          <article><span>Antal källor</span><strong id="experimentCount">1</strong></article>
+          <article><span>Altitude</span><strong id="experimentAltitude">Unknown</strong></article>
+          <article><span>Source count</span><strong id="experimentCount">1</strong></article>
         </div>
-        <p class="section-kicker correction-title">Klockkorrigering</p>
-        <ol id="clockCorrections" class="classification-list"><li>Ingen session skapad</li></ol>
-        <div class="warning-box">För höjd krävs minst en ytterligare lyssnare på annan nivå. Resultatet visar därför aldrig en fabricerad höjd.</div>
+        <p class="section-kicker correction-title">Clock correction</p>
+        <ol id="clockCorrections" class="classification-list"><li>No session created</li></ol>
+        <div class="warning-box">Altitude requires at least one additional listener at a different elevation. The result therefore never displays a fabricated altitude.</div>
       </aside>
     </div>
   </section>
 
   <section id="statisticsView" class="app-view lab-view statistics-view" hidden>
     <div class="lab-page-heading">
-      <div><p class="eyebrow">Headless Monte Carlo</p><h2>Jämför detektion och lokalisering</h2></div>
-      <p>Reproducerbara körningar med fast slumpfrö. Syntetiska avstånd är regressionsdata, inte fältverifierad räckvidd.</p>
+      <div><p class="eyebrow">Headless Monte Carlo</p><h2>Compare detection and localization</h2></div>
+      <p>Reproducible runs with a fixed random seed. Synthetic distances are regression data, not field-validated range.</p>
     </div>
 
     <div class="statistics-toolbar lab-card">
-      <label class="field"><span>Detektor</span><select id="statisticsDetector">
-        <option value="dsp-v1">FFT / harmonik DSP</option>
+      <label class="field"><span>Detector</span><select id="statisticsDetector">
+        <option value="dsp-v1">FFT / harmonic DSP</option>
         <option value="ml-onnx-v1">Feature Conv ML</option>
       </select></label>
-      <label class="field"><span>Brusmiljö</span><select id="statisticsEnvironment">
-        <option value="quiet">Tyst</option>
-        <option value="urban">Stad</option>
-        <option value="loud-structured">Högt + strukturerat ljud</option>
+      <label class="field"><span>Noise environment</span><select id="statisticsEnvironment">
+        <option value="quiet">Quiet</option>
+        <option value="urban">Urban</option>
+        <option value="loud-structured">Loud + structured noise</option>
       </select></label>
-      <label class="field"><span>Jämförelsemått</span><select id="statisticsMetric">
-        <option value="detectionRate">Detektionsgrad</option>
-        <option value="top1Accuracy">Korrekt detektion + typ</option>
+      <label class="field"><span>Comparison metric</span><select id="statisticsMetric">
+        <option value="detectionRate">Detection rate</option>
+        <option value="top1Accuracy">Correct detection + type</option>
       </select></label>
       <div class="statistics-run-info">
-        <span>Senaste körning</span>
-        <strong id="statisticsGenerated">Laddar…</strong>
+        <span>Latest run</span>
+        <strong id="statisticsGenerated">Loading…</strong>
         <small id="statisticsSeed">—</small>
       </div>
       <div class="statistics-downloads">
         <a href="/reports/headless/summary.json" download>JSON</a>
-        <a href="/reports/headless/detection.csv" download>Detektion CSV</a>
+        <a href="/reports/headless/detection.csv" download>Detection CSV</a>
         <a href="/reports/headless/localization.csv" download>Position CSV</a>
-        <a href="/reports/headless/failures.csv" download>Fel CSV</a>
+        <a href="/reports/headless/failures.csv" download>Failures CSV</a>
       </div>
     </div>
 
-    <div id="statisticsLoading" class="statistics-loading">Läser headless-rapport…</div>
+    <div id="statisticsLoading" class="statistics-loading">Loading headless report…</div>
     <div id="statisticsContent" hidden>
       <div class="statistics-kpis">
-        <article id="statisticsGateCard"><span>Kvalitetsgrind</span><strong id="statisticsQualityGate">—</strong><small>≤5% FPR · ≥85% recall · bättre F1</small></article>
-        <article><span>Recall</span><strong id="statisticsRecall">—</strong><small>alla positiva benchmarkfall</small></article>
-        <article><span>Falsklarm</span><strong id="statisticsFalseAlarm">—</strong><small>vald bakgrund utan drönare</small></article>
-        <article><span>F1</span><strong id="statisticsF1">—</strong><small>precision och recall i balans</small></article>
+        <article id="statisticsGateCard"><span>Quality gate</span><strong id="statisticsQualityGate">—</strong><small>≤5% FPR · ≥85% recall · better F1</small></article>
+        <article><span>Recall</span><strong id="statisticsRecall">—</strong><small>all positive benchmark cases</small></article>
+        <article><span>False alarms</span><strong id="statisticsFalseAlarm">—</strong><small>selected background without a drone</small></article>
+        <article><span>F1</span><strong id="statisticsF1">—</strong><small>precision and recall in balance</small></article>
       </div>
 
       <div class="statistics-chart-grid">
         <section class="lab-card statistics-chart-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Avståndsjämförelse</p><h3 id="statisticsDetectionTitle">Detektionsgrad per drönartyp</h3></div><span class="data-badge">MONTE CARLO</span></div>
-          <canvas id="statisticsDetectionCanvas" aria-label="Jämförelse av detektion per avstånd och drönartyp"></canvas>
+          <div class="subpanel-heading"><div><p class="eyebrow">Distance comparison</p><h3 id="statisticsDetectionTitle">Detection rate by drone type</h3></div><span class="data-badge">MONTE CARLO</span></div>
+          <canvas id="statisticsDetectionCanvas" aria-label="Detection comparison by distance and drone type"></canvas>
           <div id="statisticsProfileLegend" class="chart-legend"></div>
         </section>
         <section class="lab-card statistics-chart-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Tidsnoggrannhet</p><h3>2D-fel mot kvarvarande tidsjitter</h3></div><span class="data-badge">3 TELEFONER</span></div>
-          <canvas id="statisticsLocalizationCanvas" aria-label="Jämförelse av positioneringsfel mot tidsjitter"></canvas>
+          <div class="subpanel-heading"><div><p class="eyebrow">Timing accuracy</p><h3>2D error versus residual timing jitter</h3></div><span class="data-badge">3 PHONES</span></div>
+          <canvas id="statisticsLocalizationCanvas" aria-label="Localization error compared with timing jitter"></canvas>
           <div class="chart-legend"><span><i style="--series:#53e2bf"></i>Median</span><span><i style="--series:#ffb45c"></i>p90</span></div>
         </section>
         <section class="lab-card statistics-chart-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Tröskelanalys</p><h3>Precision–recall</h3></div><span id="statisticsThresholdBadge" class="data-badge">—</span></div>
-          <canvas id="statisticsCurveCanvas" aria-label="Precision och recall vid olika detektionströsklar"></canvas>
+          <div class="subpanel-heading"><div><p class="eyebrow">Threshold analysis</p><h3>Precision–recall</h3></div><span id="statisticsThresholdBadge" class="data-badge">—</span></div>
+          <canvas id="statisticsCurveCanvas" aria-label="Precision and recall at different detection thresholds"></canvas>
           <div class="chart-legend"><span><i style="--series:#53e2bf"></i>Precision</span><span><i style="--series:#ff746d"></i>Recall</span></div>
         </section>
       </div>
 
       <div class="statistics-table-grid">
         <section class="lab-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Ranking</p><h3>Drönartyper i vald miljö</h3></div></div>
-          <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Typ</th><th>Genomsnitt</th><th>Bäst</th><th>Sämst</th></tr></thead><tbody id="statisticsRankingBody"></tbody></table></div>
+          <div class="subpanel-heading"><div><p class="eyebrow">Ranking</p><h3>Drone types in the selected environment</h3></div></div>
+          <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Type</th><th>Average</th><th>Best</th><th>Worst</th></tr></thead><tbody id="statisticsRankingBody"></tbody></table></div>
         </section>
         <section class="lab-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Synkronisering</p><h3>Positioneringsjämförelse</h3></div></div>
-          <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Jitter</th><th>Median</th><th>p90</th><th>≤ 5 m</th><th>Riktningsfel p90</th></tr></thead><tbody id="statisticsLocalizationBody"></tbody></table></div>
+          <div class="subpanel-heading"><div><p class="eyebrow">Synchronization</p><h3>Localization comparison</h3></div></div>
+          <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Jitter</th><th>Median</th><th>p90</th><th>≤ 5 m</th><th>Bearing error p90</th></tr></thead><tbody id="statisticsLocalizationBody"></tbody></table></div>
         </section>
       </div>
 
       <div class="statistics-table-grid">
         <section class="lab-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Confusion matrix</p><h3>Binärt beslut</h3></div></div>
+          <div class="subpanel-heading"><div><p class="eyebrow">Confusion matrix</p><h3>Binary decision</h3></div></div>
           <div class="confusion-grid">
-            <span></span><strong>Pred. drönare</strong><strong>Pred. bakgrund</strong>
-            <strong>Drönare</strong><article class="confusion-good"><span>TP</span><b id="statisticsTp">—</b></article><article class="confusion-bad"><span>FN</span><b id="statisticsFn">—</b></article>
-            <strong>Bakgrund</strong><article class="confusion-bad"><span>FP</span><b id="statisticsFp">—</b></article><article class="confusion-good"><span>TN</span><b id="statisticsTn">—</b></article>
+            <span></span><strong>Pred. drone</strong><strong>Pred. background</strong>
+            <strong>Drone</strong><article class="confusion-good"><span>TP</span><b id="statisticsTp">—</b></article><article class="confusion-bad"><span>FN</span><b id="statisticsFn">—</b></article>
+            <strong>Background</strong><article class="confusion-bad"><span>FP</span><b id="statisticsFp">—</b></article><article class="confusion-good"><span>TN</span><b id="statisticsTn">—</b></article>
           </div>
         </section>
         <section class="lab-card">
-          <div class="subpanel-heading"><div><p class="eyebrow">Failure explorer</p><h3>Falsklarm och missar</h3></div><span id="statisticsFailureCount" class="data-badge">—</span></div>
-          <div class="table-scroll failure-scroll"><table class="statistics-table"><thead><tr><th>Fel</th><th>Källa</th><th>Miljö</th><th>Sannolikhet</th></tr></thead><tbody id="statisticsFailureBody"></tbody></table></div>
+          <div class="subpanel-heading"><div><p class="eyebrow">Failure explorer</p><h3>False alarms and misses</h3></div><span id="statisticsFailureCount" class="data-badge">—</span></div>
+          <div class="table-scroll failure-scroll"><table class="statistics-table"><thead><tr><th>Failure</th><th>Source</th><th>Environment</th><th>Probability</th></tr></thead><tbody id="statisticsFailureBody"></tbody></table></div>
         </section>
       </div>
 
       <section class="lab-card statistics-comparison-card">
-        <div class="subpanel-heading"><div><p class="eyebrow">Direkt jämförelse</p><h3>DSP mot ML på samma benchmark</h3></div><span class="data-badge">SAMMA DATA · SAMMA FRÖ</span></div>
-        <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detektor</th><th>Standard</th><th>Precision</th><th>Recall</th><th>Falsklarm</th><th>F1</th><th>PR-AUC</th><th>Grind</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
+        <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>DSP versus ML on the same benchmark</h3></div><span class="data-badge">SAME DATA · SAME SEED</span></div>
+        <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detector</th><th>Default</th><th>Precision</th><th>Recall</th><th>False alarms</th><th>F1</th><th>PR-AUC</th><th>Gate</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
       </section>
 
       <div class="statistics-caveat lab-card">
-        <strong>Så ska statistiken läsas</strong>
+        <strong>How to read the statistics</strong>
         <ul id="statisticsCaveats"></ul>
       </div>
     </div>
@@ -590,10 +589,20 @@ let running = false;
 let playbackRate = 1;
 let previousTimestamp = performance.now();
 let previousStatus = result.status;
-const events: Array<{ time: number; text: string; tone: string }> = [];
+type EventTone = "neutral" | "warning" | "danger";
+const events: Array<{ time: number; text: string; tone: EventTone }> = [];
 
 function setText(selector: string, value: string): void {
   requiredElement(selector).textContent = value;
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function setRangeValue(
@@ -627,7 +636,7 @@ function syncControls(): void {
   requiredElement<HTMLInputElement>("#toggleCamera").checked = config.sensors.camera;
 }
 
-function addEvent(text: string, tone = "neutral"): void {
+function addEvent(text: string, tone: EventTone = "neutral"): void {
   if (events[0]?.text === text) return;
   events.unshift({ time: state.elapsedS, text, tone });
   events.splice(5);
@@ -641,7 +650,7 @@ function renderEvents(): void {
       (event) => `
         <li class="event-item event-item--${event.tone}">
           <time>${formatClock(event.time)}</time>
-          <span>${event.text}</span>
+          <span>${escapeHtml(event.text)}</span>
         </li>`,
     )
     .join("");
@@ -654,14 +663,14 @@ function loadScenario(id: ScenarioId): void {
   running = false;
   previousStatus = result.status;
   events.splice(0);
-  addEvent(`Scenario laddat: ${SCENARIOS[id].label}`);
+  addEvent(`Scenario loaded: ${SCENARIOS[id].label}`);
   syncControls();
   syncPlayButton();
   renderAll();
 }
 
 function syncPlayButton(): void {
-  setText("#playLabel", running ? "Pausa" : "Starta");
+  setText("#playLabel", running ? "Pause" : "Start");
   setText("#playIcon", running ? "Ⅱ" : "▶");
   playButton.classList.toggle("is-running", running);
 }
@@ -704,7 +713,7 @@ requiredElement<HTMLInputElement>("#radioActive").addEventListener("change", (ev
 requiredElement<HTMLSelectElement>("#spoofMode").addEventListener("change", (event) => {
   config.spoofMode = (event.currentTarget as HTMLSelectElement).value as SpoofMode;
   result = evaluateSimulation(state, config);
-  addEvent(config.spoofMode === "none" ? "Akustisk störning avstängd" : "Akustisk störkälla aktiverad", config.spoofMode === "none" ? "neutral" : "warning");
+  addEvent(config.spoofMode === "none" ? "Acoustic interference disabled" : "Acoustic interference source enabled", config.spoofMode === "none" ? "neutral" : "warning");
   renderAll();
 });
 requiredElement<HTMLSelectElement>("#sensorCount").addEventListener("change", (event) => {
@@ -715,7 +724,7 @@ requiredElement<HTMLSelectElement>("#sensorCount").addEventListener("change", (e
 arrayModeSelect.addEventListener("change", () => {
   config.arrayMode = arrayModeSelect.value as ArrayMode;
   result = evaluateSimulation(state, config);
-  addEvent(`Akustiskt nät: ${ARRAY_MODES[config.arrayMode].label}`, config.arrayMode === "hardware" ? "neutral" : "warning");
+  addEvent(`Acoustic network: ${ARRAY_MODES[config.arrayMode].label}`, config.arrayMode === "hardware" ? "neutral" : "warning");
   renderAll();
 });
 
@@ -734,7 +743,7 @@ for (const [selector, key] of [
 
 playButton.addEventListener("click", () => {
   running = !running;
-  addEvent(running ? "Simulering startad" : "Simulering pausad");
+  addEvent(running ? "Simulation started" : "Simulation paused");
   syncPlayButton();
 });
 
@@ -755,7 +764,7 @@ worldCanvas.addEventListener("click", (event) => {
   };
   running = false;
   result = evaluateSimulation(state, config);
-  addEvent("Drönaren flyttades manuellt");
+  addEvent("Drone moved manually");
   syncPlayButton();
   renderAll();
 });
@@ -769,17 +778,17 @@ function formatClock(seconds: number): string {
 
 function formatSeconds(seconds: number): string {
   if (!Number.isFinite(seconds)) return "—";
-  if (seconds < 0) return "0,0 s";
-  return `${seconds.toFixed(seconds < 10 ? 1 : 0).replace(".", ",")} s`;
+  if (seconds < 0) return "0.0 s";
+  return `${seconds.toFixed(seconds < 10 ? 1 : 0)} s`;
 }
 
 function statusCopy(status: SimulationResult["status"]): { label: string; map: string } {
   switch (status) {
-    case "confirmed": return { label: "Bekräftad drönarsignatur", map: "Bekräftat spår" };
-    case "possible": return { label: "Möjlig drönarsignatur", map: "Analyserar signal" };
-    case "jammed": return { label: "Akustisk kanal störd", map: "Störning upptäckt" };
-    case "spoof": return { label: "Misstänkt replay-signal", map: "Spoof misstänkt" };
-    default: return { label: "Ingen bekräftad signatur", map: "Övervakar" };
+    case "confirmed": return { label: "Confirmed drone signature", map: "Confirmed track" };
+    case "possible": return { label: "Possible drone signature", map: "Analyzing signal" };
+    case "jammed": return { label: "Acoustic channel jammed", map: "Interference detected" };
+    case "spoof": return { label: "Suspected replay signal", map: "Spoof suspected" };
+    default: return { label: "No confirmed signature", map: "Monitoring" };
   }
 }
 
@@ -797,17 +806,17 @@ function renderMetrics(): void {
   setText("#mapStatusText", copy.map);
   setText("#fusionOutput", `${Math.round(result.fusionConfidence * 100)}%`);
   setText("#ringValue", String(Math.round(result.fusionConfidence * 100)));
-  setText("#distanceOutput", config.dronePresent ? `${Math.round(result.droneDistanceToTargetM)} m` : "Ingen");
+  setText("#distanceOutput", config.dronePresent ? `${Math.round(result.droneDistanceToTargetM)} m` : "None");
   setText("#marginOutput", formatSeconds(result.machineMarginS));
   const hasBearing = Number.isFinite(result.estimatedBearingDeg);
-  setText("#bearingOutput", hasBearing ? `${Math.round(result.estimatedBearingDeg)}°` : "Okänd");
-  setText("#bearingErrorOutput", hasBearing ? `±${result.bearingErrorDeg.toFixed(1)}° beräknat` : "kräver minst 2 noder");
-  setText("#syncOutput", `${result.arrayTimingErrorMs.toFixed(result.arrayTimingErrorMs < 0.1 ? 2 : 1).replace(".", ",")} ms`);
-  setText("#syncDistanceOutput", `${result.arraySpatialErrorM.toFixed(result.arraySpatialErrorM < 0.1 ? 3 : 2).replace(".", ",")} m`);
+  setText("#bearingOutput", hasBearing ? `${Math.round(result.estimatedBearingDeg)}°` : "Unknown");
+  setText("#bearingErrorOutput", hasBearing ? `±${result.bearingErrorDeg.toFixed(1)}° estimated` : "requires at least 2 nodes");
+  setText("#syncOutput", `${result.arrayTimingErrorMs.toFixed(result.arrayTimingErrorMs < 0.1 ? 2 : 1)} ms`);
+  setText("#syncDistanceOutput", `${result.arraySpatialErrorM.toFixed(result.arraySpatialErrorM < 0.1 ? 3 : 2)} m`);
   setText("#snrOutput", config.dronePresent ? `${result.snrDb.toFixed(1)} dB` : "—");
   setText("#etaOutput", formatSeconds(result.etaS));
-  setText("#delayOutput", `${result.soundDelayS.toFixed(2).replace(".", ",")} s`);
-  setText("#latencyOutput", `${result.systemLatencyS.toFixed(2).replace(".", ",")} s`);
+  setText("#delayOutput", `${result.soundDelayS.toFixed(2)} s`);
+  setText("#latencyOutput", `${result.systemLatencyS.toFixed(2)} s`);
   setText("#humanMarginOutput", formatSeconds(result.humanMarginS));
   setText("#elapsedOutput", formatClock(state.elapsedS));
   setText("#bpfBadge", `${Math.round(result.bladePassFrequencyHz)} Hz BPF`);
@@ -836,8 +845,8 @@ function renderMetrics(): void {
     setText(
       "#spoofAlertText",
       result.status === "jammed"
-        ? "Brusgolvet döljer den harmoniska signaturen. Andra sensorer krävs."
-        : "Arrayens rumsliga data saknar stöd från radar, RF och optik.",
+        ? "The noise floor obscures the harmonic signature. Other sensors are required."
+        : "The array's spatial data is not supported by radar, RF, or optical sensors.",
     );
   }
 }
@@ -907,7 +916,7 @@ function drawWorld(): void {
   ctx.beginPath(); ctx.arc(x(target.x), y(target.y), 7, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = "#d8e5e3";
   ctx.font = "600 11px Inter, system-ui, sans-serif";
-  ctx.fillText("SKYDDSOBJEKT", x(target.x) + 13, y(target.y) + 4);
+  ctx.fillText("PROTECTED ASSET", x(target.x) + 13, y(target.y) + 4);
 
   const visibleNodes = state.sensorNodes.slice(0, config.sensorCount);
   if (config.sensors.acoustic) {
@@ -989,7 +998,7 @@ function drawWorld(): void {
     ctx.restore();
     ctx.fillStyle = "#d8baff";
     ctx.font = "600 10px Inter, system-ui, sans-serif";
-    ctx.fillText(config.spoofMode === "replay" ? "REPLAY" : "BRUSKÄLLA", x(source.x) + 15, y(source.y) - 10);
+    ctx.fillText(config.spoofMode === "replay" ? "REPLAY" : "NOISE SOURCE", x(source.x) + 15, y(source.y) - 10);
   }
 
   ctx.fillStyle = "rgba(216, 229, 227, 0.42)";
@@ -1061,8 +1070,8 @@ function animate(timestamp: number): void {
     state = stepSimulation(state, config, rawDelta * playbackRate);
     result = evaluateSimulation(state, config);
     updateStatusEvent();
+    if (!viewElements.simulator.hidden) renderAll();
   }
-  renderAll();
   requestAnimationFrame(animate);
 }
 
@@ -1080,8 +1089,11 @@ function selectView(view: AppViewId): void {
     element.hidden = id !== view;
   }
   document.querySelectorAll<HTMLButtonElement>(".view-tab").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.view === view);
+    const selected = button.dataset.view === view;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
   });
+  if (view === "simulator") renderAll();
   if (view === "soundLab") drawLabSpectrum();
   if (view === "experiment") drawExperiment();
   if (view === "statistics") void loadStatistics();
@@ -1101,7 +1113,7 @@ let statisticsReport: HeadlessReport | undefined;
 let statisticsPromise: Promise<void> | undefined;
 
 function percent(value: number): string {
-  return `${(value * 100).toFixed(1).replace(".", ",")}%`;
+  return `${(value * 100).toFixed(1)}%`;
 }
 
 function drawChartFrame(
@@ -1176,7 +1188,7 @@ function drawDetectorCurve(): void {
     const threshold = step / 4;
     const x = left + width * threshold;
     ctx.fillStyle = "#78918f";
-    ctx.fillText(threshold.toFixed(2).replace(".", ","), x, top + height + 10);
+    ctx.fillText(threshold.toFixed(2), x, top + height + 10);
   }
   for (const [key, color] of [["precision", "#53e2bf"], ["recall", "#ff746d"]] as const) {
     ctx.strokeStyle = color;
@@ -1207,7 +1219,7 @@ function drawLocalizationStatistics(): void {
   rows.forEach((row, index) => {
     const x = left + width * index / Math.max(1, rows.length - 1);
     ctx.fillStyle = "#78918f";
-    ctx.fillText(`${String(row.timingJitterMs).replace(".", ",")} ms`, x, top + height + 10);
+    ctx.fillText(`${String(row.timingJitterMs)} ms`, x, top + height + 10);
   });
   for (const [key, color] of [["medianErrorM", "#53e2bf"], ["p90ErrorM", "#ffb45c"]] as const) {
     ctx.strokeStyle = color;
@@ -1238,29 +1250,29 @@ function renderStatistics(): void {
   const profileComparison = compareProfiles(statisticsReport, environment, metric, detectorId);
   const falseAlarmRows = model?.falseAlarms ?? statisticsReport.falseAlarms;
   const falseAlarm = falseAlarmRows.find((row) => row.environment === environment);
-  setText("#statisticsGenerated", new Date(statisticsReport.generatedAt).toLocaleString("sv-SE"));
-  setText("#statisticsSeed", `Frö ${statisticsReport.seed} · ${statisticsReport.configuration.trialsPerDroneCondition} försök per villkor`);
+  setText("#statisticsGenerated", new Date(statisticsReport.generatedAt).toLocaleString("en-GB"));
+  setText("#statisticsSeed", `Seed ${statisticsReport.seed} · ${statisticsReport.configuration.trialsPerDroneCondition} trials per condition`);
   const gatePassed = model?.qualityGate?.passed;
-  setText("#statisticsQualityGate", model?.qualityGate ? (gatePassed ? "GODKÄND" : "UNDERKÄND") : "BASLINJE");
+  setText("#statisticsQualityGate", model?.qualityGate ? (gatePassed ? "PASSED" : "FAILED") : "BASELINE");
   requiredElement("#statisticsGateCard").dataset.status = gatePassed ? "passed" : model?.qualityGate ? "failed" : "baseline";
   setText("#statisticsRecall", model ? percent(model.overall.recall) : percent(statisticsMean(rows.map((row) => row.detectionRate))));
   setText("#statisticsFalseAlarm", percent(falseAlarm?.falsePositiveRate ?? 0));
   setText("#statisticsF1", model ? percent(model.overall.f1) : "—");
-  setText("#statisticsThresholdBadge", model ? `TRÖSKEL ${model.threshold.toFixed(2)}` : "V1-RAPPORT");
+  setText("#statisticsThresholdBadge", model ? `THRESHOLD ${model.threshold.toFixed(2)}` : "V1 REPORT");
   setText(
     "#statisticsDetectionTitle",
-    metric === "detectionRate" ? "Detektionsgrad per drönartyp" : "Korrekt detektion + typ",
+    metric === "detectionRate" ? "Detection rate by drone type" : "Correct detection + type",
   );
   requiredElement("#statisticsProfileLegend").innerHTML = profileComparison.map((item) =>
-    `<span><i style="--series:${statisticsColors[item.profile]}"></i>${item.label}</span>`
+    `<span><i style="--series:${statisticsColors[item.profile]}"></i>${escapeHtml(item.label)}</span>`
   ).join("");
   requiredElement<HTMLTableSectionElement>("#statisticsRankingBody").innerHTML = profileComparison.map((item) => {
     const profileRows = rows.filter((row) => row.profile === item.profile);
     const values = profileRows.map((row) => row[metric]);
-    return `<tr><td><i class="table-series" style="--series:${statisticsColors[item.profile]}"></i>${item.label}</td><td>${percent(item.average)}</td><td>${percent(Math.max(...values))}</td><td>${percent(Math.min(...values))}</td></tr>`;
+    return `<tr><td><i class="table-series" style="--series:${statisticsColors[item.profile]}"></i>${escapeHtml(item.label)}</td><td>${percent(item.average)}</td><td>${percent(Math.max(...values))}</td><td>${percent(Math.min(...values))}</td></tr>`;
   }).join("");
   requiredElement<HTMLTableSectionElement>("#statisticsLocalizationBody").innerHTML = statisticsReport.localization.map((row) =>
-    `<tr><td>${String(row.timingJitterMs).replace(".", ",")} ms</td><td>${row.medianErrorM.toFixed(1).replace(".", ",")} m</td><td>${row.p90ErrorM.toFixed(1).replace(".", ",")} m</td><td>${percent(row.within5MRate)}</td><td>${row.p90BearingErrorDeg.toFixed(1).replace(".", ",")}°</td></tr>`
+    `<tr><td>${String(row.timingJitterMs)} ms</td><td>${row.medianErrorM.toFixed(1)} m</td><td>${row.p90ErrorM.toFixed(1)} m</td><td>${percent(row.within5MRate)}</td><td>${row.p90BearingErrorDeg.toFixed(1)}°</td></tr>`
   ).join("");
   if (model) {
     setText("#statisticsTp", String(model.overall.truePositive));
@@ -1269,17 +1281,17 @@ function renderStatistics(): void {
     setText("#statisticsFn", String(model.overall.falseNegative));
   }
   const failures = (statisticsReport.failures ?? []).filter((failure) => failure.detectorId === detectorId);
-  setText("#statisticsFailureCount", `${failures.length} VISAS`);
+  setText("#statisticsFailureCount", `${failures.length} SHOWN`);
   requiredElement<HTMLTableSectionElement>("#statisticsFailureBody").innerHTML = failures.length > 0
     ? failures.slice(0, 12).map((failure) =>
-      `<tr><td>${failure.failureKind === "false-positive" ? "Falsklarm" : "Miss"}</td><td>${failure.sourceLabel}</td><td>${failure.environment}</td><td>${percent(failure.probability)}</td></tr>`
+      `<tr><td>${failure.failureKind === "false-positive" ? "False alarm" : "Miss"}</td><td>${escapeHtml(failure.sourceLabel)}</td><td>${escapeHtml(failure.environment)}</td><td>${percent(failure.probability)}</td></tr>`
     ).join("")
-    : `<tr><td colspan="4">Inga sparade fel för vald detektor.</td></tr>`;
+    : `<tr><td colspan="4">No saved failures for the selected detector.</td></tr>`;
   requiredElement<HTMLTableSectionElement>("#statisticsDetectorComparisonBody").innerHTML = (statisticsReport.models ?? []).map((item) =>
-    `<tr><td>${item.label}</td><td>${item.isDefault ? "Ja" : "Nej"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Godkänd" : "Underkänd") : "Baslinje"}</td></tr>`
+    `<tr><td>${escapeHtml(item.label)}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : "Baseline"}</td></tr>`
   ).join("");
   requiredElement("#statisticsCaveats").innerHTML = statisticsReport.caveats
-    .map((caveat) => `<li>${caveat}</li>`).join("");
+    .map((caveat) => `<li>${escapeHtml(caveat)}</li>`).join("");
   drawDetectionStatistics();
   drawLocalizationStatistics();
   drawDetectorCurve();
@@ -1302,7 +1314,7 @@ async function loadStatistics(): Promise<void> {
       requiredElement("#statisticsContent").hidden = false;
       renderStatistics();
     } catch (error) {
-      loading.textContent = `Ingen rapport kunde läsas (${String(error)}). Kör npm run simulate.`;
+      loading.textContent = `The report could not be loaded (${String(error)}). Run npm run simulate.`;
       statisticsPromise = undefined;
     }
   })();
@@ -1329,39 +1341,76 @@ let labDetectorOutput: DetectorOutput | undefined;
 let labInputMode: "sample" | "microphone" = "sample";
 let microphoneTruthForResult: TrialTruth = "drone";
 const initialDspDetector = new DspDetectorAdapter();
-let detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
+const detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
 let selectedDetector: DetectorAdapter = initialDspDetector;
+let mlDetectorPromise: Promise<DetectorAdapter> | undefined;
 
-void loadDetectorSuite().then((suite) => {
-  detectorAdapters = new Map<string, DetectorAdapter>([
-    [suite.dsp.id, suite.dsp],
-    [suite.ml.id, suite.ml],
-  ]);
-  selectedDetector = suite.defaultDetector;
-  labDetectorSelect.value = selectedDetector.id;
-  const gate = suite.ml.artifact.qualityGate;
-  setText(
-    "#labDetectorStatus",
-    gate.passed
-      ? "ML klarade kvalitetsgrinden och är standard."
-      : `ML är experimentell: FPR ${Math.round(suite.ml.artifact.testMetrics.falsePositiveRate * 100)}%, recall ${Math.round(suite.ml.artifact.testMetrics.recall * 100)}%. DSP är standard.`,
-  );
-}).catch((error) => {
-  setText("#labDetectorStatus", `ML kunde inte laddas: ${String(error)}. DSP används.`);
-});
+async function loadMlDetector(): Promise<DetectorAdapter> {
+  const loaded = detectorAdapters.get("ml-onnx-v1");
+  if (loaded) return loaded;
+  mlDetectorPromise ??= import("./detectors/ml-adapter")
+    .then(({ MlOnnxDetectorAdapter }) => MlOnnxDetectorAdapter.create())
+    .then((detector) => {
+      detectorAdapters.set(detector.id, detector);
+      return detector;
+    })
+    .catch((error) => {
+      mlDetectorPromise = undefined;
+      throw error;
+    });
+  return mlDetectorPromise;
+}
+
+void (async () => {
+  try {
+    const response = await fetch("/models/drone-binary-v1.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const metadata = await response.json() as {
+      qualityGate?: { passed?: boolean };
+      testMetrics?: { falsePositiveRate?: number; recall?: number };
+    };
+    if (metadata.qualityGate?.passed && labDetectorSelect.value === "dsp-v1") {
+      setText("#labDetectorStatus", "ML passed the quality gate. Loading the default detector…");
+      const detector = await loadMlDetector();
+      if (detector.isOperational && labDetectorSelect.value === "dsp-v1") {
+        selectedDetector = detector;
+        labDetectorSelect.value = detector.id;
+        setText("#labDetectorStatus", "ML passed the quality gate and is the default.");
+      } else if (labDetectorSelect.value === "dsp-v1") {
+        setText("#labDetectorStatus", "ML passed its metrics gate but could not start. DSP is in use.");
+      }
+      return;
+    }
+    if (labDetectorSelect.value === "dsp-v1") {
+      const fpr = metadata.testMetrics?.falsePositiveRate;
+      const recall = metadata.testMetrics?.recall;
+      setText(
+        "#labDetectorStatus",
+        typeof fpr === "number" && Number.isFinite(fpr) &&
+          typeof recall === "number" && Number.isFinite(recall)
+          ? `ML is experimental: FPR ${Math.round(fpr * 100)}%, recall ${Math.round(recall * 100)}%. DSP is the default.`
+          : "ML is experimental and loads only when selected. DSP is the default.",
+      );
+    }
+  } catch (error) {
+    if (labDetectorSelect.value === "dsp-v1") {
+      setText("#labDetectorStatus", `ML metadata could not be loaded: ${String(error)}. DSP is in use.`);
+    }
+  }
+})();
 
 function syncLabSample(): void {
   labInputMode = "sample";
   const sample = getAudioSample(labSampleSelect.value);
   setText("#labSampleNote", sample.note);
   setText("#labSourceLabel", sample.sourceLabel);
-  setText("#labLicense", `Licens: ${sample.license}`);
+  setText("#labLicense", `License: ${sample.license}`);
   const sourceLink = requiredElement<HTMLAnchorElement>("#labSourceLink");
   sourceLink.hidden = !sample.sourceUrl;
   sourceLink.href = sample.sourceUrl ?? "#";
   requiredElement<HTMLElement>("#labRpmField").hidden = sample.kind === "real";
-  setText("#labTruth", "Dolt tills analys");
-  setText("#labVerdict", "Detektorn testas utan etikettläckage.");
+  setText("#labTruth", "Hidden until analysis");
+  setText("#labVerdict", "The detector is tested without label leakage.");
   labResult = undefined;
   labDetectorOutput = undefined;
   renderLabResult();
@@ -1383,7 +1432,7 @@ async function getLabPcm(): Promise<{
   if (sample.kind === "ambient") {
     return { samples: generateAmbientPcm(4), sampleRate: 16000 };
   }
-  if (!sample.localUrl) throw new Error("Ljudprovet saknar lokal fil");
+  if (!sample.localUrl) throw new Error("The audio sample has no local file");
   let loaded = realAudioCache.get(sample.id);
   if (!loaded) {
     loaded = await loadMonoPcm(sample.localUrl);
@@ -1399,34 +1448,34 @@ async function getLabPcm(): Promise<{
 
 function renderLabResult(): void {
   if (!labResult || !labDetectorOutput) {
-    setText("#labDetectionTitle", "Väntar på analys");
-    setText("#labDetectionBadge", "INGEN DATA");
+    setText("#labDetectionTitle", "Waiting for analysis");
+    setText("#labDetectionBadge", "NO DATA");
     setText("#labConfidence", "—");
     setText("#labFundamental", "—");
     setText("#labHarmonic", "—");
     setText("#labFrames", "—");
-    requiredElement<HTMLOListElement>("#labClassifications").innerHTML = "<li>Ingen analys genomförd</li>";
+    requiredElement<HTMLOListElement>("#labClassifications").innerHTML = "<li>No analysis completed</li>";
     setText("#labEventJson", "{ }");
     drawLabSpectrum();
     return;
   }
-  setText("#labDetectionTitle", labDetectorOutput.detected ? "Drönarsignatur hittad" : "Ingen stabil drönarsignatur");
-  setText("#labDetectionBadge", labDetectorOutput.detected ? "DETEKTERAD" : "NEGATIV");
+  setText("#labDetectionTitle", labDetectorOutput.detected ? "Drone signature detected" : "No stable drone signature");
+  setText("#labDetectionBadge", labDetectorOutput.detected ? "DETECTED" : "NEGATIVE");
   setText("#labConfidence", `${Math.round(labDetectorOutput.probability * 100)}%`);
   setText("#labFundamental", `${Math.round(labResult.fundamentalHz)} Hz`);
   setText("#labHarmonic", `${labResult.harmonicScoreDb.toFixed(1)} dB`);
   setText("#labFrames", `${labDetectorOutput.positiveWindows}/${labDetectorOutput.analyzedWindows}`);
   requiredElement<HTMLOListElement>("#labClassifications").innerHTML = labDetectorOutput.classifications
-    .map((item, index) => `<li><span>${index + 1}. ${item.label}</span><strong>${Math.round(item.confidence * 100)}%</strong></li>`)
+    .map((item, index) => `<li><span>${index + 1}. ${escapeHtml(item.label)}</span><strong>${Math.round(item.confidence * 100)}%</strong></li>`)
     .join("");
   const event = createAcousticEvent("P1", labResult, labDetectorOutput);
   const track = fuseSingleNodeEvent(event);
   setText("#labEventJson", JSON.stringify({ event, fusedTrack: track }, null, 2));
   const sample = getAudioSample(labSampleSelect.value);
   const truthLabel = labInputMode === "microphone"
-    ? microphoneTruthForResult === "drone" ? "Drönarljud via mikrofon" : "Bakgrund / störljud via mikrofon"
+    ? microphoneTruthForResult === "drone" ? "Drone audio via microphone" : "Background / interference via microphone"
     : sample.expectedProfile === "ambient"
-      ? "Bakgrund / ingen drönare"
+      ? "Background / no drone"
       : DRONE_PROFILES[sample.expectedProfile].label;
   const topProfile = labDetectorOutput.classifications[0]?.profile;
   const correct = labInputMode === "microphone"
@@ -1434,7 +1483,7 @@ function renderLabResult(): void {
     : topProfile === sample.expectedProfile ||
       (sample.expectedProfile === "ambient" && !labDetectorOutput.detected);
   setText("#labTruth", truthLabel);
-  setText("#labVerdict", correct ? "Lyssnaren matchade facit." : "Lyssnaren matchade inte facit — ett viktigt negativt resultat.");
+  setText("#labVerdict", correct ? "The listener matched the ground truth." : "The listener did not match the ground truth — an important negative result.");
   drawLabSpectrum();
 }
 
@@ -1457,7 +1506,7 @@ function drawLabSpectrum(): void {
   if (!labResult) {
     ctx.fillStyle = "rgba(216,229,227,.32)";
     ctx.font = "12px system-ui";
-    ctx.fillText("Kör en blind analys för att visa FFT-spektrum", left, height / 2);
+    ctx.fillText("Run a blind analysis to display the FFT spectrum", left, height / 2);
     return;
   }
   const spectrum = labResult.spectrumDb;
@@ -1491,11 +1540,37 @@ labRpmInput.addEventListener("input", () => {
   labDetectorOutput = undefined;
   renderLabResult();
 });
-labDetectorSelect.addEventListener("change", () => {
-  selectedDetector = detectorAdapters.get(labDetectorSelect.value) ?? initialDspDetector;
+labDetectorSelect.addEventListener("change", async () => {
+  const requestedId = labDetectorSelect.value;
   labResult = undefined;
   labDetectorOutput = undefined;
   renderLabResult();
+  if (requestedId === "dsp-v1") {
+    selectedDetector = initialDspDetector;
+    setText("#labDetectorStatus", "FFT / harmonic DSP is ready.");
+    return;
+  }
+  const analyzeButton = requiredElement<HTMLButtonElement>("#labAnalyzeButton");
+  labDetectorSelect.disabled = true;
+  analyzeButton.disabled = true;
+  setText("#labDetectorStatus", "Loading the experimental ML runtime…");
+  try {
+    const detector = await loadMlDetector();
+    if (labDetectorSelect.value === requestedId) selectedDetector = detector;
+    setText(
+      "#labDetectorStatus",
+      detector.isOperational
+        ? "Experimental ML detector ready."
+        : "The ML runtime could not start; analysis will fall back to DSP.",
+    );
+  } catch (error) {
+    selectedDetector = initialDspDetector;
+    labDetectorSelect.value = "dsp-v1";
+    setText("#labDetectorStatus", `ML could not be loaded: ${String(error)}. DSP is in use.`);
+  } finally {
+    labDetectorSelect.disabled = false;
+    analyzeButton.disabled = false;
+  }
 });
 requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", async () => {
   const button = requiredElement<HTMLButtonElement>("#labPlayButton");
@@ -1507,6 +1582,8 @@ requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", a
     else if (sample.kind === "synthetic") {
       await playDroneMixture([sample.expectedProfile as DroneProfileId], Number(labRpmInput.value));
     } else await playPcm(pcm.samples, pcm.sampleRate);
+  } catch (error) {
+    setText("#labDetectorStatus", error instanceof Error ? error.message : "Audio playback failed");
   } finally {
     window.setTimeout(() => { button.disabled = false; }, 500);
   }
@@ -1514,26 +1591,26 @@ requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", a
 requiredElement<HTMLButtonElement>("#labAnalyzeButton").addEventListener("click", async () => {
   const button = requiredElement<HTMLButtonElement>("#labAnalyzeButton");
   button.disabled = true;
-  button.textContent = "Analyserar…";
+  button.textContent = "Analyzing…";
   try {
     const pcm = await getLabPcm();
     await new Promise<void>((resolve) => window.setTimeout(resolve, 30));
     labResult = analyzePcm(pcm.samples, pcm.sampleRate);
     const detector = selectedDetector ?? detectorAdapters.get("dsp-v1");
-    if (!detector) throw new Error("Detektorn laddas fortfarande");
+    if (!detector) throw new Error("The detector is still loading");
     labDetectorOutput = await detector.analyze(pcm.samples, pcm.sampleRate);
     setText(
       "#labDetectorStatus",
       labDetectorOutput.fallbackReason
         ? `Fallback: ${labDetectorOutput.fallbackReason}`
-        : `${labDetectorOutput.detectorLabel} · ${labDetectorOutput.latencyMs.toFixed(1).replace(".", ",")} ms`,
+        : `${labDetectorOutput.detectorLabel} · ${labDetectorOutput.latencyMs.toFixed(1)} ms`,
     );
     renderLabResult();
   } catch (error) {
-    setText("#labDetectionTitle", error instanceof Error ? error.message : "Analysen misslyckades");
+    setText("#labDetectionTitle", error instanceof Error ? error.message : "Analysis failed");
   } finally {
     button.disabled = false;
-    button.textContent = "Analysera blint";
+    button.textContent = "Analyze blind";
   }
 });
 
@@ -1556,18 +1633,18 @@ function renderMicrophoneTrials(): void {
   microphoneResetButton.disabled = metrics.total === 0;
   const body = requiredElement<HTMLTableSectionElement>("#microphoneTrialBody");
   if (microphoneTrials.length === 0) {
-    body.innerHTML = '<tr><td colspan="6">Inga försök ännu</td></tr>';
+    body.innerHTML = '<tr><td colspan="6">No trials yet</td></tr>';
     return;
   }
   body.innerHTML = [...microphoneTrials].reverse().map((trial) => {
     const correct = trial.detected === (trial.truth === "drone");
     return `<tr data-verdict="${correct ? "correct" : "incorrect"}">
       <td>${trial.id}</td>
-      <td>${trial.truth === "drone" ? "Drönare" : "Bakgrund"}</td>
-      <td>${trial.detected ? "Detekterad" : "Negativ"}</td>
+      <td>${trial.truth === "drone" ? "Drone" : "Background"}</td>
+      <td>${trial.detected ? "Detected" : "Negative"}</td>
       <td>${Math.round(trial.probability * 100)}%</td>
-      <td>${trial.topLabel}</td>
-      <td>${trial.latencyMs.toFixed(1).replace(".", ",")} ms</td>
+      <td>${escapeHtml(trial.topLabel)}</td>
+      <td>${trial.latencyMs.toFixed(1)} ms</td>
     </tr>`;
   }).join("");
 }
@@ -1586,7 +1663,12 @@ function microphoneTrialsCsv(): string {
       trial.topLabel,
     ]),
   ];
-  return rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+  const csvCell = (value: unknown): string => {
+    const text = String(value);
+    const formulaSafe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+    return `"${formulaSafe.replaceAll('"', '""')}"`;
+  };
+  return rows.map((row) => row.map(csvCell).join(",")).join("\n");
 }
 
 microphoneCaptureButton.addEventListener("click", async () => {
@@ -1595,19 +1677,19 @@ microphoneCaptureButton.addEventListener("click", async () => {
   if (!detector) return;
   microphoneCaptureButton.disabled = true;
   microphoneTruth.disabled = true;
-  setText("#microphoneBadge", "BEGÄR ÅTKOMST");
-  setText("#microphoneStatus", "Tillåt mikrofonen. Inspelningen börjar först när behörigheten är klar.");
+  setText("#microphoneBadge", "REQUESTING ACCESS");
+  setText("#microphoneStatus", "Allow microphone access. Recording begins only after permission is granted.");
   try {
     const capture = await captureMicrophone(5000, () => {
-      setText("#microphoneBadge", "SPELA NU · 5 S");
-      setText("#microphoneStatus", "Mikrofonen lyssnar — spela upp drönar- eller bakgrundsljudet från datorn nu.");
+      setText("#microphoneBadge", "PLAY NOW · 5 S");
+      setText("#microphoneStatus", "The microphone is listening — play the drone or background audio from the computer now.");
     });
-    setText("#microphoneBadge", "ANALYSERAR");
+    setText("#microphoneBadge", "ANALYZING");
     labInputMode = "microphone";
     microphoneTruthForResult = truth;
     labResult = analyzePcm(capture.samples, capture.sampleRate);
     labDetectorOutput = await detector.analyze(capture.samples, capture.sampleRate);
-    const topLabel = labDetectorOutput.classifications[0]?.label ?? "Okänd";
+    const topLabel = labDetectorOutput.classifications[0]?.label ?? "Unknown";
     const trial: MicrophoneTrial = {
       id: microphoneTrials.length + 1,
       capturedAt: new Date().toISOString(),
@@ -1621,16 +1703,16 @@ microphoneCaptureButton.addEventListener("click", async () => {
     microphoneTrials.push(trial);
     const correct = trial.detected === (truth === "drone");
     const dbFs = 20 * Math.log10(Math.max(1e-7, capture.rms));
-    setText("#microphoneRms", `${dbFs.toFixed(1).replace(".", ",")} dBFS`);
-    setText("#microphoneBadge", correct ? "MATCH" : "AVVIKELSE");
+    setText("#microphoneRms", `${dbFs.toFixed(1)} dBFS`);
+    setText("#microphoneBadge", correct ? "MATCH" : "MISMATCH");
     setText(
       "#microphoneStatus",
-      `${correct ? "Resultatet matchade facit" : "Resultatet matchade inte facit"}: ${trial.detected ? "drönare detekterad" : "ingen drönare"}. ${Math.round(capture.durationMs)} ms ljud vid ${capture.sampleRate} Hz analyserades lokalt.`,
+      `${correct ? "The result matched the ground truth" : "The result did not match the ground truth"}: ${trial.detected ? "drone detected" : "no drone detected"}. ${Math.round(capture.durationMs)} ms of audio at ${capture.sampleRate} Hz was analyzed locally.`,
     );
     renderLabResult();
     renderMicrophoneTrials();
   } catch (error) {
-    setText("#microphoneBadge", "FEL");
+    setText("#microphoneBadge", "ERROR");
     setText("#microphoneStatus", microphoneErrorMessage(error));
   } finally {
     microphoneCaptureButton.disabled = false;
@@ -1640,8 +1722,8 @@ microphoneCaptureButton.addEventListener("click", async () => {
 
 microphoneResetButton.addEventListener("click", () => {
   microphoneTrials = [];
-  setText("#microphoneBadge", "REDO");
-  setText("#microphoneStatus", "Sessionen är nollställd. Inget råljud sparades.");
+  setText("#microphoneBadge", "READY");
+  setText("#microphoneStatus", "The session has been reset. No raw audio was saved.");
   setText("#microphoneRms", "—");
   renderMicrophoneTrials();
 });
@@ -1652,8 +1734,10 @@ microphoneDownloadButton.addEventListener("click", () => {
   const link = document.createElement("a");
   link.href = url;
   link.download = `drones-microphone-trials-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.append(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 });
 
 const experimentCanvas = requiredElement<HTMLCanvasElement>("#experimentCanvas");
@@ -1675,12 +1759,12 @@ function resetExperiment(): void {
   pendingExperiment = undefined;
   visibleExperiment = undefined;
   requiredElement<HTMLButtonElement>("#localizeButton").disabled = true;
-  setText("#experimentStatus", "EJ KALIBRERAD");
+  setText("#experimentStatus", "NOT CALIBRATED");
   setText("#experimentError", "—");
   setText("#experimentBearing", "—");
   setText("#experimentResidual", "—");
-  setText("#experimentAltitude", "Okänd");
-  requiredElement<HTMLOListElement>("#clockCorrections").innerHTML = "<li>Ingen session skapad</li>";
+  setText("#experimentAltitude", "Unknown");
+  requiredElement<HTMLOListElement>("#clockCorrections").innerHTML = "<li>No session created</li>";
   drawExperiment();
 }
 
@@ -1715,7 +1799,7 @@ function drawExperiment(): void {
   });
   ctx.fillStyle = "#ff746d";
   ctx.beginPath(); ctx.arc(px(experimentSource.x), py(experimentSource.y), 8, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#ffb1ac"; ctx.fillText("FACIT", px(experimentSource.x) + 12, py(experimentSource.y) - 10);
+  ctx.fillStyle = "#ffb1ac"; ctx.fillText("GROUND TRUTH", px(experimentSource.x) + 12, py(experimentSource.y) - 10);
   if (visibleExperiment) {
     const estimate = visibleExperiment.estimatedPosition;
     const radius = Math.max(8, 12 + visibleExperiment.errorM) * Math.min(sx, sy);
@@ -1725,7 +1809,7 @@ function drawExperiment(): void {
     ctx.beginPath();
     ctx.moveTo(px(estimate.x) - 9, py(estimate.y)); ctx.lineTo(px(estimate.x) + 9, py(estimate.y));
     ctx.moveTo(px(estimate.x), py(estimate.y) - 9); ctx.lineTo(px(estimate.x), py(estimate.y) + 9); ctx.stroke();
-    ctx.fillStyle = "#ffe0b8"; ctx.fillText("UPPSKATTNING", px(estimate.x) + 13, py(estimate.y) + 18);
+    ctx.fillStyle = "#ffe0b8"; ctx.fillText("ESTIMATE", px(estimate.x) + 13, py(estimate.y) + 18);
   }
 }
 
@@ -1748,20 +1832,20 @@ requiredElement<HTMLButtonElement>("#calibrateButton").addEventListener("click",
   pendingExperiment = analyzeOfflineTrial(experimentListeners, experimentSource, WORLD);
   visibleExperiment = undefined;
   requiredElement<HTMLButtonElement>("#localizeButton").disabled = false;
-  setText("#experimentStatus", "KALIBRERAD");
+  setText("#experimentStatus", "CALIBRATED");
   requiredElement<HTMLOListElement>("#clockCorrections").innerHTML = pendingExperiment.observations
-    .map((item) => `<li><span>${item.nodeId}</span><strong>${item.clockCorrectionMs >= 0 ? "+" : ""}${item.clockCorrectionMs.toFixed(2)} ms</strong></li>`)
+    .map((item) => `<li><span>${escapeHtml(item.nodeId)}</span><strong>${item.clockCorrectionMs >= 0 ? "+" : ""}${item.clockCorrectionMs.toFixed(2)} ms</strong></li>`)
     .join("");
   drawExperiment();
 });
 requiredElement<HTMLButtonElement>("#localizeButton").addEventListener("click", () => {
   if (!pendingExperiment) return;
   visibleExperiment = pendingExperiment;
-  setText("#experimentStatus", "2D-SPÅR LÅST");
-  setText("#experimentError", `${visibleExperiment.errorM.toFixed(1).replace(".", ",")} m`);
+  setText("#experimentStatus", "2D TRACK LOCKED");
+  setText("#experimentError", `${visibleExperiment.errorM.toFixed(1)} m`);
   setText("#experimentBearing", `${Math.round(visibleExperiment.bearingDeg)}°`);
-  setText("#experimentResidual", `${visibleExperiment.residualMs.toFixed(3).replace(".", ",")} ms`);
-  setText("#experimentAltitude", "Okänd · 3 noder i plan");
+  setText("#experimentResidual", `${visibleExperiment.residualMs.toFixed(3)} ms`);
+  setText("#experimentAltitude", "Unknown · 3 coplanar nodes");
   setText("#experimentCount", String(visibleExperiment.sourceCount));
   drawExperiment();
 });
@@ -1771,7 +1855,7 @@ syncExperimentInputs();
 resetExperiment();
 
 syncControls();
-addEvent(`Scenario laddat: ${SCENARIOS.quiet.label}`);
+addEvent(`Scenario loaded: ${SCENARIOS.quiet.label}`);
 syncPlayButton();
 renderAll();
 requestAnimationFrame(animate);

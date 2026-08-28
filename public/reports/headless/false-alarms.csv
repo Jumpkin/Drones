@@ -1,7 +1,7 @@
 detectorId,detectorLabel,environment,ambientRms,trials,falseDetections,falsePositiveRate,meanConfidence,medianLatencyMs
-dsp-v1,FFT / harmonik DSP,quiet,0.02,60,60,1,0.8656,20.14
-ml-onnx-v1,Feature Conv ML,quiet,0.02,60,1,0.0167,0.085,60.29
-dsp-v1,FFT / harmonik DSP,urban,0.05,60,54,0.9,0.8402,20.14
-ml-onnx-v1,Feature Conv ML,urban,0.05,60,9,0.15,0.2167,60.28
-dsp-v1,FFT / harmonik DSP,loud-structured,0.1,60,50,0.8333,0.8258,20.25
-ml-onnx-v1,Feature Conv ML,loud-structured,0.1,60,9,0.15,0.2181,60.63
+dsp-v1,FFT / harmonic DSP,quiet,0.02,60,60,1,0.8656,20.07
+ml-onnx-v1,Feature Conv ML,quiet,0.02,60,2,0.0333,0.0901,60.09
+dsp-v1,FFT / harmonic DSP,urban,0.05,60,54,0.9,0.8402,20.05
+ml-onnx-v1,Feature Conv ML,urban,0.05,60,9,0.15,0.2206,60.06
+dsp-v1,FFT / harmonic DSP,loud-structured,0.1,60,50,0.8333,0.8258,20.09
+ml-onnx-v1,Feature Conv ML,loud-structured,0.1,60,9,0.15,0.2169,60.27

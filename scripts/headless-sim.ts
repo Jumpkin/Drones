@@ -112,7 +112,8 @@ function mean(values: number[]): number {
 
 function percentile(values: number[], fraction: number): number {
   const sorted = [...values].sort((a, b) => a - b);
-  return sorted[Math.min(sorted.length - 1, Math.floor(fraction * sorted.length))] ?? 0;
+  const index = Math.round(Math.max(0, Math.min(1, fraction)) * Math.max(0, sorted.length - 1));
+  return sorted[index] ?? 0;
 }
 
 function angularDifference(a: number, b: number): number {
@@ -142,7 +143,7 @@ function runDetectionBenchmark(
           confidences: number[];
           latencies: number[];
         }>([
-          ["dsp-v1", { label: "FFT / harmonik DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
+          ["dsp-v1", { label: "FFT / harmonic DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
           ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
         ]);
         for (let trial = 0; trial < trials; trial += 1) {
@@ -168,7 +169,7 @@ function runDetectionBenchmark(
               environment: environment.id,
               distanceM,
               sourceLabel: DRONE_PROFILES[profile].label,
-              license: "Projektgenererad",
+              license: "Project-generated",
             });
           }
         }
@@ -204,7 +205,7 @@ function runDetectionBenchmark(
       confidences: number[];
       latencies: number[];
     }>([
-      ["dsp-v1", { label: "FFT / harmonik DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
+      ["dsp-v1", { label: "FFT / harmonic DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
       ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
     ]);
     for (let trial = 0; trial < ambientTrials; trial += 1) {
@@ -229,7 +230,7 @@ function runDetectionBenchmark(
           environment: environment.id,
           distanceM: null,
           sourceLabel: kind,
-          license: "Projektgenererad",
+          license: "Project-generated",
         });
       }
     }
@@ -291,7 +292,7 @@ function modelReport(
   const curve = curveFor(selected);
   return {
     id: detectorId,
-    label: detectorId === "dsp-v1" ? "FFT / harmonik DSP" : "Feature Conv ML",
+    label: detectorId === "dsp-v1" ? "FFT / harmonic DSP" : "Feature Conv ML",
     version: "1.0.0",
     threshold: detectorId === "dsp-v1" ? 0.42 : artifact.threshold,
     isDefault: detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : !artifact.qualityGate.passed,

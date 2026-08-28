@@ -4,6 +4,7 @@ import { extractMlFeatures, pcmWindows } from "../ml/features";
 import {
   aggregateProbabilities,
   normalizeFeatures,
+  parseMlModelArtifact,
   type MlModelArtifact,
 } from "../ml/model";
 import { DspDetectorAdapter } from "./dsp-adapter";
@@ -34,8 +35,8 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
     artifactUrl = "/models/drone-binary-v1.json",
   ): Promise<MlOnnxDetectorAdapter> {
     const response = await fetch(artifactUrl, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Kunde inte läsa ML-metadata (${response.status})`);
-    const artifact = await response.json() as MlModelArtifact;
+    if (!response.ok) throw new Error(`Could not load ML metadata (${response.status})`);
+    const artifact = parseMlModelArtifact(await response.json());
     try {
       ort.env.wasm.numThreads = 1;
       const session = await ort.InferenceSession.create(artifact.modelUrl, {
@@ -53,7 +54,7 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
       const fallback = await this.fallback.analyze(samples, sampleRate);
       return {
         ...fallback,
-        fallbackReason: `ONNX kunde inte starta: ${this.initializationError ?? "okänt fel"}`,
+        fallbackReason: `ONNX could not start: ${this.initializationError ?? "unknown error"}`,
       };
     }
     const started = performance.now();
@@ -65,7 +66,11 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
       const output = await this.session.run({ [this.artifact.inputName]: tensor });
       probabilities.push(Number(output[this.artifact.outputName].data[0]));
     }
-    const temporal = aggregateProbabilities(probabilities, this.artifact.threshold);
+    const temporal = aggregateProbabilities(
+      probabilities,
+      this.artifact.threshold,
+      this.artifact.temporal,
+    );
     const dsp = analyzePcm(samples, sampleRate);
     return {
       detectorId: this.id,
@@ -79,7 +84,7 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
       analyzedWindows: temporal.analyzedWindows,
       classifications: temporal.detected
         ? dsp.classifications
-        : [{ profile: "ambient", label: "Bakgrund / okänd", confidence: 1 - temporal.confidence }],
+        : [{ profile: "ambient", label: "Background / unknown", confidence: 1 - temporal.confidence }],
     };
   }
 }

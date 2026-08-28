@@ -74,6 +74,22 @@ function tdoaError(
   return error;
 }
 
+function observationsInListenerOrder(
+  listeners: ListenerNode[],
+  arrivals: ArrivalObservation[],
+): ArrivalObservation[] {
+  const listenerIds = new Set(listeners.map((listener) => listener.id));
+  const arrivalsById = new Map(arrivals.map((arrival) => [arrival.nodeId, arrival]));
+  if (listenerIds.size !== listeners.length || arrivalsById.size !== arrivals.length) {
+    throw new Error("Listener and observation node IDs must be unique");
+  }
+  const ordered = listeners.map((listener) => arrivalsById.get(listener.id));
+  if (ordered.some((arrival) => !arrival) || arrivals.some((arrival) => !listenerIds.has(arrival.nodeId))) {
+    throw new Error("Listener and observation node IDs must match");
+  }
+  return ordered as ArrivalObservation[];
+}
+
 export function localizeGrid(
   listeners: ListenerNode[],
   arrivals: ArrivalObservation[],
@@ -82,6 +98,11 @@ export function localizeGrid(
   if (listeners.length < 3 || arrivals.length !== listeners.length) {
     throw new Error("2D TDOA requires three matching listener observations");
   }
+  if (!Number.isFinite(bounds.width) || bounds.width <= 0 ||
+    !Number.isFinite(bounds.height) || bounds.height <= 0) {
+    throw new Error("Localization bounds must be positive finite numbers");
+  }
+  const orderedArrivals = observationsInListenerOrder(listeners, arrivals);
   let best = { position: { x: 0, y: 0 }, error: Number.POSITIVE_INFINITY };
   const scan = (origin: Point2D, radius: number, step: number): void => {
     const minX = Math.max(0, origin.x - radius);
@@ -91,7 +112,7 @@ export function localizeGrid(
     for (let x = minX; x <= maxX; x += step) {
       for (let y = minY; y <= maxY; y += step) {
         const position = { x, y };
-        const error = tdoaError(position, listeners, arrivals);
+        const error = tdoaError(position, listeners, orderedArrivals);
         if (error < best.error) best = { position, error };
       }
     }

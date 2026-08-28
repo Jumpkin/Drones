@@ -3,7 +3,7 @@ import type { DetectorAdapter, DetectorOutput } from "./types";
 
 export class DspDetectorAdapter implements DetectorAdapter {
   readonly id = "dsp-v1" as const;
-  readonly label = "FFT / harmonik DSP";
+  readonly label = "FFT / harmonic DSP";
   readonly version = "1.0.0";
   readonly isOperational = true;
 

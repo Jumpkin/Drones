@@ -11,6 +11,9 @@ undetectable, energy-efficient, and cost-effective.
 
 ## Acoustic Sensor Lab
 
+The public interface and generated report labels are English-only so the
+experiment can be shared consistently with an international audience.
+
 The first product is a deterministic browser research environment with four
 views:
 
@@ -26,10 +29,11 @@ views:
   assumed distance, noise environment, false alarms, and clock jitter.
 
 The detection layer exposes the same asynchronous adapter contract for the
-FFT baseline and an experimental ONNX binary classifier. The ML model uses
-five overlapping one-second windows and requires three positives before an
-event is emitted. It is not selected as the default unless the committed
-held-out report passes the recall, false-positive, and DSP-comparison gate.
+FFT baseline and an experimental ONNX binary classifier. The ML model scores
+overlapping one-second windows and aggregates the latest five, requiring three
+positives before an event is emitted. It is not selected as the default unless
+the committed held-out report passes the recall, false-positive, and
+DSP-comparison gate.
 
 It is an educational research environment rather than an operational
 detection or countermeasure system. All ranges and probabilities are treated

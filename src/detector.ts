@@ -28,6 +28,11 @@ export function resampleLinear(
   sourceRate: number,
   targetRate = 16000,
 ): Float32Array {
+  if (!Number.isFinite(sourceRate) || sourceRate <= 0 ||
+    !Number.isFinite(targetRate) || targetRate <= 0) {
+    throw new Error("Sample rates must be positive finite numbers");
+  }
+  if (samples.length === 0) return new Float32Array();
   if (sourceRate === targetRate) return new Float32Array(samples);
   const length = Math.max(1, Math.round(samples.length * targetRate / sourceRate));
   const output = new Float32Array(length);
@@ -81,7 +86,7 @@ function classify(
   detected: boolean,
 ): ClassificationScore[] {
   if (!detected || fundamentalHz <= 0) {
-    return [{ profile: "ambient", label: "Bakgrund / okänd", confidence: 0.82 }];
+    return [{ profile: "ambient", label: "Background / unknown", confidence: 0.82 }];
   }
 
   const binHz = sampleRate / FFT_SIZE;
@@ -244,10 +249,13 @@ export function analyzePcm(
   };
 }
 
-export function containsRawAudio(payload: unknown): boolean {
+export function containsRawAudio(payload: unknown, visited = new WeakSet<object>()): boolean {
   if (!payload || typeof payload !== "object") return false;
+  if (ArrayBuffer.isView(payload) || payload instanceof ArrayBuffer) return true;
+  if (visited.has(payload)) return false;
+  visited.add(payload);
   return Object.entries(payload as Record<string, unknown>).some(([key, value]) => {
     if (/pcm|audio|samples|wav/i.test(key)) return true;
-    return value && typeof value === "object" ? containsRawAudio(value) : false;
+    return value && typeof value === "object" ? containsRawAudio(value, visited) : false;
   });
 }

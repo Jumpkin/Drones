@@ -19,6 +19,13 @@ import {
 } from "./localization";
 import { AUDIO_SAMPLES, getAudioSample } from "./samples";
 import {
+  captureMicrophone,
+  microphoneErrorMessage,
+  summarizeTrials,
+  type MicrophoneTrial,
+  type TrialTruth,
+} from "./microphone";
+import {
   compareProfiles,
   mean as statisticsMean,
   modelFor,
@@ -362,6 +369,43 @@ app.innerHTML = `
         </div>
       </aside>
     </div>
+
+    <section class="lab-card live-test-card">
+      <div class="subpanel-heading">
+        <div><p class="eyebrow">Telefonprov · hårdvara i loopen</p><h3>Lyssna med enhetens mikrofon</h3></div>
+        <span id="microphoneBadge" class="data-badge">REDO</span>
+      </div>
+      <div class="live-test-grid">
+        <div class="live-test-controls">
+          <p class="sensor-note">Öppna denna sida på telefonen via HTTPS. Välj facit, starta fem sekunders inspelning och spela sedan upp ett ljud från en annan enhet. Facit skickas aldrig till detektorn.</p>
+          <label class="field"><span>Facit för uppspelningen</span><select id="microphoneTruth">
+            <option value="drone">Drönarljud</option>
+            <option value="ambient">Bakgrund / störljud</option>
+          </select></label>
+          <button id="microphoneCaptureButton" class="primary-button wide-button" type="button">● Spela in 5 sekunder</button>
+          <p id="microphoneStatus" class="microphone-status">Ingen mikrofoninspelning genomförd.</p>
+          <small class="privacy-note">Ljudet analyseras i webbläsaren och sparas inte. Endast testresultatet ligger kvar i denna flik.</small>
+        </div>
+        <div class="live-test-results">
+          <div class="live-kpis">
+            <article><span>Försök</span><strong id="microphoneTrialCount">0</strong></article>
+            <article><span>Recall</span><strong id="microphoneRecall">—</strong></article>
+            <article><span>Falsklarm</span><strong id="microphoneFpr">—</strong></article>
+            <article><span>Senaste RMS</span><strong id="microphoneRms">—</strong></article>
+          </div>
+          <div class="table-scroll microphone-table-scroll">
+            <table class="statistics-table">
+              <thead><tr><th>#</th><th>Facit</th><th>Beslut</th><th>Sannolikhet</th><th>Typ</th><th>Latens</th></tr></thead>
+              <tbody id="microphoneTrialBody"><tr><td colspan="6">Inga försök ännu</td></tr></tbody>
+            </table>
+          </div>
+          <div class="microphone-actions">
+            <button id="microphoneDownloadButton" class="secondary-button" type="button" disabled>Ladda ned CSV</button>
+            <button id="microphoneResetButton" class="secondary-button" type="button" disabled>Nollställ session</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </section>
 
   <section id="experimentView" class="app-view lab-view" hidden>
@@ -1282,6 +1326,8 @@ const labSpectrumCanvas = requiredElement<HTMLCanvasElement>("#labSpectrumCanvas
 const realAudioCache = new Map<string, Awaited<ReturnType<typeof loadMonoPcm>>>();
 let labResult: DetectorResult | undefined;
 let labDetectorOutput: DetectorOutput | undefined;
+let labInputMode: "sample" | "microphone" = "sample";
+let microphoneTruthForResult: TrialTruth = "drone";
 const initialDspDetector = new DspDetectorAdapter();
 let detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
 let selectedDetector: DetectorAdapter = initialDspDetector;
@@ -1305,6 +1351,7 @@ void loadDetectorSuite().then((suite) => {
 });
 
 function syncLabSample(): void {
+  labInputMode = "sample";
   const sample = getAudioSample(labSampleSelect.value);
   setText("#labSampleNote", sample.note);
   setText("#labSourceLabel", sample.sourceLabel);
@@ -1376,12 +1423,16 @@ function renderLabResult(): void {
   const track = fuseSingleNodeEvent(event);
   setText("#labEventJson", JSON.stringify({ event, fusedTrack: track }, null, 2));
   const sample = getAudioSample(labSampleSelect.value);
-  const truthLabel = sample.expectedProfile === "ambient"
-    ? "Bakgrund / ingen drönare"
-    : DRONE_PROFILES[sample.expectedProfile].label;
+  const truthLabel = labInputMode === "microphone"
+    ? microphoneTruthForResult === "drone" ? "Drönarljud via mikrofon" : "Bakgrund / störljud via mikrofon"
+    : sample.expectedProfile === "ambient"
+      ? "Bakgrund / ingen drönare"
+      : DRONE_PROFILES[sample.expectedProfile].label;
   const topProfile = labDetectorOutput.classifications[0]?.profile;
-  const correct = topProfile === sample.expectedProfile ||
-    (sample.expectedProfile === "ambient" && !labDetectorOutput.detected);
+  const correct = labInputMode === "microphone"
+    ? labDetectorOutput.detected === (microphoneTruthForResult === "drone")
+    : topProfile === sample.expectedProfile ||
+      (sample.expectedProfile === "ambient" && !labDetectorOutput.detected);
   setText("#labTruth", truthLabel);
   setText("#labVerdict", correct ? "Lyssnaren matchade facit." : "Lyssnaren matchade inte facit — ett viktigt negativt resultat.");
   drawLabSpectrum();
@@ -1484,6 +1535,125 @@ requiredElement<HTMLButtonElement>("#labAnalyzeButton").addEventListener("click"
     button.disabled = false;
     button.textContent = "Analysera blint";
   }
+});
+
+const microphoneTruth = requiredElement<HTMLSelectElement>("#microphoneTruth");
+const microphoneCaptureButton = requiredElement<HTMLButtonElement>("#microphoneCaptureButton");
+const microphoneDownloadButton = requiredElement<HTMLButtonElement>("#microphoneDownloadButton");
+const microphoneResetButton = requiredElement<HTMLButtonElement>("#microphoneResetButton");
+let microphoneTrials: MicrophoneTrial[] = [];
+
+function formatOptionalRate(value: number | null): string {
+  return value === null ? "—" : `${Math.round(value * 100)}%`;
+}
+
+function renderMicrophoneTrials(): void {
+  const metrics = summarizeTrials(microphoneTrials);
+  setText("#microphoneTrialCount", String(metrics.total));
+  setText("#microphoneRecall", formatOptionalRate(metrics.recall));
+  setText("#microphoneFpr", formatOptionalRate(metrics.falsePositiveRate));
+  microphoneDownloadButton.disabled = metrics.total === 0;
+  microphoneResetButton.disabled = metrics.total === 0;
+  const body = requiredElement<HTMLTableSectionElement>("#microphoneTrialBody");
+  if (microphoneTrials.length === 0) {
+    body.innerHTML = '<tr><td colspan="6">Inga försök ännu</td></tr>';
+    return;
+  }
+  body.innerHTML = [...microphoneTrials].reverse().map((trial) => {
+    const correct = trial.detected === (trial.truth === "drone");
+    return `<tr data-verdict="${correct ? "correct" : "incorrect"}">
+      <td>${trial.id}</td>
+      <td>${trial.truth === "drone" ? "Drönare" : "Bakgrund"}</td>
+      <td>${trial.detected ? "Detekterad" : "Negativ"}</td>
+      <td>${Math.round(trial.probability * 100)}%</td>
+      <td>${trial.topLabel}</td>
+      <td>${trial.latencyMs.toFixed(1).replace(".", ",")} ms</td>
+    </tr>`;
+  }).join("");
+}
+
+function microphoneTrialsCsv(): string {
+  const rows = [
+    ["trial", "captured_at", "truth", "detected", "probability", "latency_ms", "rms", "top_label"],
+    ...microphoneTrials.map((trial) => [
+      trial.id,
+      trial.capturedAt,
+      trial.truth,
+      trial.detected,
+      trial.probability,
+      trial.latencyMs,
+      trial.rms,
+      trial.topLabel,
+    ]),
+  ];
+  return rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+}
+
+microphoneCaptureButton.addEventListener("click", async () => {
+  const truth = microphoneTruth.value as TrialTruth;
+  const detector = selectedDetector ?? detectorAdapters.get("dsp-v1");
+  if (!detector) return;
+  microphoneCaptureButton.disabled = true;
+  microphoneTruth.disabled = true;
+  setText("#microphoneBadge", "BEGÄR ÅTKOMST");
+  setText("#microphoneStatus", "Tillåt mikrofonen. Inspelningen börjar först när behörigheten är klar.");
+  try {
+    const capture = await captureMicrophone(5000, () => {
+      setText("#microphoneBadge", "SPELA NU · 5 S");
+      setText("#microphoneStatus", "Mikrofonen lyssnar — spela upp drönar- eller bakgrundsljudet från datorn nu.");
+    });
+    setText("#microphoneBadge", "ANALYSERAR");
+    labInputMode = "microphone";
+    microphoneTruthForResult = truth;
+    labResult = analyzePcm(capture.samples, capture.sampleRate);
+    labDetectorOutput = await detector.analyze(capture.samples, capture.sampleRate);
+    const topLabel = labDetectorOutput.classifications[0]?.label ?? "Okänd";
+    const trial: MicrophoneTrial = {
+      id: microphoneTrials.length + 1,
+      capturedAt: new Date().toISOString(),
+      truth,
+      detected: labDetectorOutput.detected,
+      probability: labDetectorOutput.probability,
+      latencyMs: labDetectorOutput.latencyMs,
+      rms: capture.rms,
+      topLabel,
+    };
+    microphoneTrials.push(trial);
+    const correct = trial.detected === (truth === "drone");
+    const dbFs = 20 * Math.log10(Math.max(1e-7, capture.rms));
+    setText("#microphoneRms", `${dbFs.toFixed(1).replace(".", ",")} dBFS`);
+    setText("#microphoneBadge", correct ? "MATCH" : "AVVIKELSE");
+    setText(
+      "#microphoneStatus",
+      `${correct ? "Resultatet matchade facit" : "Resultatet matchade inte facit"}: ${trial.detected ? "drönare detekterad" : "ingen drönare"}. ${Math.round(capture.durationMs)} ms ljud vid ${capture.sampleRate} Hz analyserades lokalt.`,
+    );
+    renderLabResult();
+    renderMicrophoneTrials();
+  } catch (error) {
+    setText("#microphoneBadge", "FEL");
+    setText("#microphoneStatus", microphoneErrorMessage(error));
+  } finally {
+    microphoneCaptureButton.disabled = false;
+    microphoneTruth.disabled = false;
+  }
+});
+
+microphoneResetButton.addEventListener("click", () => {
+  microphoneTrials = [];
+  setText("#microphoneBadge", "REDO");
+  setText("#microphoneStatus", "Sessionen är nollställd. Inget råljud sparades.");
+  setText("#microphoneRms", "—");
+  renderMicrophoneTrials();
+});
+
+microphoneDownloadButton.addEventListener("click", () => {
+  const blob = new Blob([microphoneTrialsCsv()], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `drones-microphone-trials-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
 });
 
 const experimentCanvas = requiredElement<HTMLCanvasElement>("#experimentCanvas");

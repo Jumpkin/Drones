@@ -17,7 +17,9 @@ views:
 - **City simulation** starts with one phone and one drone, and demonstrates
   detection, sensor limits, spoofing, fusion, and reaction time.
 - **Sound lab** plays real Batear recordings or generated signatures and runs a
-  blind TypeScript FFT/harmonic detector on decoded PCM.
+  blind TypeScript FFT/harmonic detector on decoded PCM. Its phone experiment
+  captures five seconds from the device microphone, analyzes it locally, and
+  records binary drone/background outcomes without retaining raw audio.
 - **Multi-phone experiment** simulates offline clock calibration and 2D TDOA
   localization from three fixed listener phones.
 - **Statistics** compares headless Monte Carlo results across drone profiles,
@@ -73,3 +75,9 @@ view. No raw audio is written to a report.
 The synthetic distance model uses simplified free-field 1/r attenuation with
 an assumed reference gain. It is useful for regression comparisons but does
 not establish real-world detection range without calibrated field data.
+
+The first hardware-in-the-loop milestone is intentionally binary rather than
+model-specific: play a randomized mix of drone and non-drone sounds from a
+computer, capture them on a phone over HTTPS, and measure recall, false-alarm
+rate, and inference latency. Laptop playback validates the capture and
+classification path, not real drone range or sound pressure.

@@ -1,0 +1,248 @@
+name: Deploy Drones development
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**/*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-drones-development
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      started_epoch: ${{ steps.timing.outputs.started_epoch }}
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Record pipeline start
+        id: timing
+        run: echo "started_epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Configure Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run release checks
+        run: |
+          set -euo pipefail
+          npm test
+          npm run lint
+          npm run build
+          npm audit --omit=dev
+          ./scripts/validate-deployment-contract.sh
+          docker compose config --quiet
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      release_sha: ${{ steps.release.outputs.sha }}
+      drones_image: ${{ steps.image.outputs.reference }}
+      publish_started_epoch: ${{ steps.release.outputs.started_epoch }}
+      build_seconds: ${{ steps.build.outputs.seconds }}
+    steps:
+      - name: Check out validated commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Record immutable release
+        id: release
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          echo "sha=$RELEASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "started_epoch=${{ needs.validate.outputs.started_epoch }}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure container-backed Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Sign in to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USER: ${{ github.actor }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USER" --password-stdin
+
+      - name: Build and publish immutable image
+        id: build
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+          SOURCE_URL: https://github.com/${{ github.repository }}
+        run: |
+          set -euo pipefail
+          started_epoch="$(date +%s)"
+          docker buildx build --platform linux/amd64 --pull --push \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --provenance=mode=max --sbom=true \
+            --metadata-file image-metadata.json \
+            --label "org.opencontainers.image.revision=$RELEASE_SHA" \
+            --label "org.opencontainers.image.source=$SOURCE_URL" \
+            --tag "ghcr.io/jumpkin/drones:$RELEASE_SHA" \
+            .
+          echo "seconds=$(($(date +%s) - started_epoch))" >> "$GITHUB_OUTPUT"
+
+      - name: Record image digest
+        id: image
+        run: echo "reference=ghcr.io/jumpkin/drones@$(jq -r '."containerimage.digest"' image-metadata.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Verify and scan the published digest
+        env:
+          DRONES_RUNTIME_IMAGE: ${{ steps.image.outputs.reference }}
+        run: |
+          set -euo pipefail
+          docker network create tael-platform-dev_edge
+          docker compose pull drones
+          docker compose up --detach --wait drones
+          container_id="$(docker compose ps --quiet drones)"
+          docker compose exec -T drones wget --quiet -O - http://127.0.0.1:8080/ | grep --quiet 'Drones · Acoustic Sensor Lab'
+          test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = '65532:65532'
+          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' "$container_id")" = 'true'
+          docker inspect --format '{{json .HostConfig.CapDrop}}' "$container_id" | grep --quiet 'ALL'
+          docker inspect --format '{{json .HostConfig.SecurityOpt}}' "$container_id" | grep --quiet 'no-new-privileges'
+          bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$container_id")"
+          test "$bindings" = 'null' || test "$bindings" = '{}'
+
+      - name: Scan published image for fixable critical vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ steps.image.outputs.reference }}
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: CRITICAL
+
+      - name: Stop verification stack
+        if: always()
+        run: |
+          docker compose down --remove-orphans
+          docker network rm tael-platform-dev_edge || true
+
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: development
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Check out deployment tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.publish.outputs.release_sha }}
+
+      - name: Configure restricted SSH identity
+        env:
+          DEPLOY_KEY: ${{ secrets.DEVELOPMENT_SSH_PRIVATE_KEY }}
+          HOST_KEY: ${{ vars.DEVELOPMENT_SSH_HOST_KEY }}
+        run: |
+          set -euo pipefail
+          install -d -m 0700 "$HOME/.ssh"
+          install -m 0600 /dev/null "$HOME/.ssh/development_key"
+          printf '%s\n' "$DEPLOY_KEY" >"$HOME/.ssh/development_key"
+          printf '%s\n' "$HOST_KEY" >"$HOME/.ssh/known_hosts"
+
+      - name: Deploy and verify with automatic rollback
+        id: deploy
+        env:
+          DEPLOY_HOST: ${{ vars.DEVELOPMENT_HOST }}
+          DEPLOY_USER: ${{ vars.DEVELOPMENT_SSH_USER }}
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USER: ${{ github.actor }}
+          RELEASE_SHA: ${{ needs.publish.outputs.release_sha }}
+          DRONES_IMAGE: ${{ needs.publish.outputs.drones_image }}
+        run: |
+          set +e
+          started_epoch="$(date +%s)"
+          {
+            printf '%s\n' "$GHCR_USER"
+            printf '%s\n' "$GHCR_TOKEN"
+            printf '%s\n' "$DRONES_IMAGE"
+          } | ssh \
+            -i "$HOME/.ssh/development_key" \
+            -o BatchMode=yes \
+            -o ConnectTimeout=15 \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" "deploy $RELEASE_SHA"
+          deploy_status=$?
+          server_seconds="$(($(date +%s) - started_epoch))"
+          if [[ $deploy_status -eq 0 ]]; then result=success; else result=failure; fi
+          {
+            echo "result=$result"
+            echo "server_seconds=$server_seconds"
+            echo "attempted_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_OUTPUT"
+          exit "$deploy_status"
+
+      - name: Create mandatory deployment log
+        if: always()
+        env:
+          DEPLOY_PRODUCT: drones
+          DEPLOY_ENVIRONMENT: development
+          DEPLOY_COMMIT: ${{ needs.publish.outputs.release_sha }}
+          DEPLOY_IMAGE: ${{ needs.publish.outputs.drones_image }}
+          DEPLOY_METHOD: restricted-ssh-docker-compose
+          DEPLOY_RUN_ID: ${{ github.run_id }}
+          DEPLOY_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          DEPLOY_ATTEMPTED_AT: ${{ steps.deploy.outputs.attempted_at }}
+          DEPLOY_RESULT: ${{ steps.deploy.outputs.result }}
+          DEPLOY_BUILD_SECONDS: ${{ needs.publish.outputs.build_seconds }}
+          DEPLOY_SERVER_SECONDS: ${{ steps.deploy.outputs.server_seconds }}
+          PUBLISH_STARTED_EPOCH: ${{ needs.publish.outputs.publish_started_epoch }}
+        run: |
+          set -euo pipefail
+          : "${DEPLOY_ATTEMPTED_AT:=$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
+          : "${DEPLOY_RESULT:=cancelled}"
+          : "${DEPLOY_SERVER_SECONDS:=0}"
+          export DEPLOY_ATTEMPTED_AT DEPLOY_RESULT DEPLOY_SERVER_SECONDS
+          export DEPLOY_TOTAL_SECONDS="$(($(date +%s) - PUBLISH_STARTED_EPOCH))"
+          ./scripts/write-deployment-log.sh deployment-log.json
+          {
+            echo '### Deployment receipt'
+            echo
+            echo '```json'
+            cat deployment-log.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload mandatory deployment log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tael-deployment-log-${{ github.run_id }}
+          path: deployment-log.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Record deployment summary
+        env:
+          RELEASE_SHA: ${{ needs.publish.outputs.release_sha }}
+        run: |
+          {
+            echo '### Drones development deployment'
+            echo
+            echo "Deployed immutable release \`$RELEASE_SHA\`."
+            echo 'Open it at `https://drones.tael.se`.'
+          } >> "$GITHUB_STEP_SUMMARY"

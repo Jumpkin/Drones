@@ -1,0 +1,39 @@
+name: tael-drones-dev
+
+services:
+  drones:
+    image: ${DRONES_RUNTIME_IMAGE:-tael-drones-dev:latest}
+    build:
+      context: .
+    restart: unless-stopped
+    networks:
+      - drones
+      - platform
+    read_only: true
+    tmpfs:
+      - /tmp:uid=65532,gid=65532,mode=0700
+    mem_limit: 96m
+    mem_reservation: 24m
+    cpus: "0.25"
+    pids_limit: 50
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8080/health/ready"]
+      interval: 1s
+      timeout: 1s
+      retries: 15
+      start_period: 1s
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  drones:
+    internal: true
+  platform:
+    external: true
+    name: tael-platform-dev_edge

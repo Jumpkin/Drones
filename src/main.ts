@@ -486,6 +486,7 @@ app.innerHTML = `
       <div class="statistics-downloads">
         <a href="/reports/headless/summary.json" download>JSON</a>
         <a href="/reports/headless/detection.csv" download>Detection CSV</a>
+        <a href="/reports/headless/phone-playback.csv" download>Phone CSV</a>
         <a href="/reports/headless/localization.csv" download>Position CSV</a>
         <a href="/reports/headless/failures.csv" download>Failures CSV</a>
       </div>
@@ -547,6 +548,11 @@ app.innerHTML = `
       <section class="lab-card statistics-comparison-card">
         <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>DSP versus ML on the same synthetic benchmark</h3></div><span class="data-badge">SAME GENERATOR · SAME SEED</span></div>
         <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detector</th><th>Default</th><th>Precision</th><th>Recall</th><th>False alarms</th><th>F1</th><th>PR-AUC</th><th>Gate</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
+      </section>
+
+      <section class="lab-card statistics-comparison-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Headless playback-to-phone proxy</p><h3>Speaker, room, and phone-channel robustness</h3></div><span class="data-badge">SYNTHETIC · NOT HARDWARE</span></div>
+        <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Phone model</th><th>Playback condition</th><th>Trials/class</th><th>Recall</th><th>False alarms</th><th>Precision</th><th>F1</th></tr></thead><tbody id="statisticsPhonePlaybackBody"></tbody></table></div>
       </section>
 
       <div class="statistics-caveat lab-card">
@@ -1294,6 +1300,13 @@ function renderStatistics(): void {
   requiredElement<HTMLTableSectionElement>("#statisticsDetectorComparisonBody").innerHTML = (statisticsReport.models ?? []).map((item) =>
     `<tr><td>${escapeHtml(item.label)}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : "Baseline"}</td></tr>`
   ).join("");
+  const phonePlaybackRows = (statisticsReport.phonePlayback ?? [])
+    .filter((row) => row.detectorId === detectorId);
+  requiredElement<HTMLTableSectionElement>("#statisticsPhonePlaybackBody").innerHTML = phonePlaybackRows.length > 0
+    ? phonePlaybackRows.map((row) =>
+      `<tr><td>${escapeHtml(row.phoneLabel)}</td><td>${escapeHtml(row.roomLabel)}</td><td>${row.trialsPerClass}</td><td>${percent(row.recall)}</td><td>${percent(row.falsePositiveRate)}</td><td>${percent(row.precision)}</td><td>${percent(row.f1)}</td></tr>`
+    ).join("")
+    : '<tr><td colspan="7">No phone playback proxy results in this report.</td></tr>';
   requiredElement("#statisticsCaveats").innerHTML = statisticsReport.caveats
     .map((caveat) => `<li>${escapeHtml(caveat)}</li>`).join("");
   drawDetectionStatistics();

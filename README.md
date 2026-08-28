@@ -18,7 +18,9 @@ and must not be interpreted as field-validated range.
   with three listener nodes.
 - **Statistics** compares deterministic headless Monte Carlo runs across drone
   profiles, assumed distances, noise environments, false alarms, and residual
-  clock jitter.
+  clock jitter. It also includes a synthetic playback-to-phone robustness proxy
+  covering speaker coloration, distance, room echo, background sound, and three
+  representative phone audio chains.
 
 Version 0.2 added a shared detector interface and compares the transparent FFT
 baseline with a tiny ONNX feature-convolution classifier. The ML detector is
@@ -27,6 +29,9 @@ reaches at least 85% recall, at most 5% false positives, and beats DSP F1.
 
 Version 0.3 adds the local phone-microphone experiment, binary session metrics,
 CSV export, mobile layout, and the hardened Tael deployment contract.
+
+Version 0.4 adds a deterministic headless computer-playback-to-phone proxy with
+explicit synthetic phone and room-channel assumptions.
 
 ## Run locally
 
@@ -79,6 +84,10 @@ npm run simulate
 The headless simulation writes aggregate JSON and CSV reports to
 `public/reports/headless/`. It never writes raw audio to a report. Use
 `npm run simulate:quick` for a shorter development run.
+
+The phone playback proxy is intentionally a pre-hardware stress test. Its
+flagship, budget, and processed-phone profiles are engineering assumptions,
+not measurements of named devices, and cannot establish real microphone range.
 
 ## Current limitations
 

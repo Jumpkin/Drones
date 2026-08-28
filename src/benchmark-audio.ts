@@ -30,6 +30,37 @@ export const HARD_NEGATIVE_KINDS: HardNegativeKind[] = [
   "vacuum",
 ];
 
+export interface PhoneAudioProfile {
+  id: "flagship" | "budget" | "processed";
+  label: string;
+  highPassHz: number;
+  lowPassHz: number;
+  drive: number;
+  selfNoiseRms: number;
+}
+
+export interface PlaybackRoomProfile {
+  id: "desk" | "living-room" | "office" | "traffic";
+  label: string;
+  distanceM: number;
+  echoDelayMs: number;
+  echoGain: number;
+  environment: BenchmarkEnvironment;
+}
+
+export const PHONE_AUDIO_PROFILES: PhoneAudioProfile[] = [
+  { id: "flagship", label: "Flagship phone", highPassHz: 75, lowPassHz: 7_500, drive: 1.05, selfNoiseRms: 0.003 },
+  { id: "budget", label: "Budget phone", highPassHz: 150, lowPassHz: 5_200, drive: 1.45, selfNoiseRms: 0.008 },
+  { id: "processed", label: "Processed phone", highPassHz: 220, lowPassHz: 4_200, drive: 1.8, selfNoiseRms: 0.006 },
+];
+
+export const PLAYBACK_ROOM_PROFILES: PlaybackRoomProfile[] = [
+  { id: "desk", label: "Desk · 1.5 m", distanceM: 1.5, echoDelayMs: 18, echoGain: 0.08, environment: { id: "quiet", ambientRms: 0.006, machineryAmplitude: 0 } },
+  { id: "living-room", label: "Living room · 4 m", distanceM: 4, echoDelayMs: 54, echoGain: 0.24, environment: { id: "quiet", ambientRms: 0.014, machineryAmplitude: 0.003 } },
+  { id: "office", label: "Office · 8 m", distanceM: 8, echoDelayMs: 92, echoGain: 0.34, environment: { id: "urban", ambientRms: 0.032, machineryAmplitude: 0.012 } },
+  { id: "traffic", label: "Traffic · 4 m", distanceM: 4, echoDelayMs: 38, echoGain: 0.18, environment: { id: "loud-structured", ambientRms: 0.07, machineryAmplitude: 0.028 } },
+];
+
 export function mulberry32(seed: number): () => number {
   let state = seed >>> 0;
   return () => {
@@ -94,6 +125,39 @@ export function makeDroneObservation(
     observation[index] = clampAudio(observation[index] + drone[index] * gain);
   }
   return observation;
+}
+
+export function simulatePhonePlayback(
+  input: Float32Array,
+  sampleRate: number,
+  phone: PhoneAudioProfile,
+  room: PlaybackRoomProfile,
+  random: () => number,
+): Float32Array {
+  if (!Number.isFinite(sampleRate) || sampleRate <= 0) throw new Error("Sample rate must be positive");
+  const output = new Float32Array(input.length);
+  const ambient = makeAmbient(input.length, sampleRate, room.environment, random);
+  const echoDelay = Math.max(1, Math.round(room.echoDelayMs * sampleRate / 1000));
+  const distanceGain = 0.78 / (1 + Math.max(0, room.distanceM - 1) * 0.22);
+  const lowPassRc = 1 / (2 * Math.PI * phone.lowPassHz);
+  const highPassRc = 1 / (2 * Math.PI * phone.highPassHz);
+  const dt = 1 / sampleRate;
+  const lowPassAlpha = dt / (lowPassRc + dt);
+  const highPassAlpha = highPassRc / (highPassRc + dt);
+  const driveScale = Math.tanh(phone.drive);
+  let lowPassed = 0;
+  let highPassed = 0;
+  let previousLowPassed = 0;
+  for (let index = 0; index < input.length; index += 1) {
+    const direct = input[index] * distanceGain;
+    const echoed = index >= echoDelay ? input[index - echoDelay] * distanceGain * room.echoGain : 0;
+    const roomSignal = direct + echoed + ambient[index] + gaussian(random) * phone.selfNoiseRms;
+    lowPassed += lowPassAlpha * (roomSignal - lowPassed);
+    highPassed = highPassAlpha * (highPassed + lowPassed - previousLowPassed);
+    previousLowPassed = lowPassed;
+    output[index] = clampAudio(Math.tanh(highPassed * phone.drive) / driveScale);
+  }
+  return output;
 }
 
 export function makeHardNegative(

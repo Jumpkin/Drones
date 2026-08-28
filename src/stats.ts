@@ -41,6 +41,21 @@ export interface LocalizationStatistic {
   medianResidualMs: number;
 }
 
+export interface PhonePlaybackStatistic {
+  detectorId: "dsp-v1" | "ml-onnx-v1";
+  phoneId: string;
+  phoneLabel: string;
+  roomId: string;
+  roomLabel: string;
+  trialsPerClass: number;
+  precision: number;
+  recall: number;
+  falsePositiveRate: number;
+  f1: number;
+  accuracy: number;
+  meanConfidence: number;
+}
+
 export interface HeadlessReport {
   schemaVersion: number;
   generatedAt: string;
@@ -48,11 +63,32 @@ export interface HeadlessReport {
   configuration: {
     trialsPerDroneCondition: number;
     localizationTrialsPerJitterLevel: number;
+    phoneTrialsPerProfile?: number;
     distancesM: number[];
     attenuationModel: string;
     trainingDomain?: string;
     benchmarkDomain?: string;
     reportTimestampPolicy?: string;
+    componentSeeds?: {
+      detection: number;
+      phonePlayback: number;
+      localization: number;
+    };
+    phoneAudioProfiles?: Array<{
+      id: string;
+      label: string;
+      highPassHz: number;
+      lowPassHz: number;
+      drive: number;
+      selfNoiseRms: number;
+    }>;
+    playbackRoomProfiles?: Array<{
+      id: string;
+      label: string;
+      distanceM: number;
+      echoDelayMs: number;
+      echoGain: number;
+    }>;
   };
   caveats: string[];
   models?: DetectorModelStatistic[];
@@ -65,6 +101,7 @@ export interface HeadlessReport {
     correctBinary: boolean;
     confidence: number;
   }>;
+  phonePlayback?: PhonePlaybackStatistic[];
   detection: DetectionStatistic[];
   falseAlarms: FalseAlarmStatistic[];
   localization: LocalizationStatistic[];

@@ -1,0 +1,25 @@
+detectorId,phoneId,phoneLabel,roomId,roomLabel,trialsPerClass,precision,recall,falsePositiveRate,f1,accuracy,meanConfidence
+dsp-v1,flagship,Flagship phone,desk,Desk · 1.5 m,20,0.5,1,1,0.6667,0.5,0.949
+ml-onnx-v1,flagship,Flagship phone,desk,Desk · 1.5 m,20,0.8,1,0.25,0.8889,0.875,0.5696
+dsp-v1,flagship,Flagship phone,living-room,Living room · 4 m,20,0.5,1,1,0.6667,0.5,0.9422
+ml-onnx-v1,flagship,Flagship phone,living-room,Living room · 4 m,20,0.8333,1,0.2,0.9091,0.9,0.5924
+dsp-v1,flagship,Flagship phone,office,Office · 8 m,20,0.5,1,1,0.6667,0.5,0.9281
+ml-onnx-v1,flagship,Flagship phone,office,Office · 8 m,20,0.5128,1,0.95,0.678,0.525,0.8705
+dsp-v1,flagship,Flagship phone,traffic,Traffic · 4 m,20,0.5,1,1,0.6667,0.5,0.933
+ml-onnx-v1,flagship,Flagship phone,traffic,Traffic · 4 m,20,0.5278,0.95,0.85,0.6786,0.55,0.7449
+dsp-v1,budget,Budget phone,desk,Desk · 1.5 m,20,0.5128,1,0.95,0.678,0.525,0.9341
+ml-onnx-v1,budget,Budget phone,desk,Desk · 1.5 m,20,0.8696,1,0.15,0.9302,0.925,0.5405
+dsp-v1,budget,Budget phone,living-room,Living room · 4 m,20,0.5,1,1,0.6667,0.5,0.934
+ml-onnx-v1,budget,Budget phone,living-room,Living room · 4 m,20,0.7407,1,0.35,0.8511,0.825,0.6085
+dsp-v1,budget,Budget phone,office,Office · 8 m,20,0.5,1,1,0.6667,0.5,0.9168
+ml-onnx-v1,budget,Budget phone,office,Office · 8 m,20,0.5128,1,0.95,0.678,0.525,0.8782
+dsp-v1,budget,Budget phone,traffic,Traffic · 4 m,20,0.5,1,1,0.6667,0.5,0.9254
+ml-onnx-v1,budget,Budget phone,traffic,Traffic · 4 m,20,0.5263,1,0.9,0.6897,0.55,0.8248
+dsp-v1,processed,Processed phone,desk,Desk · 1.5 m,20,0.5263,1,0.9,0.6897,0.55,0.9303
+ml-onnx-v1,processed,Processed phone,desk,Desk · 1.5 m,20,1,1,0,1,1,0.4973
+dsp-v1,processed,Processed phone,living-room,Living room · 4 m,20,0.5,1,1,0.6667,0.5,0.9146
+ml-onnx-v1,processed,Processed phone,living-room,Living room · 4 m,20,0.7407,1,0.35,0.8511,0.825,0.6175
+dsp-v1,processed,Processed phone,office,Office · 8 m,20,0.5,1,1,0.6667,0.5,0.907
+ml-onnx-v1,processed,Processed phone,office,Office · 8 m,20,0.5128,1,0.95,0.678,0.525,0.8911
+dsp-v1,processed,Processed phone,traffic,Traffic · 4 m,20,0.5,1,1,0.6667,0.5,0.9098
+ml-onnx-v1,processed,Processed phone,traffic,Traffic · 4 m,20,0.5128,1,0.95,0.678,0.525,0.8251

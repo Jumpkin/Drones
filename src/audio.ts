@@ -176,7 +176,7 @@ export async function loadMonoPcm(
 ): Promise<{ samples: Float32Array; sampleRate: number; buffer: AudioBuffer }> {
   audioContext ??= new AudioContext();
   const response = await fetch(url);
-  if (!response.ok) throw new Error(`Kunde inte läsa ljudfilen (${response.status})`);
+  if (!response.ok) throw new Error(`Could not load audio file (${response.status})`);
   const encoded = await response.arrayBuffer();
   const buffer = await audioContext.decodeAudioData(encoded.slice(0));
   const mono = new Float32Array(buffer.length);

@@ -97,7 +97,7 @@ export const WORLD = { width: 700, height: 420 } as const;
 export const DRONE_PROFILES: Record<DroneProfileId, DroneProfile> = {
   camera: {
     id: "camera",
-    label: "Kameramultirotor",
+    label: "Camera multirotor",
     sourceDb: 94,
     radarFactor: 0.72,
     rotorBlades: 2,
@@ -106,7 +106,7 @@ export const DRONE_PROFILES: Record<DroneProfileId, DroneProfile> = {
   },
   fpv: {
     id: "fpv",
-    label: "Snabb FPV",
+    label: "Fast FPV",
     sourceDb: 98,
     radarFactor: 0.52,
     rotorBlades: 3,
@@ -115,7 +115,7 @@ export const DRONE_PROFILES: Record<DroneProfileId, DroneProfile> = {
   },
   fixedWing: {
     id: "fixedWing",
-    label: "Elektrisk fastvinge",
+    label: "Electric fixed-wing",
     sourceDb: 90,
     radarFactor: 0.78,
     rotorBlades: 2,
@@ -124,7 +124,7 @@ export const DRONE_PROFILES: Record<DroneProfileId, DroneProfile> = {
   },
   combustion: {
     id: "combustion",
-    label: "Förbränningsmotor",
+    label: "Combustion engine",
     sourceDb: 111,
     radarFactor: 1,
     rotorBlades: 2,
@@ -157,19 +157,19 @@ export const ARRAY_MODES: Record<ArrayMode, {
   networkLatencyS: number;
 }> = {
   hardware: {
-    label: "Dedikerad synkroniserad array",
+    label: "Dedicated synchronized array",
     timingErrorMs: 0.02,
     audioQuality: 1,
     networkLatencyS: 0.03,
   },
   wifiPhones: {
-    label: "Telefonmesh · samma Wi‑Fi",
+    label: "Phone mesh · same Wi-Fi",
     timingErrorMs: 2.5,
     audioQuality: 0.9,
     networkLatencyS: 0.18,
   },
   bluetoothPhones: {
-    label: "Telefoner · Bluetooth-råljud",
+    label: "Phones · raw Bluetooth audio",
     timingErrorMs: 10,
     audioQuality: 0.72,
     networkLatencyS: 0.45,
@@ -178,8 +178,8 @@ export const ARRAY_MODES: Record<ArrayMode, {
 
 export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
   quiet: {
-    label: "En telefon · en drönare",
-    description: "En telefon kan detektera och klassificera, men inte ensam bestämma unik riktning eller höjd.",
+    label: "One phone · one drone",
+    description: "One phone can detect and classify, but cannot determine a unique bearing or altitude on its own.",
     config: {
       profile: "camera",
       dronePresent: true,
@@ -199,8 +199,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 630, y: 92 },
   },
   fastFpv: {
-    label: "Snabb FPV",
-    description: "En liten FPV flyger snabbt och lågt mot skyddsområdet.",
+    label: "Fast FPV",
+    description: "A small FPV drone flies low and fast toward the protected area.",
     config: {
       profile: "fpv",
       dronePresent: true,
@@ -220,8 +220,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 620, y: 118 },
   },
   urban: {
-    label: "Urban ljudmiljö",
-    description: "Trafik, reflektioner och sämre sikt pressar alla sensorer.",
+    label: "Urban soundscape",
+    description: "Traffic, reflections, and reduced visibility challenge every sensor.",
     config: {
       profile: "camera",
       dronePresent: true,
@@ -241,8 +241,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 610, y: 88 },
   },
   rfSilent: {
-    label: "Radiotyst fastvinge",
-    description: "Autonom elektrisk fastvinge utan aktiv radiolänk.",
+    label: "Radio-silent fixed-wing",
+    description: "Autonomous electric fixed-wing drone without an active radio link.",
     config: {
       profile: "fixedWing",
       dronePresent: true,
@@ -262,8 +262,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 640, y: 126 },
   },
   replay: {
-    label: "Replay-attack",
-    description: "Ingen drönare finns; en stationär högtalare spelar upp rotorljud.",
+    label: "Replay attack",
+    description: "No drone is present; a stationary speaker plays rotor audio.",
     config: {
       profile: "camera",
       dronePresent: false,
@@ -283,8 +283,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 640, y: 90 },
   },
   masking: {
-    label: "Akustisk maskering",
-    description: "En snabb drönare kombineras med starkt bredbandigt buller nära sensorerna.",
+    label: "Acoustic masking",
+    description: "A fast drone is combined with strong broadband noise near the sensors.",
     config: {
       profile: "fpv",
       dronePresent: true,
@@ -304,8 +304,8 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDefinition> = {
     droneStart: { x: 610, y: 105 },
   },
   phoneMesh: {
-    label: "Telefonmesh över Wi‑Fi",
-    description: "Tre telefoner delar lokala ljuddetektioner; nätverket är snabbt men mikrofonklockorna är inte sampelsynkroniserade.",
+    label: "Phone mesh over Wi-Fi",
+    description: "Three phones share local acoustic detections; the network is fast, but the microphone clocks are not sample-synchronized.",
     config: {
       profile: "camera",
       dronePresent: true,

@@ -34,7 +34,7 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
     artifactUrl = "/models/drone-binary-v1.json",
   ): Promise<MlOnnxDetectorAdapter> {
     const response = await fetch(artifactUrl, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Kunde inte läsa ML-metadata (${response.status})`);
+    if (!response.ok) throw new Error(`Could not load ML metadata (${response.status})`);
     const artifact = await response.json() as MlModelArtifact;
     try {
       ort.env.wasm.numThreads = 1;
@@ -53,7 +53,7 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
       const fallback = await this.fallback.analyze(samples, sampleRate);
       return {
         ...fallback,
-        fallbackReason: `ONNX kunde inte starta: ${this.initializationError ?? "okänt fel"}`,
+        fallbackReason: `ONNX could not start: ${this.initializationError ?? "unknown error"}`,
       };
     }
     const started = performance.now();
@@ -79,7 +79,7 @@ export class MlOnnxDetectorAdapter implements DetectorAdapter {
       analyzedWindows: temporal.analyzedWindows,
       classifications: temporal.detected
         ? dsp.classifications
-        : [{ profile: "ambient", label: "Bakgrund / okänd", confidence: 1 - temporal.confidence }],
+        : [{ profile: "ambient", label: "Background / unknown", confidence: 1 - temporal.confidence }],
     };
   }
 }

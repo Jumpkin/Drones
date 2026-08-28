@@ -11,6 +11,9 @@ undetectable, energy-efficient, and cost-effective.
 
 ## Acoustic Sensor Lab
 
+The public interface and generated report labels are English-only so the
+experiment can be shared consistently with an international audience.
+
 The first product is a deterministic browser research environment with four
 views:
 

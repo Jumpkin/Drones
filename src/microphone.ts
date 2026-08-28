@@ -81,16 +81,16 @@ export function summarizeTrials(trials: MicrophoneTrial[]): TrialMetrics {
 
 export function microphoneErrorMessage(error: unknown): string {
   if (!window.isSecureContext) {
-    return "Mikrofonen kräver HTTPS eller localhost.";
+    return "The microphone requires HTTPS or localhost.";
   }
   if (error instanceof DOMException) {
     if (error.name === "NotAllowedError" || error.name === "SecurityError") {
-      return "Mikrofonbehörighet nekades. Tillåt mikrofonen i webbläsarens platsinställningar och försök igen.";
+      return "Microphone permission was denied. Allow microphone access in the browser site settings and try again.";
     }
-    if (error.name === "NotFoundError") return "Ingen mikrofon hittades på enheten.";
-    if (error.name === "NotReadableError") return "Mikrofonen används av en annan app eller kunde inte startas.";
+    if (error.name === "NotFoundError") return "No microphone was found on this device.";
+    if (error.name === "NotReadableError") return "The microphone is in use by another app or could not be started.";
   }
-  return error instanceof Error ? error.message : "Mikrofoninspelningen misslyckades.";
+  return error instanceof Error ? error.message : "Microphone capture failed.";
 }
 
 export async function captureMicrophone(
@@ -98,10 +98,10 @@ export async function captureMicrophone(
   onStarted?: (settings: MediaTrackSettings) => void,
 ): Promise<CapturedMicrophoneAudio> {
   if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error("Webbläsaren saknar stöd för mikrofoninspelning.");
+    throw new Error("This browser does not support microphone capture.");
   }
   if (!window.isSecureContext) {
-    throw new Error("Mikrofonen kräver HTTPS eller localhost.");
+    throw new Error("The microphone requires HTTPS or localhost.");
   }
 
   const requestedConstraints = { ...DEFAULT_CONSTRAINTS };
@@ -140,7 +140,7 @@ export async function captureMicrophone(
   }
 
   const samples = concatenate(chunks);
-  if (samples.length === 0) throw new Error("Mikrofonen gav inga ljudprover.");
+  if (samples.length === 0) throw new Error("The microphone returned no audio samples.");
   return {
     samples,
     sampleRate: context.sampleRate,

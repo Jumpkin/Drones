@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-28T15:16:20.281Z",
+  "generatedAt": "2026-08-28T16:28:24.911Z",
   "seed": 20260828,
   "configuration": {
     "sampleRate": 16000,
@@ -45,7 +45,7 @@
   "models": [
     {
       "id": "dsp-v1",
-      "label": "FFT / harmonik DSP",
+      "label": "FFT / harmonic DSP",
       "version": "1.0.0",
       "threshold": 0.42,
       "isDefault": true,
@@ -315,9 +315,9 @@
       "detection": [
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -328,13 +328,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.97
+          "medianLatencyMs": 19.98
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -345,13 +345,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.999,
-          "medianLatencyMs": 20.01
+          "medianLatencyMs": 20.05
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -366,9 +366,9 @@
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -379,13 +379,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9995,
-          "medianLatencyMs": 20.15
+          "medianLatencyMs": 20.06
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -396,13 +396,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9227,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.06
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -413,13 +413,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9697,
-          "medianLatencyMs": 20.3
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -430,13 +430,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9785,
-          "medianLatencyMs": 20.05
+          "medianLatencyMs": 20.17
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -447,13 +447,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8751,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.16
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -464,13 +464,13 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.9713,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.04
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -481,13 +481,13 @@
           "top1Accuracy": 0.7333,
           "accuracyWhenDetected": 0.7333,
           "meanConfidence": 0.8632,
-          "medianLatencyMs": 20.1
+          "medianLatencyMs": 20.65
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -498,13 +498,13 @@
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
           "meanConfidence": 0.8696,
-          "medianLatencyMs": 20.17
+          "medianLatencyMs": 21.09
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -515,13 +515,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9723,
-          "medianLatencyMs": 20.22
+          "medianLatencyMs": 20.94
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -532,13 +532,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.4815,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 21.31
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -549,13 +549,13 @@
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
           "meanConfidence": 0.8793,
-          "medianLatencyMs": 20.22
+          "medianLatencyMs": 21.99
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -566,13 +566,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9735,
-          "medianLatencyMs": 20.35
+          "medianLatencyMs": 20.2
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -583,13 +583,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9981,
-          "medianLatencyMs": 19.79
+          "medianLatencyMs": 20.03
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -600,13 +600,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9939,
-          "medianLatencyMs": 19.98
+          "medianLatencyMs": 19.96
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -617,13 +617,13 @@
           "top1Accuracy": 0.7333,
           "accuracyWhenDetected": 0.7333,
           "meanConfidence": 0.7923,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.05
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -634,13 +634,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9953,
-          "medianLatencyMs": 20.01
+          "medianLatencyMs": 19.97
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -651,13 +651,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8972,
-          "medianLatencyMs": 20.19
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -668,13 +668,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9313,
-          "medianLatencyMs": 20.19
+          "medianLatencyMs": 20.12
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -685,13 +685,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.971,
-          "medianLatencyMs": 20.17
+          "medianLatencyMs": 20.08
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -702,13 +702,13 @@
           "top1Accuracy": 0.2667,
           "accuracyWhenDetected": 0.2667,
           "meanConfidence": 0.7954,
-          "medianLatencyMs": 20.21
+          "medianLatencyMs": 20.08
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -719,13 +719,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9764,
-          "medianLatencyMs": 20.13
+          "medianLatencyMs": 20.06
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -736,13 +736,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.839,
-          "medianLatencyMs": 20.17
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -753,13 +753,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.8856,
-          "medianLatencyMs": 20.1
+          "medianLatencyMs": 20.16
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -770,13 +770,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9692,
-          "medianLatencyMs": 21.43
+          "medianLatencyMs": 20.17
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -787,13 +787,13 @@
           "top1Accuracy": 0.4,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.4677,
-          "medianLatencyMs": 20.94
+          "medianLatencyMs": 20.15
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -804,13 +804,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.8605,
-          "medianLatencyMs": 20.86
+          "medianLatencyMs": 20.17
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -821,13 +821,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9696,
-          "medianLatencyMs": 20.23
+          "medianLatencyMs": 20.22
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -842,9 +842,9 @@
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -855,13 +855,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.989,
-          "medianLatencyMs": 20.2
+          "medianLatencyMs": 20.09
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -872,13 +872,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9152,
-          "medianLatencyMs": 20.23
+          "medianLatencyMs": 20.06
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -889,13 +889,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9976,
-          "medianLatencyMs": 20.12
+          "medianLatencyMs": 19.98
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -906,13 +906,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9364,
-          "medianLatencyMs": 20.29
+          "medianLatencyMs": 20.04
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -923,13 +923,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9699,
-          "medianLatencyMs": 20.17
+          "medianLatencyMs": 20.13
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -940,13 +940,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9626,
-          "medianLatencyMs": 20.11
+          "medianLatencyMs": 21.89
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -957,13 +957,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8886,
-          "medianLatencyMs": 20.17
+          "medianLatencyMs": 20.05
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -974,13 +974,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9695,
-          "medianLatencyMs": 20.1
+          "medianLatencyMs": 20.17
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -991,13 +991,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7511,
-          "medianLatencyMs": 20.24
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1008,13 +1008,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8805,
-          "medianLatencyMs": 20.32
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1025,13 +1025,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9754,
-          "medianLatencyMs": 20.12
+          "medianLatencyMs": 20.15
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1042,13 +1042,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.4795,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.04
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1059,13 +1059,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8682,
-          "medianLatencyMs": 20.12
+          "medianLatencyMs": 20.03
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1076,13 +1076,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9762,
-          "medianLatencyMs": 20.15
+          "medianLatencyMs": 20.02
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1093,13 +1093,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 1,
-          "medianLatencyMs": 20
+          "medianLatencyMs": 19.87
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1110,13 +1110,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9981,
-          "medianLatencyMs": 20.08
+          "medianLatencyMs": 19.95
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1127,13 +1127,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9372,
-          "medianLatencyMs": 20.05
+          "medianLatencyMs": 19.9
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1144,13 +1144,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9995,
-          "medianLatencyMs": 19.98
+          "medianLatencyMs": 19.91
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1161,13 +1161,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9653,
-          "medianLatencyMs": 20.12
+          "medianLatencyMs": 19.99
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1178,13 +1178,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8489,
-          "medianLatencyMs": 20.22
+          "medianLatencyMs": 20.85
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1195,13 +1195,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9957,
-          "medianLatencyMs": 20.19
+          "medianLatencyMs": 20.9
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1212,13 +1212,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7767,
-          "medianLatencyMs": 20.21
+          "medianLatencyMs": 20.11
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1229,13 +1229,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9703,
-          "medianLatencyMs": 20.18
+          "medianLatencyMs": 20.08
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1246,13 +1246,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9347,
-          "medianLatencyMs": 20.15
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1263,13 +1263,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8698,
-          "medianLatencyMs": 20.2
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1280,13 +1280,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9741,
-          "medianLatencyMs": 20.19
+          "medianLatencyMs": 19.99
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1297,13 +1297,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.6413,
-          "medianLatencyMs": 20.18
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1314,13 +1314,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8719,
-          "medianLatencyMs": 20.27
+          "medianLatencyMs": 20.09
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1331,42 +1331,42 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9731,
-          "medianLatencyMs": 20.22
+          "medianLatencyMs": 20.05
         }
       ],
       "falseAlarms": [
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "environment": "quiet",
           "ambientRms": 0.02,
           "trials": 60,
           "falseDetections": 60,
           "falsePositiveRate": 1,
           "meanConfidence": 0.8656,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 20.02
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "environment": "urban",
           "ambientRms": 0.05,
           "trials": 60,
           "falseDetections": 54,
           "falsePositiveRate": 0.9,
           "meanConfidence": 0.8402,
-          "medianLatencyMs": 20.14
+          "medianLatencyMs": 21.77
         },
         {
           "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonik DSP",
+          "detectorLabel": "FFT / harmonic DSP",
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 60,
           "falseDetections": 50,
           "falsePositiveRate": 0.8333,
           "meanConfidence": 0.8258,
-          "medianLatencyMs": 20.25
+          "medianLatencyMs": 20.18
         }
       ]
     },
@@ -1649,7 +1649,7 @@
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1660,13 +1660,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8279,
-          "medianLatencyMs": 60.58
+          "medianLatencyMs": 60.59
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1677,13 +1677,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.5906,
-          "medianLatencyMs": 60.2
+          "medianLatencyMs": 60.16
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1694,13 +1694,13 @@
           "top1Accuracy": 0.6667,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.5247,
-          "medianLatencyMs": 60.39
+          "medianLatencyMs": 60.37
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1711,13 +1711,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8156,
-          "medianLatencyMs": 60.37
+          "medianLatencyMs": 60.18
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1728,13 +1728,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9272,
-          "medianLatencyMs": 60.64
+          "medianLatencyMs": 60.21
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1745,13 +1745,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.7497,
-          "medianLatencyMs": 60.9
+          "medianLatencyMs": 60.16
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1762,13 +1762,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9428,
-          "medianLatencyMs": 60.62
+          "medianLatencyMs": 60.54
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1779,13 +1779,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.989,
-          "medianLatencyMs": 60.62
+          "medianLatencyMs": 60.47
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1796,13 +1796,13 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.8299,
-          "medianLatencyMs": 60.71
+          "medianLatencyMs": 60.14
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1813,13 +1813,13 @@
           "top1Accuracy": 0.7333,
           "accuracyWhenDetected": 0.7333,
           "meanConfidence": 0.9974,
-          "medianLatencyMs": 60.78
+          "medianLatencyMs": 62.32
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1830,13 +1830,13 @@
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
           "meanConfidence": 0.9919,
-          "medianLatencyMs": 60.59
+          "medianLatencyMs": 64.36
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1847,13 +1847,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8432,
-          "medianLatencyMs": 60.65
+          "medianLatencyMs": 63.85
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1864,13 +1864,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7343,
-          "medianLatencyMs": 60.57
+          "medianLatencyMs": 65.21
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1881,13 +1881,13 @@
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
           "meanConfidence": 0.993,
-          "medianLatencyMs": 60.69
+          "medianLatencyMs": 64.75
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "camera",
-          "label": "Kameramultirotor",
+          "label": "Camera multirotor",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1898,13 +1898,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8217,
-          "medianLatencyMs": 61.03
+          "medianLatencyMs": 60.67
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1915,13 +1915,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9897,
-          "medianLatencyMs": 59.63
+          "medianLatencyMs": 59.89
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1938,7 +1938,7 @@
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -1949,13 +1949,13 @@
           "top1Accuracy": 0.7333,
           "accuracyWhenDetected": 0.7857,
           "meanConfidence": 0.6554,
-          "medianLatencyMs": 60.27
+          "medianLatencyMs": 60.09
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -1966,13 +1966,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.984,
-          "medianLatencyMs": 59.95
+          "medianLatencyMs": 59.83
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -1983,13 +1983,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9529,
-          "medianLatencyMs": 60.46
+          "medianLatencyMs": 60.24
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2000,13 +2000,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8338,
-          "medianLatencyMs": 60.83
+          "medianLatencyMs": 60.38
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2017,13 +2017,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9894,
-          "medianLatencyMs": 60.42
+          "medianLatencyMs": 60.34
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2034,13 +2034,13 @@
           "top1Accuracy": 0.2667,
           "accuracyWhenDetected": 0.2667,
           "meanConfidence": 0.9789,
-          "medianLatencyMs": 60.39
+          "medianLatencyMs": 60.29
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2057,7 +2057,7 @@
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2068,13 +2068,13 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9942,
-          "medianLatencyMs": 60.95
+          "medianLatencyMs": 60.23
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2085,13 +2085,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9917,
-          "medianLatencyMs": 60.53
+          "medianLatencyMs": 60.38
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2102,13 +2102,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8334,
-          "medianLatencyMs": 65.77
+          "medianLatencyMs": 60.35
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2119,13 +2119,13 @@
           "top1Accuracy": 0.4,
           "accuracyWhenDetected": 0.4286,
           "meanConfidence": 0.7334,
-          "medianLatencyMs": 63.72
+          "medianLatencyMs": 60.42
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2136,13 +2136,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9922,
-          "medianLatencyMs": 62.15
+          "medianLatencyMs": 60.56
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
-          "label": "Snabb FPV",
+          "label": "Fast FPV",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2153,13 +2153,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.861,
-          "medianLatencyMs": 60.73
+          "medianLatencyMs": 60.66
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2170,13 +2170,13 @@
           "top1Accuracy": 0.2667,
           "accuracyWhenDetected": 0.2667,
           "meanConfidence": 0.6895,
-          "medianLatencyMs": 59.82
+          "medianLatencyMs": 59.96
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2187,13 +2187,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.125,
           "meanConfidence": 0.4422,
-          "medianLatencyMs": 60.06
+          "medianLatencyMs": 60.14
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2204,13 +2204,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0769,
           "meanConfidence": 0.635,
-          "medianLatencyMs": 60.62
+          "medianLatencyMs": 60.13
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2221,13 +2221,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0833,
           "meanConfidence": 0.5083,
-          "medianLatencyMs": 60.15
+          "medianLatencyMs": 59.93
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2238,13 +2238,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.935,
-          "medianLatencyMs": 60.51
+          "medianLatencyMs": 60.12
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2255,13 +2255,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.8309,
-          "medianLatencyMs": 60.47
+          "medianLatencyMs": 60.31
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2272,13 +2272,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.925,
-          "medianLatencyMs": 60.44
+          "medianLatencyMs": 63.39
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2289,13 +2289,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9875,
-          "medianLatencyMs": 60.51
+          "medianLatencyMs": 60.42
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2306,13 +2306,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8198,
-          "medianLatencyMs": 60.24
+          "medianLatencyMs": 60.37
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2323,13 +2323,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9957,
-          "medianLatencyMs": 60.51
+          "medianLatencyMs": 60.33
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2340,13 +2340,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9912,
-          "medianLatencyMs": 60.7
+          "medianLatencyMs": 60.45
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2357,13 +2357,13 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.8061,
-          "medianLatencyMs": 60.32
+          "medianLatencyMs": 60.49
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2374,13 +2374,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.743,
-          "medianLatencyMs": 60.52
+          "medianLatencyMs": 60.23
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2391,13 +2391,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9932,
-          "medianLatencyMs": 60.61
+          "medianLatencyMs": 60.21
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "fixedWing",
-          "label": "Elektrisk fastvinge",
+          "label": "Electric fixed-wing",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2408,13 +2408,13 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.804,
-          "medianLatencyMs": 60.38
+          "medianLatencyMs": 60.24
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2425,13 +2425,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9605,
-          "medianLatencyMs": 59.73
+          "medianLatencyMs": 59.6
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2442,13 +2442,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9054,
-          "medianLatencyMs": 59.96
+          "medianLatencyMs": 59.67
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 25,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2459,13 +2459,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.6398,
-          "medianLatencyMs": 60.33
+          "medianLatencyMs": 59.97
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2476,13 +2476,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9749,
-          "medianLatencyMs": 59.89
+          "medianLatencyMs": 59.61
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2493,13 +2493,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9299,
-          "medianLatencyMs": 60.47
+          "medianLatencyMs": 60.02
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2510,13 +2510,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7612,
-          "medianLatencyMs": 60.88
+          "medianLatencyMs": 63.53
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2527,13 +2527,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9717,
-          "medianLatencyMs": 60.3
+          "medianLatencyMs": 62.55
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2544,13 +2544,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.974,
-          "medianLatencyMs": 60.72
+          "medianLatencyMs": 60.23
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2561,13 +2561,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7802,
-          "medianLatencyMs": 60.63
+          "medianLatencyMs": 60.43
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2578,13 +2578,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9916,
-          "medianLatencyMs": 60.38
+          "medianLatencyMs": 60.19
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2595,13 +2595,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9886,
-          "medianLatencyMs": 60.78
+          "medianLatencyMs": 60.25
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2612,13 +2612,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8417,
-          "medianLatencyMs": 60.83
+          "medianLatencyMs": 60.14
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2629,13 +2629,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9768,
-          "medianLatencyMs": 60.36
+          "medianLatencyMs": 60.34
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
@@ -2646,13 +2646,13 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.993,
-          "medianLatencyMs": 60.77
+          "medianLatencyMs": 60.48
         },
         {
           "detectorId": "ml-onnx-v1",
           "detectorLabel": "Feature Conv ML",
           "profile": "combustion",
-          "label": "Förbränningsmotor",
+          "label": "Combustion engine",
           "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
@@ -2663,7 +2663,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8442,
-          "medianLatencyMs": 60.54
+          "medianLatencyMs": 60.29
         }
       ],
       "falseAlarms": [
@@ -2676,7 +2676,7 @@
           "falseDetections": 1,
           "falsePositiveRate": 0.0167,
           "meanConfidence": 0.085,
-          "medianLatencyMs": 60.29
+          "medianLatencyMs": 60.03
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2687,7 +2687,7 @@
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
           "meanConfidence": 0.2167,
-          "medianLatencyMs": 60.28
+          "medianLatencyMs": 66.5
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2698,7 +2698,7 @@
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
           "meanConfidence": 0.2181,
-          "medianLatencyMs": 60.63
+          "medianLatencyMs": 60.89
         }
       ]
     }
@@ -3300,9 +3300,9 @@
   "detection": [
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 25,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3313,13 +3313,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.97
+      "medianLatencyMs": 19.98
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 25,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3330,13 +3330,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.999,
-      "medianLatencyMs": 20.01
+      "medianLatencyMs": 20.05
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 25,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3351,9 +3351,9 @@
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 50,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3364,13 +3364,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9995,
-      "medianLatencyMs": 20.15
+      "medianLatencyMs": 20.06
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 50,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3381,13 +3381,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9227,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.06
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 50,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3398,13 +3398,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9697,
-      "medianLatencyMs": 20.3
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 100,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3415,13 +3415,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9785,
-      "medianLatencyMs": 20.05
+      "medianLatencyMs": 20.17
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 100,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3432,13 +3432,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.8751,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.16
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 100,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3449,13 +3449,13 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.9713,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.04
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 200,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3466,13 +3466,13 @@
       "top1Accuracy": 0.7333,
       "accuracyWhenDetected": 0.7333,
       "meanConfidence": 0.8632,
-      "medianLatencyMs": 20.1
+      "medianLatencyMs": 20.65
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 200,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3483,13 +3483,13 @@
       "top1Accuracy": 0.8667,
       "accuracyWhenDetected": 0.8667,
       "meanConfidence": 0.8696,
-      "medianLatencyMs": 20.17
+      "medianLatencyMs": 21.09
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 200,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3500,13 +3500,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9723,
-      "medianLatencyMs": 20.22
+      "medianLatencyMs": 20.94
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 400,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3517,13 +3517,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.4815,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 21.31
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 400,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3534,13 +3534,13 @@
       "top1Accuracy": 0.8667,
       "accuracyWhenDetected": 0.8667,
       "meanConfidence": 0.8793,
-      "medianLatencyMs": 20.22
+      "medianLatencyMs": 21.99
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
-      "label": "Kameramultirotor",
+      "label": "Camera multirotor",
       "distanceM": 400,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3551,13 +3551,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9735,
-      "medianLatencyMs": 20.35
+      "medianLatencyMs": 20.2
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 25,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3568,13 +3568,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9981,
-      "medianLatencyMs": 19.79
+      "medianLatencyMs": 20.03
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 25,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3585,13 +3585,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9939,
-      "medianLatencyMs": 19.98
+      "medianLatencyMs": 19.96
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 25,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3602,13 +3602,13 @@
       "top1Accuracy": 0.7333,
       "accuracyWhenDetected": 0.7333,
       "meanConfidence": 0.7923,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.05
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 50,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3619,13 +3619,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9953,
-      "medianLatencyMs": 20.01
+      "medianLatencyMs": 19.97
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 50,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3636,13 +3636,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.8972,
-      "medianLatencyMs": 20.19
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 50,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3653,13 +3653,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9313,
-      "medianLatencyMs": 20.19
+      "medianLatencyMs": 20.12
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 100,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3670,13 +3670,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.971,
-      "medianLatencyMs": 20.17
+      "medianLatencyMs": 20.08
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 100,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3687,13 +3687,13 @@
       "top1Accuracy": 0.2667,
       "accuracyWhenDetected": 0.2667,
       "meanConfidence": 0.7954,
-      "medianLatencyMs": 20.21
+      "medianLatencyMs": 20.08
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 100,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3704,13 +3704,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9764,
-      "medianLatencyMs": 20.13
+      "medianLatencyMs": 20.06
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 200,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3721,13 +3721,13 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.839,
-      "medianLatencyMs": 20.17
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 200,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3738,13 +3738,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.8856,
-      "medianLatencyMs": 20.1
+      "medianLatencyMs": 20.16
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 200,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3755,13 +3755,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9692,
-      "medianLatencyMs": 21.43
+      "medianLatencyMs": 20.17
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 400,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3772,13 +3772,13 @@
       "top1Accuracy": 0.4,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.4677,
-      "medianLatencyMs": 20.94
+      "medianLatencyMs": 20.15
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 400,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3789,13 +3789,13 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.8605,
-      "medianLatencyMs": 20.86
+      "medianLatencyMs": 20.17
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fpv",
-      "label": "Snabb FPV",
+      "label": "Fast FPV",
       "distanceM": 400,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3806,13 +3806,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9696,
-      "medianLatencyMs": 20.23
+      "medianLatencyMs": 20.22
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 25,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3827,9 +3827,9 @@
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 25,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3840,13 +3840,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.989,
-      "medianLatencyMs": 20.2
+      "medianLatencyMs": 20.09
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 25,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3857,13 +3857,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9152,
-      "medianLatencyMs": 20.23
+      "medianLatencyMs": 20.06
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 50,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3874,13 +3874,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9976,
-      "medianLatencyMs": 20.12
+      "medianLatencyMs": 19.98
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 50,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3891,13 +3891,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9364,
-      "medianLatencyMs": 20.29
+      "medianLatencyMs": 20.04
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 50,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3908,13 +3908,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9699,
-      "medianLatencyMs": 20.17
+      "medianLatencyMs": 20.13
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 100,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3925,13 +3925,13 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.9626,
-      "medianLatencyMs": 20.11
+      "medianLatencyMs": 21.89
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 100,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3942,13 +3942,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8886,
-      "medianLatencyMs": 20.17
+      "medianLatencyMs": 20.05
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 100,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -3959,13 +3959,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9695,
-      "medianLatencyMs": 20.1
+      "medianLatencyMs": 20.17
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 200,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -3976,13 +3976,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.7511,
-      "medianLatencyMs": 20.24
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 200,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -3993,13 +3993,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8805,
-      "medianLatencyMs": 20.32
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 200,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4010,13 +4010,13 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9754,
-      "medianLatencyMs": 20.12
+      "medianLatencyMs": 20.15
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 400,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4027,13 +4027,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.4795,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.04
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 400,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4044,13 +4044,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8682,
-      "medianLatencyMs": 20.12
+      "medianLatencyMs": 20.03
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
-      "label": "Elektrisk fastvinge",
+      "label": "Electric fixed-wing",
       "distanceM": 400,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4061,13 +4061,13 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.9762,
-      "medianLatencyMs": 20.15
+      "medianLatencyMs": 20.02
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 25,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4078,13 +4078,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 1,
-      "medianLatencyMs": 20
+      "medianLatencyMs": 19.87
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 25,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4095,13 +4095,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9981,
-      "medianLatencyMs": 20.08
+      "medianLatencyMs": 19.95
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 25,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4112,13 +4112,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9372,
-      "medianLatencyMs": 20.05
+      "medianLatencyMs": 19.9
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 50,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4129,13 +4129,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9995,
-      "medianLatencyMs": 19.98
+      "medianLatencyMs": 19.91
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 50,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4146,13 +4146,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9653,
-      "medianLatencyMs": 20.12
+      "medianLatencyMs": 19.99
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 50,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4163,13 +4163,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8489,
-      "medianLatencyMs": 20.22
+      "medianLatencyMs": 20.85
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 100,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4180,13 +4180,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9957,
-      "medianLatencyMs": 20.19
+      "medianLatencyMs": 20.9
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 100,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4197,13 +4197,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.7767,
-      "medianLatencyMs": 20.21
+      "medianLatencyMs": 20.11
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 100,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4214,13 +4214,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9703,
-      "medianLatencyMs": 20.18
+      "medianLatencyMs": 20.08
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 200,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4231,13 +4231,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9347,
-      "medianLatencyMs": 20.15
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 200,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4248,13 +4248,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8698,
-      "medianLatencyMs": 20.2
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 200,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4265,13 +4265,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9741,
-      "medianLatencyMs": 20.19
+      "medianLatencyMs": 19.99
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 400,
       "environment": "quiet",
       "ambientRms": 0.02,
@@ -4282,13 +4282,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.6413,
-      "medianLatencyMs": 20.18
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 400,
       "environment": "urban",
       "ambientRms": 0.05,
@@ -4299,13 +4299,13 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8719,
-      "medianLatencyMs": 20.27
+      "medianLatencyMs": 20.09
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
-      "label": "Förbränningsmotor",
+      "label": "Combustion engine",
       "distanceM": 400,
       "environment": "loud-structured",
       "ambientRms": 0.1,
@@ -4316,42 +4316,42 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9731,
-      "medianLatencyMs": 20.22
+      "medianLatencyMs": 20.05
     }
   ],
   "falseAlarms": [
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "environment": "quiet",
       "ambientRms": 0.02,
       "trials": 60,
       "falseDetections": 60,
       "falsePositiveRate": 1,
       "meanConfidence": 0.8656,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 20.02
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "environment": "urban",
       "ambientRms": 0.05,
       "trials": 60,
       "falseDetections": 54,
       "falsePositiveRate": 0.9,
       "meanConfidence": 0.8402,
-      "medianLatencyMs": 20.14
+      "medianLatencyMs": 21.77
     },
     {
       "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonik DSP",
+      "detectorLabel": "FFT / harmonic DSP",
       "environment": "loud-structured",
       "ambientRms": 0.1,
       "trials": 60,
       "falseDetections": 50,
       "falsePositiveRate": 0.8333,
       "meanConfidence": 0.8258,
-      "medianLatencyMs": 20.25
+      "medianLatencyMs": 20.18
     }
   ]
 }

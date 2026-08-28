@@ -81,7 +81,7 @@ function classify(
   detected: boolean,
 ): ClassificationScore[] {
   if (!detected || fundamentalHz <= 0) {
-    return [{ profile: "ambient", label: "Bakgrund / okänd", confidence: 0.82 }];
+    return [{ profile: "ambient", label: "Background / unknown", confidence: 0.82 }];
   }
 
   const binHz = sampleRate / FFT_SIZE;

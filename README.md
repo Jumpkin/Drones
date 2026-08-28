@@ -39,8 +39,8 @@ Then open the local URL printed by Vite.
 
 ## Phone microphone experiment
 
-Open **Ljudlabb** on a phone from an HTTPS-hosted copy of the app. Choose the
-truth (`Drönarljud` or `Bakgrund / störljud`), start the five-second capture,
+Open **Sound lab** on a phone from an HTTPS-hosted copy of the app. Choose the
+truth (`Drone audio` or `Background / interference`), start the five-second capture,
 and play a sample from a separate computer. The selected truth is used only
 after inference to score the trial; it is never passed to the detector.
 

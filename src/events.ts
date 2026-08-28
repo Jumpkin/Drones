@@ -60,7 +60,7 @@ export function createAcousticEvent(
 export function fuseSingleNodeEvent(event: AcousticEvent): FusedTrack {
   return {
     trackId: `track-${event.nodeId}`,
-    classLabel: event.classificationTopK[0]?.label ?? "Okänd",
+    classLabel: event.classificationTopK[0]?.label ?? "Unknown",
     confidence: event.detectionConfidence,
     rangeBandM: event.detectionConfidence > 0.4 ? [20, 160] : null,
     radialState: "unknown",

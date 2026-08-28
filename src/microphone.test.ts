@@ -10,7 +10,7 @@ function trial(truth: MicrophoneTrial["truth"], detected: boolean): MicrophoneTr
     probability: detected ? 0.8 : 0.2,
     latencyMs: 12,
     rms: 0.1,
-    topLabel: detected ? "Kameramultirotor" : "Bakgrund / okänd",
+    topLabel: detected ? "Camera multirotor" : "Background / unknown",
   };
 }
 

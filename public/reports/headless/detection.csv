@@ -1,121 +1,121 @@
 detectorId,detectorLabel,profile,label,distanceM,environment,ambientRms,trials,detected,correctTop1,detectionRate,top1Accuracy,accuracyWhenDetected,meanConfidence,medianLatencyMs
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,25,quiet,0.02,15,15,15,1,1,1,1,19.97
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,25,quiet,0.02,15,15,15,1,1,1,0.8279,60.58
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,25,urban,0.05,15,15,15,1,1,1,0.999,20.01
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,25,urban,0.05,15,15,15,1,1,1,0.5906,60.2
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,25,loud-structured,0.1,15,15,15,1,1,1,0.9184,20.18
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,25,loud-structured,0.1,15,10,10,0.6667,0.6667,1,0.5247,60.39
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,50,quiet,0.02,15,15,15,1,1,1,0.9995,20.15
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,50,quiet,0.02,15,15,15,1,1,1,0.8156,60.37
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,50,urban,0.05,15,15,15,1,1,1,0.9227,20.14
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,50,urban,0.05,15,15,15,1,1,1,0.9272,60.64
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,50,loud-structured,0.1,15,15,15,1,1,1,0.9697,20.3
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,50,loud-structured,0.1,15,15,15,1,1,1,0.7497,60.9
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,100,quiet,0.02,15,15,15,1,1,1,0.9785,20.05
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,100,quiet,0.02,15,15,15,1,1,1,0.9428,60.62
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,100,urban,0.05,15,15,15,1,1,1,0.8751,20.14
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,100,urban,0.05,15,15,15,1,1,1,0.989,60.62
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,100,loud-structured,0.1,15,15,14,1,0.9333,0.9333,0.9713,20.14
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,100,loud-structured,0.1,15,15,14,1,0.9333,0.9333,0.8299,60.71
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,200,quiet,0.02,15,15,11,1,0.7333,0.7333,0.8632,20.1
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,200,quiet,0.02,15,15,11,1,0.7333,0.7333,0.9974,60.78
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,200,urban,0.05,15,15,13,1,0.8667,0.8667,0.8696,20.17
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,200,urban,0.05,15,15,13,1,0.8667,0.8667,0.9919,60.59
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,200,loud-structured,0.1,15,15,15,1,1,1,0.9723,20.22
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,200,loud-structured,0.1,15,15,15,1,1,1,0.8432,60.65
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,400,quiet,0.02,15,6,0,0.4,0,0,0.4815,20.14
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,400,quiet,0.02,15,13,0,0.8667,0,0,0.7343,60.57
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,400,urban,0.05,15,15,13,1,0.8667,0.8667,0.8793,20.22
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,400,urban,0.05,15,15,13,1,0.8667,0.8667,0.993,60.69
-dsp-v1,FFT / harmonik DSP,camera,Kameramultirotor,400,loud-structured,0.1,15,15,15,1,1,1,0.9735,20.35
-ml-onnx-v1,Feature Conv ML,camera,Kameramultirotor,400,loud-structured,0.1,15,15,15,1,1,1,0.8217,61.03
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,25,quiet,0.02,15,15,15,1,1,1,0.9981,19.79
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,25,quiet,0.02,15,15,15,1,1,1,0.9897,59.63
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,25,urban,0.05,15,15,15,1,1,1,0.9939,19.98
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,25,urban,0.05,15,15,15,1,1,1,0.9335,60.1
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,25,loud-structured,0.1,15,15,11,1,0.7333,0.7333,0.7923,20.14
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,25,loud-structured,0.1,15,14,11,0.9333,0.7333,0.7857,0.6554,60.27
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,50,quiet,0.02,15,15,15,1,1,1,0.9953,20.01
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,50,quiet,0.02,15,15,15,1,1,1,0.984,59.95
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,50,urban,0.05,15,15,15,1,1,1,0.8972,20.19
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,50,urban,0.05,15,15,15,1,1,1,0.9529,60.46
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,50,loud-structured,0.1,15,15,0,1,0,0,0.9313,20.19
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,50,loud-structured,0.1,15,15,0,1,0,0,0.8338,60.83
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,100,quiet,0.02,15,15,15,1,1,1,0.971,20.17
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,100,quiet,0.02,15,15,15,1,1,1,0.9894,60.42
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,100,urban,0.05,15,15,4,1,0.2667,0.2667,0.7954,20.21
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,100,urban,0.05,15,15,4,1,0.2667,0.2667,0.9789,60.39
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,100,loud-structured,0.1,15,15,0,1,0,0,0.9764,20.13
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,100,loud-structured,0.1,15,15,0,1,0,0,0.8226,60.29
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,200,quiet,0.02,15,15,15,1,1,1,0.839,20.17
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,200,quiet,0.02,15,15,15,1,1,1,0.9942,60.95
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,200,urban,0.05,15,15,1,1,0.0667,0.0667,0.8856,20.1
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,200,urban,0.05,15,15,1,1,0.0667,0.0667,0.9917,60.53
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,200,loud-structured,0.1,15,15,0,1,0,0,0.9692,21.43
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,200,loud-structured,0.1,15,15,0,1,0,0,0.8334,65.77
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,400,quiet,0.02,15,6,6,0.4,0.4,1,0.4677,20.94
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,400,quiet,0.02,15,14,6,0.9333,0.4,0.4286,0.7334,63.72
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,400,urban,0.05,15,15,2,1,0.1333,0.1333,0.8605,20.86
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,400,urban,0.05,15,15,2,1,0.1333,0.1333,0.9922,62.15
-dsp-v1,FFT / harmonik DSP,fpv,Snabb FPV,400,loud-structured,0.1,15,15,0,1,0,0,0.9696,20.23
-ml-onnx-v1,Feature Conv ML,fpv,Snabb FPV,400,loud-structured,0.1,15,15,0,1,0,0,0.861,60.73
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,25,quiet,0.02,15,15,4,1,0.2667,0.2667,1,19.99
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,25,quiet,0.02,15,15,4,1,0.2667,0.2667,0.6895,59.82
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,25,urban,0.05,15,15,1,1,0.0667,0.0667,0.989,20.2
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,25,urban,0.05,15,8,1,0.5333,0.0667,0.125,0.4422,60.06
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,25,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9152,20.23
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,25,loud-structured,0.1,15,13,1,0.8667,0.0667,0.0769,0.635,60.62
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,50,quiet,0.02,15,15,1,1,0.0667,0.0667,0.9976,20.12
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,50,quiet,0.02,15,12,1,0.8,0.0667,0.0833,0.5083,60.15
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,50,urban,0.05,15,15,1,1,0.0667,0.0667,0.9364,20.29
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,50,urban,0.05,15,15,1,1,0.0667,0.0667,0.935,60.51
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,50,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9699,20.17
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,50,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.8309,60.47
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,100,quiet,0.02,15,15,2,1,0.1333,0.1333,0.9626,20.11
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,100,quiet,0.02,15,15,2,1,0.1333,0.1333,0.925,60.44
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,100,urban,0.05,15,15,0,1,0,0,0.8886,20.17
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,100,urban,0.05,15,15,0,1,0,0,0.9875,60.51
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,100,loud-structured,0.1,15,15,0,1,0,0,0.9695,20.1
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,100,loud-structured,0.1,15,15,0,1,0,0,0.8198,60.24
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,200,quiet,0.02,15,15,0,1,0,0,0.7511,20.24
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,200,quiet,0.02,15,15,0,1,0,0,0.9957,60.51
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,200,urban,0.05,15,15,0,1,0,0,0.8805,20.32
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,200,urban,0.05,15,15,0,1,0,0,0.9912,60.7
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,200,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9754,20.12
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,200,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.8061,60.32
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,400,quiet,0.02,15,6,0,0.4,0,0,0.4795,20.14
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,400,quiet,0.02,15,15,0,1,0,0,0.743,60.52
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,400,urban,0.05,15,15,0,1,0,0,0.8682,20.12
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,400,urban,0.05,15,15,0,1,0,0,0.9932,60.61
-dsp-v1,FFT / harmonik DSP,fixedWing,Elektrisk fastvinge,400,loud-structured,0.1,15,15,2,1,0.1333,0.1333,0.9762,20.15
-ml-onnx-v1,Feature Conv ML,fixedWing,Elektrisk fastvinge,400,loud-structured,0.1,15,15,2,1,0.1333,0.1333,0.804,60.38
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,25,quiet,0.02,15,15,0,1,0,0,1,20
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,25,quiet,0.02,15,15,0,1,0,0,0.9605,59.73
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,25,urban,0.05,15,15,0,1,0,0,0.9981,20.08
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,25,urban,0.05,15,15,0,1,0,0,0.9054,59.96
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,25,loud-structured,0.1,15,15,0,1,0,0,0.9372,20.05
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,25,loud-structured,0.1,15,14,0,0.9333,0,0,0.6398,60.33
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,50,quiet,0.02,15,15,0,1,0,0,0.9995,19.98
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,50,quiet,0.02,15,15,0,1,0,0,0.9749,59.89
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,50,urban,0.05,15,15,0,1,0,0,0.9653,20.12
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,50,urban,0.05,15,15,0,1,0,0,0.9299,60.47
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,50,loud-structured,0.1,15,15,0,1,0,0,0.8489,20.22
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,50,loud-structured,0.1,15,15,0,1,0,0,0.7612,60.88
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,100,quiet,0.02,15,15,0,1,0,0,0.9957,20.19
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,100,quiet,0.02,15,15,0,1,0,0,0.9717,60.3
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,100,urban,0.05,15,15,0,1,0,0,0.7767,20.21
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,100,urban,0.05,15,15,0,1,0,0,0.974,60.72
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,100,loud-structured,0.1,15,15,0,1,0,0,0.9703,20.18
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,100,loud-structured,0.1,15,15,0,1,0,0,0.7802,60.63
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,200,quiet,0.02,15,15,0,1,0,0,0.9347,20.15
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,200,quiet,0.02,15,15,0,1,0,0,0.9916,60.38
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,200,urban,0.05,15,15,0,1,0,0,0.8698,20.2
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,200,urban,0.05,15,15,0,1,0,0,0.9886,60.78
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,200,loud-structured,0.1,15,15,0,1,0,0,0.9741,20.19
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,200,loud-structured,0.1,15,15,0,1,0,0,0.8417,60.83
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,400,quiet,0.02,15,15,0,1,0,0,0.6413,20.18
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,400,quiet,0.02,15,15,0,1,0,0,0.9768,60.36
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,400,urban,0.05,15,15,0,1,0,0,0.8719,20.27
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,400,urban,0.05,15,15,0,1,0,0,0.993,60.77
-dsp-v1,FFT / harmonik DSP,combustion,Förbränningsmotor,400,loud-structured,0.1,15,15,0,1,0,0,0.9731,20.22
-ml-onnx-v1,Feature Conv ML,combustion,Förbränningsmotor,400,loud-structured,0.1,15,15,0,1,0,0,0.8442,60.54
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,25,quiet,0.02,15,15,15,1,1,1,1,19.98
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,25,quiet,0.02,15,15,15,1,1,1,0.8279,60.59
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,25,urban,0.05,15,15,15,1,1,1,0.999,20.05
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,25,urban,0.05,15,15,15,1,1,1,0.5906,60.16
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,25,loud-structured,0.1,15,15,15,1,1,1,0.9184,20.18
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,25,loud-structured,0.1,15,10,10,0.6667,0.6667,1,0.5247,60.37
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,50,quiet,0.02,15,15,15,1,1,1,0.9995,20.06
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,50,quiet,0.02,15,15,15,1,1,1,0.8156,60.18
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,50,urban,0.05,15,15,15,1,1,1,0.9227,20.06
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,50,urban,0.05,15,15,15,1,1,1,0.9272,60.21
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,50,loud-structured,0.1,15,15,15,1,1,1,0.9697,20.07
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,50,loud-structured,0.1,15,15,15,1,1,1,0.7497,60.16
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,100,quiet,0.02,15,15,15,1,1,1,0.9785,20.17
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,100,quiet,0.02,15,15,15,1,1,1,0.9428,60.54
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,100,urban,0.05,15,15,15,1,1,1,0.8751,20.16
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,100,urban,0.05,15,15,15,1,1,1,0.989,60.47
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,100,loud-structured,0.1,15,15,14,1,0.9333,0.9333,0.9713,20.04
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,100,loud-structured,0.1,15,15,14,1,0.9333,0.9333,0.8299,60.14
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,200,quiet,0.02,15,15,11,1,0.7333,0.7333,0.8632,20.65
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,200,quiet,0.02,15,15,11,1,0.7333,0.7333,0.9974,62.32
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,200,urban,0.05,15,15,13,1,0.8667,0.8667,0.8696,21.09
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,200,urban,0.05,15,15,13,1,0.8667,0.8667,0.9919,64.36
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,200,loud-structured,0.1,15,15,15,1,1,1,0.9723,20.94
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,200,loud-structured,0.1,15,15,15,1,1,1,0.8432,63.85
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,400,quiet,0.02,15,6,0,0.4,0,0,0.4815,21.31
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,400,quiet,0.02,15,13,0,0.8667,0,0,0.7343,65.21
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,400,urban,0.05,15,15,13,1,0.8667,0.8667,0.8793,21.99
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,400,urban,0.05,15,15,13,1,0.8667,0.8667,0.993,64.75
+dsp-v1,FFT / harmonic DSP,camera,Camera multirotor,400,loud-structured,0.1,15,15,15,1,1,1,0.9735,20.2
+ml-onnx-v1,Feature Conv ML,camera,Camera multirotor,400,loud-structured,0.1,15,15,15,1,1,1,0.8217,60.67
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,25,quiet,0.02,15,15,15,1,1,1,0.9981,20.03
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,25,quiet,0.02,15,15,15,1,1,1,0.9897,59.89
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,25,urban,0.05,15,15,15,1,1,1,0.9939,19.96
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,25,urban,0.05,15,15,15,1,1,1,0.9335,60.1
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,25,loud-structured,0.1,15,15,11,1,0.7333,0.7333,0.7923,20.05
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,25,loud-structured,0.1,15,14,11,0.9333,0.7333,0.7857,0.6554,60.09
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,50,quiet,0.02,15,15,15,1,1,1,0.9953,19.97
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,50,quiet,0.02,15,15,15,1,1,1,0.984,59.83
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,50,urban,0.05,15,15,15,1,1,1,0.8972,20.07
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,50,urban,0.05,15,15,15,1,1,1,0.9529,60.24
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,50,loud-structured,0.1,15,15,0,1,0,0,0.9313,20.12
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,50,loud-structured,0.1,15,15,0,1,0,0,0.8338,60.38
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,100,quiet,0.02,15,15,15,1,1,1,0.971,20.08
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,100,quiet,0.02,15,15,15,1,1,1,0.9894,60.34
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,100,urban,0.05,15,15,4,1,0.2667,0.2667,0.7954,20.08
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,100,urban,0.05,15,15,4,1,0.2667,0.2667,0.9789,60.29
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,100,loud-structured,0.1,15,15,0,1,0,0,0.9764,20.06
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,100,loud-structured,0.1,15,15,0,1,0,0,0.8226,60.29
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,200,quiet,0.02,15,15,15,1,1,1,0.839,20.1
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,200,quiet,0.02,15,15,15,1,1,1,0.9942,60.23
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,200,urban,0.05,15,15,1,1,0.0667,0.0667,0.8856,20.16
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,200,urban,0.05,15,15,1,1,0.0667,0.0667,0.9917,60.38
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,200,loud-structured,0.1,15,15,0,1,0,0,0.9692,20.17
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,200,loud-structured,0.1,15,15,0,1,0,0,0.8334,60.35
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,400,quiet,0.02,15,6,6,0.4,0.4,1,0.4677,20.15
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,400,quiet,0.02,15,14,6,0.9333,0.4,0.4286,0.7334,60.42
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,400,urban,0.05,15,15,2,1,0.1333,0.1333,0.8605,20.17
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,400,urban,0.05,15,15,2,1,0.1333,0.1333,0.9922,60.56
+dsp-v1,FFT / harmonic DSP,fpv,Fast FPV,400,loud-structured,0.1,15,15,0,1,0,0,0.9696,20.22
+ml-onnx-v1,Feature Conv ML,fpv,Fast FPV,400,loud-structured,0.1,15,15,0,1,0,0,0.861,60.66
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,25,quiet,0.02,15,15,4,1,0.2667,0.2667,1,19.99
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,25,quiet,0.02,15,15,4,1,0.2667,0.2667,0.6895,59.96
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,25,urban,0.05,15,15,1,1,0.0667,0.0667,0.989,20.09
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,25,urban,0.05,15,8,1,0.5333,0.0667,0.125,0.4422,60.14
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,25,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9152,20.06
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,25,loud-structured,0.1,15,13,1,0.8667,0.0667,0.0769,0.635,60.13
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,50,quiet,0.02,15,15,1,1,0.0667,0.0667,0.9976,19.98
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,50,quiet,0.02,15,12,1,0.8,0.0667,0.0833,0.5083,59.93
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,50,urban,0.05,15,15,1,1,0.0667,0.0667,0.9364,20.04
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,50,urban,0.05,15,15,1,1,0.0667,0.0667,0.935,60.12
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,50,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9699,20.13
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,50,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.8309,60.31
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,100,quiet,0.02,15,15,2,1,0.1333,0.1333,0.9626,21.89
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,100,quiet,0.02,15,15,2,1,0.1333,0.1333,0.925,63.39
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,100,urban,0.05,15,15,0,1,0,0,0.8886,20.05
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,100,urban,0.05,15,15,0,1,0,0,0.9875,60.42
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,100,loud-structured,0.1,15,15,0,1,0,0,0.9695,20.17
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,100,loud-structured,0.1,15,15,0,1,0,0,0.8198,60.37
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,200,quiet,0.02,15,15,0,1,0,0,0.7511,20.1
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,200,quiet,0.02,15,15,0,1,0,0,0.9957,60.33
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,200,urban,0.05,15,15,0,1,0,0,0.8805,20.1
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,200,urban,0.05,15,15,0,1,0,0,0.9912,60.45
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,200,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.9754,20.15
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,200,loud-structured,0.1,15,15,1,1,0.0667,0.0667,0.8061,60.49
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,400,quiet,0.02,15,6,0,0.4,0,0,0.4795,20.04
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,400,quiet,0.02,15,15,0,1,0,0,0.743,60.23
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,400,urban,0.05,15,15,0,1,0,0,0.8682,20.03
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,400,urban,0.05,15,15,0,1,0,0,0.9932,60.21
+dsp-v1,FFT / harmonic DSP,fixedWing,Electric fixed-wing,400,loud-structured,0.1,15,15,2,1,0.1333,0.1333,0.9762,20.02
+ml-onnx-v1,Feature Conv ML,fixedWing,Electric fixed-wing,400,loud-structured,0.1,15,15,2,1,0.1333,0.1333,0.804,60.24
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,25,quiet,0.02,15,15,0,1,0,0,1,19.87
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,25,quiet,0.02,15,15,0,1,0,0,0.9605,59.6
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,25,urban,0.05,15,15,0,1,0,0,0.9981,19.95
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,25,urban,0.05,15,15,0,1,0,0,0.9054,59.67
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,25,loud-structured,0.1,15,15,0,1,0,0,0.9372,19.9
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,25,loud-structured,0.1,15,14,0,0.9333,0,0,0.6398,59.97
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,50,quiet,0.02,15,15,0,1,0,0,0.9995,19.91
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,50,quiet,0.02,15,15,0,1,0,0,0.9749,59.61
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,50,urban,0.05,15,15,0,1,0,0,0.9653,19.99
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,50,urban,0.05,15,15,0,1,0,0,0.9299,60.02
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,50,loud-structured,0.1,15,15,0,1,0,0,0.8489,20.85
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,50,loud-structured,0.1,15,15,0,1,0,0,0.7612,63.53
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,100,quiet,0.02,15,15,0,1,0,0,0.9957,20.9
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,100,quiet,0.02,15,15,0,1,0,0,0.9717,62.55
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,100,urban,0.05,15,15,0,1,0,0,0.7767,20.11
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,100,urban,0.05,15,15,0,1,0,0,0.974,60.23
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,100,loud-structured,0.1,15,15,0,1,0,0,0.9703,20.08
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,100,loud-structured,0.1,15,15,0,1,0,0,0.7802,60.43
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,200,quiet,0.02,15,15,0,1,0,0,0.9347,20.1
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,200,quiet,0.02,15,15,0,1,0,0,0.9916,60.19
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,200,urban,0.05,15,15,0,1,0,0,0.8698,20.1
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,200,urban,0.05,15,15,0,1,0,0,0.9886,60.25
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,200,loud-structured,0.1,15,15,0,1,0,0,0.9741,19.99
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,200,loud-structured,0.1,15,15,0,1,0,0,0.8417,60.14
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,400,quiet,0.02,15,15,0,1,0,0,0.6413,20.07
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,400,quiet,0.02,15,15,0,1,0,0,0.9768,60.34
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,400,urban,0.05,15,15,0,1,0,0,0.8719,20.09
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,400,urban,0.05,15,15,0,1,0,0,0.993,60.48
+dsp-v1,FFT / harmonic DSP,combustion,Combustion engine,400,loud-structured,0.1,15,15,0,1,0,0,0.9731,20.05
+ml-onnx-v1,Feature Conv ML,combustion,Combustion engine,400,loud-structured,0.1,15,15,0,1,0,0,0.8442,60.29

@@ -142,7 +142,7 @@ function runDetectionBenchmark(
           confidences: number[];
           latencies: number[];
         }>([
-          ["dsp-v1", { label: "FFT / harmonik DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
+          ["dsp-v1", { label: "FFT / harmonic DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
           ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
         ]);
         for (let trial = 0; trial < trials; trial += 1) {
@@ -204,7 +204,7 @@ function runDetectionBenchmark(
       confidences: number[];
       latencies: number[];
     }>([
-      ["dsp-v1", { label: "FFT / harmonik DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
+      ["dsp-v1", { label: "FFT / harmonic DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
       ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
     ]);
     for (let trial = 0; trial < ambientTrials; trial += 1) {
@@ -291,7 +291,7 @@ function modelReport(
   const curve = curveFor(selected);
   return {
     id: detectorId,
-    label: detectorId === "dsp-v1" ? "FFT / harmonik DSP" : "Feature Conv ML",
+    label: detectorId === "dsp-v1" ? "FFT / harmonic DSP" : "Feature Conv ML",
     version: "1.0.0",
     threshold: detectorId === "dsp-v1" ? 0.42 : artifact.threshold,
     isDefault: detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : !artifact.qualityGate.passed,

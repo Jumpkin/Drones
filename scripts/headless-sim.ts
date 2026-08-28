@@ -4,10 +4,14 @@ import { fileURLToPath } from "node:url";
 import {
   BENCHMARK_ENVIRONMENTS,
   HARD_NEGATIVE_KINDS,
+  PHONE_AUDIO_PROFILES,
+  PLAYBACK_ROOM_PROFILES,
   makeDroneObservation,
   makeHardNegative,
   mulberry32,
+  simulatePhonePlayback,
 } from "../src/benchmark-audio";
+import { generateDronePcm } from "../src/audio";
 import { analyzePcm } from "../src/detector";
 import {
   analyzeWithArtifact,
@@ -53,6 +57,21 @@ interface FalseAlarmRow {
   trials: number;
   falseDetections: number;
   falsePositiveRate: number;
+  meanConfidence: number;
+}
+
+interface PhonePlaybackRow {
+  detectorId: "dsp-v1" | "ml-onnx-v1";
+  phoneId: string;
+  phoneLabel: string;
+  roomId: string;
+  roomLabel: string;
+  trialsPerClass: number;
+  precision: number;
+  recall: number;
+  falsePositiveRate: number;
+  f1: number;
+  accuracy: number;
   meanConfidence: number;
 }
 
@@ -248,6 +267,82 @@ function runDetectionBenchmark(
   return { detection, falseAlarms, observations };
 }
 
+function runPhonePlaybackBenchmark(
+  trialsPerProfile: number,
+  random: () => number,
+  artifact: MlModelArtifact,
+): PhonePlaybackRow[] {
+  const rows: PhonePlaybackRow[] = [];
+  const sourceEnvironment = { id: "quiet" as const, ambientRms: 0, machineryAmplitude: 0 };
+  for (const phone of PHONE_AUDIO_PROFILES) {
+    for (const room of PLAYBACK_ROOM_PROFILES) {
+      const truth: boolean[] = [];
+      const dspDetected: boolean[] = [];
+      const mlDetected: boolean[] = [];
+      const dspConfidence: number[] = [];
+      const mlConfidence: number[] = [];
+      for (let trial = 0; trial < trialsPerProfile; trial += 1) {
+        for (let profileIndex = 0; profileIndex < PROFILES.length; profileIndex += 1) {
+          const profile = PROFILES[profileIndex];
+          const droneSource = generateDronePcm(
+            profile,
+            DURATION_S,
+            SAMPLE_RATE,
+            -20 + random() * 40,
+            0,
+          );
+          const droneCapture = simulatePhonePlayback(droneSource, SAMPLE_RATE, phone, room, random);
+          const dspPositive = analyzePcm(droneCapture, SAMPLE_RATE);
+          const mlPositive = analyzeWithArtifact(droneCapture, SAMPLE_RATE, artifact);
+          truth.push(true);
+          dspDetected.push(dspPositive.detected);
+          mlDetected.push(mlPositive.detected);
+          dspConfidence.push(dspPositive.confidence);
+          mlConfidence.push(mlPositive.confidence);
+
+          const kind = HARD_NEGATIVE_KINDS[(trial * PROFILES.length + profileIndex) % HARD_NEGATIVE_KINDS.length];
+          const negativeSource = makeHardNegative(
+            kind,
+            DURATION_S,
+            SAMPLE_RATE,
+            sourceEnvironment,
+            random,
+          );
+          const negativeCapture = simulatePhonePlayback(negativeSource, SAMPLE_RATE, phone, room, random);
+          const dspNegative = analyzePcm(negativeCapture, SAMPLE_RATE);
+          const mlNegative = analyzeWithArtifact(negativeCapture, SAMPLE_RATE, artifact);
+          truth.push(false);
+          dspDetected.push(dspNegative.detected);
+          mlDetected.push(mlNegative.detected);
+          dspConfidence.push(dspNegative.confidence);
+          mlConfidence.push(mlNegative.confidence);
+        }
+      }
+      for (const outcome of [
+        { id: "dsp-v1" as const, detected: dspDetected, confidence: dspConfidence },
+        { id: "ml-onnx-v1" as const, detected: mlDetected, confidence: mlConfidence },
+      ]) {
+        const metrics = binaryMetrics(truth, outcome.detected);
+        rows.push({
+          detectorId: outcome.id,
+          phoneId: phone.id,
+          phoneLabel: phone.label,
+          roomId: room.id,
+          roomLabel: room.label,
+          trialsPerClass: trialsPerProfile * PROFILES.length,
+          precision: round(metrics.precision),
+          recall: round(metrics.recall),
+          falsePositiveRate: round(metrics.falsePositiveRate),
+          f1: round(metrics.f1),
+          accuracy: round(metrics.accuracy),
+          meanConfidence: round(mean(outcome.confidence)),
+        });
+      }
+    }
+  }
+  return rows;
+}
+
 function metricsFor(observations: Observation[], threshold?: number): BinaryMetrics {
   return binaryMetrics(
     observations.map((item) => item.truth),
@@ -419,14 +514,27 @@ function csv(rows: Array<Record<string, unknown>>): string {
 async function main(): Promise<void> {
   const trials = argumentNumber("--trials", 15);
   const localizationTrials = argumentNumber("--localization-trials", 300);
+  const phoneTrials = argumentNumber("--phone-trials", Math.max(3, Math.ceil(trials / 3)));
   const seed = argumentNumber("--seed", 20260828);
   const reportDirectory = path.resolve(PROJECT_ROOT, argumentString("--out", "public/reports/headless"));
   const artifact = JSON.parse(
     await readFile(path.join(PROJECT_ROOT, "public/models/drone-binary-v1.json"), "utf8"),
   ) as MlModelArtifact;
-  const random = mulberry32(seed);
-  const detector = runDetectionBenchmark(trials, random, artifact);
-  const localization = runLocalizationBenchmark(localizationTrials, random);
+  const componentSeeds = {
+    detection: seed,
+    phonePlayback: (seed ^ 0x50484f4e) >>> 0,
+    localization: (seed ^ 0x4c4f4341) >>> 0,
+  };
+  const detector = runDetectionBenchmark(trials, mulberry32(componentSeeds.detection), artifact);
+  const phonePlayback = runPhonePlaybackBenchmark(
+    phoneTrials,
+    mulberry32(componentSeeds.phonePlayback),
+    artifact,
+  );
+  const localization = runLocalizationBenchmark(
+    localizationTrials,
+    mulberry32(componentSeeds.localization),
+  );
   const realSamples = await runRealSamples(artifact);
   const models = (["dsp-v1", "ml-onnx-v1"] as const).map((id) => modelReport(
     id,
@@ -450,6 +558,7 @@ async function main(): Promise<void> {
       clipDurationS: DURATION_S,
       trialsPerDroneCondition: trials,
       localizationTrialsPerJitterLevel: localizationTrials,
+      phoneTrialsPerProfile: phoneTrials,
       distancesM: DISTANCES_M,
       environments: BENCHMARK_ENVIRONMENTS,
       attenuationModel: "free-field 1/r, reference gain 0.72 at 25 m",
@@ -457,11 +566,15 @@ async function main(): Promise<void> {
       trainingDomain: "synthetic-only",
       benchmarkDomain: "synthetic signals from the same generator family",
       reportTimestampPolicy: "model artifact timestamp for reproducible output",
+      componentSeeds,
+      phoneAudioProfiles: PHONE_AUDIO_PROFILES,
+      playbackRoomProfiles: PLAYBACK_ROOM_PROFILES,
     },
     caveats: [
       "Synthetic results are regression benchmarks, not validated field range.",
       "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
       "Training and Monte Carlo benchmarking use the same synthetic generator family; results measure regression behavior, not independent generalization.",
+      "Phone playback rows simulate speaker coloration, room echo, distance loss, background sound, microphone bandwidth, compression, and self-noise; they are not measurements from physical phones.",
       "The ML detector is binary. Every ML 'detection + type' row uses ML for detection and the DSP classifier for type attribution.",
       "Distance uses assumed source gain rather than calibrated SPL data.",
       "Localization omits reverberation and multipath.",
@@ -471,6 +584,7 @@ async function main(): Promise<void> {
     models,
     failures,
     realSamples,
+    phonePlayback,
     localization,
     detection: detector.detection.filter((row) => row.detectorId === "dsp-v1"),
     falseAlarms: detector.falseAlarms.filter((row) => row.detectorId === "dsp-v1"),
@@ -480,12 +594,22 @@ async function main(): Promise<void> {
     writeFile(path.join(reportDirectory, "summary.json"), `${JSON.stringify(summary, null, 2)}\n`),
     writeFile(path.join(reportDirectory, "detection.csv"), csv(detector.detection as unknown as Array<Record<string, unknown>>)),
     writeFile(path.join(reportDirectory, "false-alarms.csv"), csv(detector.falseAlarms as unknown as Array<Record<string, unknown>>)),
+    writeFile(path.join(reportDirectory, "phone-playback.csv"), csv(phonePlayback as unknown as Array<Record<string, unknown>>)),
     writeFile(path.join(reportDirectory, "localization.csv"), csv(localization as unknown as Array<Record<string, unknown>>)),
     writeFile(path.join(reportDirectory, "failures.csv"), csv(failures as unknown as Array<Record<string, unknown>>)),
   ]);
   console.log(JSON.stringify({
     seed,
     models: models.map((model) => ({ id: model.id, isDefault: model.isDefault, overall: model.overall })),
+    phonePlayback: (["dsp-v1", "ml-onnx-v1"] as const).map((detectorId) => {
+      const rows = phonePlayback.filter((row) => row.detectorId === detectorId);
+      return {
+        detectorId,
+        meanRecall: round(mean(rows.map((row) => row.recall))),
+        meanFalsePositiveRate: round(mean(rows.map((row) => row.falsePositiveRate))),
+        worstFalsePositiveRate: round(Math.max(...rows.map((row) => row.falsePositiveRate))),
+      };
+    }),
     realSamples,
     reports: reportDirectory,
   }, null, 2));

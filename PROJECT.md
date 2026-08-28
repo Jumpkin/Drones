@@ -26,7 +26,8 @@ views:
 - **Multi-phone experiment** simulates offline clock calibration and 2D TDOA
   localization from three fixed listener phones.
 - **Statistics** compares headless Monte Carlo results across drone profiles,
-  assumed distance, noise environment, false alarms, and clock jitter.
+  assumed distance, noise environment, false alarms, clock jitter, and a
+  synthetic computer-speaker-to-phone playback channel.
 
 The detection layer exposes the same asynchronous adapter contract for the
 FFT baseline and an experimental ONNX binary classifier. The ML model scores
@@ -79,6 +80,11 @@ view. No raw audio is written to a report.
 The synthetic distance model uses simplified free-field 1/r attenuation with
 an assumed reference gain. It is useful for regression comparisons but does
 not establish real-world detection range without calibrated field data.
+
+The headless phone proxy adds deterministic speaker/microphone bandwidth,
+compression, room echo, playback distance, background sound, and microphone
+self-noise. These profiles are stress-test assumptions rather than physical
+phone measurements; the hardware-in-the-loop experiment remains required.
 
 The first hardware-in-the-loop milestone is intentionally binary rather than
 model-specific: play a randomized mix of drone and non-drone sounds from a

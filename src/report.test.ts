@@ -16,6 +16,11 @@ describe("committed headless report", () => {
     expect(report.models?.find((model) => model.id === "ml-onnx-v1")?.detection.every(
       (row) => row.classificationMethod === "ml-detection+dsp-type",
     )).toBe(true);
+    expect(report.phonePlayback?.length).toBe(24);
+    expect(report.phonePlayback?.every((row) =>
+      row.trialsPerClass > 0 && row.recall >= 0 && row.recall <= 1 &&
+      row.falsePositiveRate >= 0 && row.falsePositiveRate <= 1
+    )).toBe(true);
   });
 
   it("keeps ML experimental while its quality gate fails", async () => {

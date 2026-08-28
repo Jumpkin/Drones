@@ -7,6 +7,7 @@
     "clipDurationS": 3,
     "trialsPerDroneCondition": 15,
     "localizationTrialsPerJitterLevel": 300,
+    "phoneTrialsPerProfile": 5,
     "distancesM": [
       25,
       50,
@@ -35,12 +36,94 @@
     "splitPolicy": "grouped by source recording/session; 70/15/15",
     "trainingDomain": "synthetic-only",
     "benchmarkDomain": "synthetic signals from the same generator family",
-    "reportTimestampPolicy": "model artifact timestamp for reproducible output"
+    "reportTimestampPolicy": "model artifact timestamp for reproducible output",
+    "componentSeeds": {
+      "detection": 20260828,
+      "phonePlayback": 1367173266,
+      "localization": 1299866781
+    },
+    "phoneAudioProfiles": [
+      {
+        "id": "flagship",
+        "label": "Flagship phone",
+        "highPassHz": 75,
+        "lowPassHz": 7500,
+        "drive": 1.05,
+        "selfNoiseRms": 0.003
+      },
+      {
+        "id": "budget",
+        "label": "Budget phone",
+        "highPassHz": 150,
+        "lowPassHz": 5200,
+        "drive": 1.45,
+        "selfNoiseRms": 0.008
+      },
+      {
+        "id": "processed",
+        "label": "Processed phone",
+        "highPassHz": 220,
+        "lowPassHz": 4200,
+        "drive": 1.8,
+        "selfNoiseRms": 0.006
+      }
+    ],
+    "playbackRoomProfiles": [
+      {
+        "id": "desk",
+        "label": "Desk · 1.5 m",
+        "distanceM": 1.5,
+        "echoDelayMs": 18,
+        "echoGain": 0.08,
+        "environment": {
+          "id": "quiet",
+          "ambientRms": 0.006,
+          "machineryAmplitude": 0
+        }
+      },
+      {
+        "id": "living-room",
+        "label": "Living room · 4 m",
+        "distanceM": 4,
+        "echoDelayMs": 54,
+        "echoGain": 0.24,
+        "environment": {
+          "id": "quiet",
+          "ambientRms": 0.014,
+          "machineryAmplitude": 0.003
+        }
+      },
+      {
+        "id": "office",
+        "label": "Office · 8 m",
+        "distanceM": 8,
+        "echoDelayMs": 92,
+        "echoGain": 0.34,
+        "environment": {
+          "id": "urban",
+          "ambientRms": 0.032,
+          "machineryAmplitude": 0.012
+        }
+      },
+      {
+        "id": "traffic",
+        "label": "Traffic · 4 m",
+        "distanceM": 4,
+        "echoDelayMs": 38,
+        "echoGain": 0.18,
+        "environment": {
+          "id": "loud-structured",
+          "ambientRms": 0.07,
+          "machineryAmplitude": 0.028
+        }
+      }
+    ]
   },
   "caveats": [
     "Synthetic results are regression benchmarks, not validated field range.",
     "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
     "Training and Monte Carlo benchmarking use the same synthetic generator family; results measure regression behavior, not independent generalization.",
+    "Phone playback rows simulate speaker coloration, room echo, distance loss, background sound, microphone bandwidth, compression, and self-noise; they are not measurements from physical phones.",
     "The ML detector is binary. Every ML 'detection + type' row uses ML for detection and the DSP classifier for type attribution.",
     "Distance uses assumed source gain rather than calibrated SPL data.",
     "Localization omits reverberation and multipath.",
@@ -3250,50 +3333,388 @@
       "confidence": 0.9994
     }
   ],
+  "phonePlayback": [
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.949
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 0.8,
+      "recall": 1,
+      "falsePositiveRate": 0.25,
+      "f1": 0.8889,
+      "accuracy": 0.875,
+      "meanConfidence": 0.5696
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9422
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.8333,
+      "recall": 1,
+      "falsePositiveRate": 0.2,
+      "f1": 0.9091,
+      "accuracy": 0.9,
+      "meanConfidence": 0.5924
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9281
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5128,
+      "recall": 1,
+      "falsePositiveRate": 0.95,
+      "f1": 0.678,
+      "accuracy": 0.525,
+      "meanConfidence": 0.8705
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.933
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "flagship",
+      "phoneLabel": "Flagship phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5278,
+      "recall": 0.95,
+      "falsePositiveRate": 0.85,
+      "f1": 0.6786,
+      "accuracy": 0.55,
+      "meanConfidence": 0.7449
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 0.5128,
+      "recall": 1,
+      "falsePositiveRate": 0.95,
+      "f1": 0.678,
+      "accuracy": 0.525,
+      "meanConfidence": 0.9341
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 0.8696,
+      "recall": 1,
+      "falsePositiveRate": 0.15,
+      "f1": 0.9302,
+      "accuracy": 0.925,
+      "meanConfidence": 0.5405
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.934
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.7407,
+      "recall": 1,
+      "falsePositiveRate": 0.35,
+      "f1": 0.8511,
+      "accuracy": 0.825,
+      "meanConfidence": 0.6085
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9168
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5128,
+      "recall": 1,
+      "falsePositiveRate": 0.95,
+      "f1": 0.678,
+      "accuracy": 0.525,
+      "meanConfidence": 0.8782
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9254
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "budget",
+      "phoneLabel": "Budget phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5263,
+      "recall": 1,
+      "falsePositiveRate": 0.9,
+      "f1": 0.6897,
+      "accuracy": 0.55,
+      "meanConfidence": 0.8248
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 0.5263,
+      "recall": 1,
+      "falsePositiveRate": 0.9,
+      "f1": 0.6897,
+      "accuracy": 0.55,
+      "meanConfidence": 0.9303
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "desk",
+      "roomLabel": "Desk · 1.5 m",
+      "trialsPerClass": 20,
+      "precision": 1,
+      "recall": 1,
+      "falsePositiveRate": 0,
+      "f1": 1,
+      "accuracy": 1,
+      "meanConfidence": 0.4973
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9146
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "living-room",
+      "roomLabel": "Living room · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.7407,
+      "recall": 1,
+      "falsePositiveRate": 0.35,
+      "f1": 0.8511,
+      "accuracy": 0.825,
+      "meanConfidence": 0.6175
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.907
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "office",
+      "roomLabel": "Office · 8 m",
+      "trialsPerClass": 20,
+      "precision": 0.5128,
+      "recall": 1,
+      "falsePositiveRate": 0.95,
+      "f1": 0.678,
+      "accuracy": 0.525,
+      "meanConfidence": 0.8911
+    },
+    {
+      "detectorId": "dsp-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 1,
+      "f1": 0.6667,
+      "accuracy": 0.5,
+      "meanConfidence": 0.9098
+    },
+    {
+      "detectorId": "ml-onnx-v1",
+      "phoneId": "processed",
+      "phoneLabel": "Processed phone",
+      "roomId": "traffic",
+      "roomLabel": "Traffic · 4 m",
+      "trialsPerClass": 20,
+      "precision": 0.5128,
+      "recall": 1,
+      "falsePositiveRate": 0.95,
+      "f1": 0.678,
+      "accuracy": 0.525,
+      "meanConfidence": 0.8251
+    }
+  ],
   "localization": [
     {
       "timingJitterMs": 0.02,
       "trials": 300,
       "medianErrorM": 0.21,
-      "p90ErrorM": 0.35,
-      "medianBearingErrorDeg": 0.05,
-      "p90BearingErrorDeg": 0.11,
+      "p90ErrorM": 0.34,
+      "medianBearingErrorDeg": 0.04,
+      "p90BearingErrorDeg": 0.14,
       "within5MRate": 1,
       "within10MRate": 1,
-      "medianResidualMs": 0.509
+      "medianResidualMs": 0.514
     },
     {
       "timingJitterMs": 0.1,
       "trials": 300,
-      "medianErrorM": 0.2,
-      "p90ErrorM": 0.33,
+      "medianErrorM": 0.22,
+      "p90ErrorM": 0.38,
       "medianBearingErrorDeg": 0.04,
-      "p90BearingErrorDeg": 0.13,
-      "within5MRate": 1,
-      "within10MRate": 1,
-      "medianResidualMs": 0.518
+      "p90BearingErrorDeg": 0.18,
+      "within5MRate": 0.9933,
+      "within10MRate": 0.9933,
+      "medianResidualMs": 0.532
     },
     {
       "timingJitterMs": 0.5,
       "trials": 300,
-      "medianErrorM": 0.28,
-      "p90ErrorM": 0.6,
-      "medianBearingErrorDeg": 0.05,
-      "p90BearingErrorDeg": 0.21,
+      "medianErrorM": 0.29,
+      "p90ErrorM": 0.62,
+      "medianBearingErrorDeg": 0.06,
+      "p90BearingErrorDeg": 0.19,
       "within5MRate": 1,
       "within10MRate": 1,
-      "medianResidualMs": 0.573
+      "medianResidualMs": 0.508
     },
     {
       "timingJitterMs": 2,
       "trials": 300,
-      "medianErrorM": 0.88,
-      "p90ErrorM": 2.03,
-      "medianBearingErrorDeg": 0.18,
-      "p90BearingErrorDeg": 0.62,
+      "medianErrorM": 0.87,
+      "p90ErrorM": 1.99,
+      "medianBearingErrorDeg": 0.17,
+      "p90BearingErrorDeg": 0.59,
       "within5MRate": 1,
       "within10MRate": 1,
-      "medianResidualMs": 0.517
+      "medianResidualMs": 0.508
     }
   ],
   "detection": [

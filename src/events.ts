@@ -49,7 +49,7 @@ export function createAcousticEvent(
     nodeId,
     capturedAtMs,
     windowMs: Math.round(analyzedSamples / result.spectrumSampleRate * 1000),
-    snrEstimateDb: result.harmonicScoreDb,
+    snrEstimateDb: result.spectralSnrDb,
     fundamentalHz: result.fundamentalHz,
     harmonicScoreDb: result.harmonicScoreDb,
     detectionConfidence: detector?.probability ?? result.confidence,

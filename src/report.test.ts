@@ -13,6 +13,9 @@ describe("committed headless report", () => {
     expect(report.realSamples.every((sample) =>
       typeof sample.detectorId === "string" && typeof sample.correctBinary === "boolean"
     )).toBe(true);
+    expect(report.models?.find((model) => model.id === "ml-onnx-v1")?.detection.every(
+      (row) => row.classificationMethod === "ml-detection+dsp-type",
+    )).toBe(true);
   });
 
   it("keeps ML experimental while its quality gate fails", async () => {
@@ -25,5 +28,13 @@ describe("committed headless report", () => {
     expect(ml?.qualityGate?.passed).toBe(false);
     expect(ml?.isDefault).toBe(false);
     expect(dsp?.isDefault).toBe(true);
+  });
+
+  it("ties the reproducible report snapshot to the committed model artifact", async () => {
+    const [report, artifact] = await Promise.all([
+      readFile("public/reports/headless/summary.json", "utf8").then(JSON.parse),
+      readFile("public/models/drone-binary-v1.json", "utf8").then(JSON.parse),
+    ]) as [{ generatedAt: string }, { trainedAt: string }];
+    expect(report.generatedAt).toBe(artifact.trainedAt);
   });
 });

@@ -163,6 +163,9 @@ export function estimateDelaySamples(
   target: Float32Array,
   maxLagSamples: number,
 ): number {
+  if (!Number.isInteger(maxLagSamples) || maxLagSamples < 0) {
+    throw new Error("Maximum lag must be a non-negative integer");
+  }
   let bestLag = 0;
   let bestCorrelation = Number.NEGATIVE_INFINITY;
   for (let lag = -maxLagSamples; lag <= maxLagSamples; lag += 1) {
@@ -171,18 +174,20 @@ export function estimateDelaySamples(
     let targetEnergy = 0;
     const start = Math.max(0, -lag);
     const end = Math.min(reference.length, target.length - lag);
-    for (let index = start; index < end; index += 4) {
+    for (let index = start; index < end; index += 1) {
       const a = reference[index];
       const b = target[index + lag];
       sum += a * b;
       refEnergy += a * a;
       targetEnergy += b * b;
     }
-    const correlation = sum / Math.sqrt(refEnergy * targetEnergy + 1e-12);
+    const energy = refEnergy * targetEnergy;
+    if (energy <= 1e-12) continue;
+    const correlation = sum / Math.sqrt(energy);
     if (correlation > bestCorrelation) {
       bestCorrelation = correlation;
       bestLag = lag;
     }
   }
-  return bestLag;
+  return Number.isFinite(bestCorrelation) ? bestLag : 0;
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-28T16:46:50.988Z",
+  "generatedAt": "2026-08-28T18:22:30.057Z",
   "seed": 20260828,
   "configuration": {
     "sampleRate": 16000,
@@ -32,11 +32,16 @@
       }
     ],
     "attenuationModel": "free-field 1/r, reference gain 0.72 at 25 m",
-    "splitPolicy": "grouped by source recording/session; 70/15/15"
+    "splitPolicy": "grouped by source recording/session; 70/15/15",
+    "trainingDomain": "synthetic-only",
+    "benchmarkDomain": "synthetic signals from the same generator family",
+    "reportTimestampPolicy": "model artifact timestamp for reproducible output"
   },
   "caveats": [
     "Synthetic results are regression benchmarks, not validated field range.",
     "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
+    "Training and Monte Carlo benchmarking use the same synthetic generator family; results measure regression behavior, not independent generalization.",
+    "The ML detector is binary. Every ML 'detection + type' row uses ML for detection and the DSP classifier for type attribution.",
     "Distance uses assumed source gain rather than calibrated SPL data.",
     "Localization omits reverberation and multipath.",
     "Three coplanar listeners estimate 2D only; altitude remains unknown.",
@@ -61,8 +66,8 @@
         "f1": 0.9025270758122743,
         "accuracy": 0.825
       },
-      "prAuc": 0.6535,
-      "rocAuc": 0.4588,
+      "prAuc": 0.7501,
+      "rocAuc": 0.396,
       "brierScore": 0.1482,
       "curve": [
         {
@@ -328,7 +333,7 @@
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
           "meanConfidence": 1,
-          "medianLatencyMs": 20.02
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -345,7 +350,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.999,
-          "medianLatencyMs": 20.05
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -362,7 +367,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.9274,
-          "medianLatencyMs": 20.13
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -379,7 +384,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.9991,
-          "medianLatencyMs": 20.02
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -396,7 +401,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9251,
-          "medianLatencyMs": 20.07
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -413,7 +418,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.9648,
-          "medianLatencyMs": 20.17
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -430,7 +435,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9884,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -447,7 +452,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8828,
-          "medianLatencyMs": 20.14
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -464,7 +469,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9695,
-          "medianLatencyMs": 20.14
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -481,7 +486,7 @@
           "top1Accuracy": 0.8,
           "accuracyWhenDetected": 0.8,
           "meanConfidence": 0.8658,
-          "medianLatencyMs": 20.15
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -498,7 +503,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.8724,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -515,7 +520,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9683,
-          "medianLatencyMs": 20.28
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -532,7 +537,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.4854,
-          "medianLatencyMs": 20.29
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -549,7 +554,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.886,
-          "medianLatencyMs": 20.25
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -566,7 +571,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9759,
-          "medianLatencyMs": 20.22
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -583,7 +588,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9981,
-          "medianLatencyMs": 19.92
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -600,7 +605,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.991,
-          "medianLatencyMs": 19.99
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -617,7 +622,7 @@
           "top1Accuracy": 0.6667,
           "accuracyWhenDetected": 0.6667,
           "meanConfidence": 0.8055,
-          "medianLatencyMs": 20.14
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -634,7 +639,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9953,
-          "medianLatencyMs": 20
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -651,7 +656,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8783,
-          "medianLatencyMs": 20.06
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -668,7 +673,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9453,
-          "medianLatencyMs": 20.1
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -685,7 +690,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.972,
-          "medianLatencyMs": 20.05
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -702,7 +707,7 @@
           "top1Accuracy": 0.3333,
           "accuracyWhenDetected": 0.3333,
           "meanConfidence": 0.7995,
-          "medianLatencyMs": 20.07
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -719,7 +724,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9752,
-          "medianLatencyMs": 20.13
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -736,7 +741,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8214,
-          "medianLatencyMs": 20.18
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -753,7 +758,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.8853,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -770,7 +775,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9713,
-          "medianLatencyMs": 20.17
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -787,7 +792,7 @@
           "top1Accuracy": 0.4,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.4726,
-          "medianLatencyMs": 20.21
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -804,7 +809,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8702,
-          "medianLatencyMs": 20.15
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -821,7 +826,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.97,
-          "medianLatencyMs": 20.1
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -838,7 +843,7 @@
           "top1Accuracy": 0.3333,
           "accuracyWhenDetected": 0.3333,
           "meanConfidence": 1,
-          "medianLatencyMs": 20.03
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -855,7 +860,7 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9848,
-          "medianLatencyMs": 20.07
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -872,7 +877,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9139,
-          "medianLatencyMs": 20.17
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -889,7 +894,7 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9967,
-          "medianLatencyMs": 20.05
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -906,7 +911,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9456,
-          "medianLatencyMs": 20.12
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -923,7 +928,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9662,
-          "medianLatencyMs": 20.15
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -940,7 +945,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9563,
-          "medianLatencyMs": 20.12
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -957,7 +962,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8735,
-          "medianLatencyMs": 20.04
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -974,7 +979,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9724,
-          "medianLatencyMs": 20.12
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -991,7 +996,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7493,
-          "medianLatencyMs": 20.1
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1008,7 +1013,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8777,
-          "medianLatencyMs": 20.06
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1025,7 +1030,7 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.9757,
-          "medianLatencyMs": 20.16
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1042,7 +1047,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.4814,
-          "medianLatencyMs": 20.14
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1059,7 +1064,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.868,
-          "medianLatencyMs": 20.12
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1076,7 +1081,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9748,
-          "medianLatencyMs": 20.16
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1093,7 +1098,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.85
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1110,7 +1115,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9991,
-          "medianLatencyMs": 19.92
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1127,7 +1132,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9505,
-          "medianLatencyMs": 19.95
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1144,7 +1149,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.91
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1161,7 +1166,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9676,
-          "medianLatencyMs": 20.07
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1178,7 +1183,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8643,
-          "medianLatencyMs": 20.17
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1195,7 +1200,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9953,
-          "medianLatencyMs": 19.99
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1212,7 +1217,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7786,
-          "medianLatencyMs": 20.17
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1229,7 +1234,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9724,
-          "medianLatencyMs": 20.18
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1246,7 +1251,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9275,
-          "medianLatencyMs": 20.1
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1263,7 +1268,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8647,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1280,7 +1285,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9747,
-          "medianLatencyMs": 20.15
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1297,7 +1302,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.6416,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1314,7 +1319,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8796,
-          "medianLatencyMs": 20.11
+          "classificationMethod": "dsp"
         },
         {
           "detectorId": "dsp-v1",
@@ -1331,7 +1336,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9729,
-          "medianLatencyMs": 20.15
+          "classificationMethod": "dsp"
         }
       ],
       "falseAlarms": [
@@ -1343,8 +1348,7 @@
           "trials": 60,
           "falseDetections": 60,
           "falsePositiveRate": 1,
-          "meanConfidence": 0.8656,
-          "medianLatencyMs": 20.07
+          "meanConfidence": 0.8656
         },
         {
           "detectorId": "dsp-v1",
@@ -1354,8 +1358,7 @@
           "trials": 60,
           "falseDetections": 54,
           "falsePositiveRate": 0.9,
-          "meanConfidence": 0.8402,
-          "medianLatencyMs": 20.05
+          "meanConfidence": 0.8402
         },
         {
           "detectorId": "dsp-v1",
@@ -1365,8 +1368,7 @@
           "trials": 60,
           "falseDetections": 50,
           "falsePositiveRate": 0.8333,
-          "meanConfidence": 0.8258,
-          "medianLatencyMs": 20.09
+          "meanConfidence": 0.8258
         }
       ]
     },
@@ -1393,8 +1395,8 @@
         "f1": 0.9783453636868406,
         "accuracy": 0.9638888888888889
       },
-      "prAuc": 0.8166,
-      "rocAuc": 0.9787,
+      "prAuc": 0.9949,
+      "rocAuc": 0.9795,
       "brierScore": 0.0464,
       "curve": [
         {
@@ -1514,7 +1516,7 @@
         {
           "threshold": 0.475,
           "precision": 0.981,
-          "recall": 0.9744,
+          "recall": 0.9733,
           "falsePositiveRate": 0.0944
         },
         {
@@ -1659,8 +1661,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.8667,
           "accuracyWhenDetected": 0.8667,
-          "meanConfidence": 0.8295,
-          "medianLatencyMs": 60.61
+          "meanConfidence": 0.8296,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1677,7 +1679,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.6195,
-          "medianLatencyMs": 60.02
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1694,7 +1696,7 @@
           "top1Accuracy": 0.7333,
           "accuracyWhenDetected": 0.9167,
           "meanConfidence": 0.5898,
-          "medianLatencyMs": 60.18
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1711,7 +1713,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.8523,
-          "medianLatencyMs": 59.86
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1728,7 +1730,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9202,
-          "medianLatencyMs": 60.18
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1745,7 +1747,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.7493,
-          "medianLatencyMs": 60.35
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1762,7 +1764,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9447,
-          "medianLatencyMs": 60.36
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1779,7 +1781,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.988,
-          "medianLatencyMs": 60.39
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1795,8 +1797,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8149,
-          "medianLatencyMs": 60.41
+          "meanConfidence": 0.8148,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1813,7 +1815,7 @@
           "top1Accuracy": 0.8,
           "accuracyWhenDetected": 0.8,
           "meanConfidence": 0.9971,
-          "medianLatencyMs": 60.5
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1830,7 +1832,7 @@
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.9904,
-          "medianLatencyMs": 60.3
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1847,7 +1849,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8307,
-          "medianLatencyMs": 60.79
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1863,8 +1865,8 @@
           "detectionRate": 0.8667,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7819,
-          "medianLatencyMs": 60.87
+          "meanConfidence": 0.7821,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1881,7 +1883,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9922,
-          "medianLatencyMs": 60.92
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1898,7 +1900,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.8239,
-          "medianLatencyMs": 60.52
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1914,8 +1916,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9942,
-          "medianLatencyMs": 59.76
+          "meanConfidence": 0.9943,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1932,7 +1934,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.969,
-          "medianLatencyMs": 60.03
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1948,8 +1950,8 @@
           "detectionRate": 0.9333,
           "top1Accuracy": 0.6667,
           "accuracyWhenDetected": 0.7143,
-          "meanConfidence": 0.688,
-          "medianLatencyMs": 60.22
+          "meanConfidence": 0.6881,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1966,7 +1968,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9941,
-          "medianLatencyMs": 59.91
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1982,8 +1984,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9483,
-          "medianLatencyMs": 60.11
+          "meanConfidence": 0.9484,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2000,7 +2002,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8216,
-          "medianLatencyMs": 60.24
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2017,7 +2019,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9915,
-          "medianLatencyMs": 60.22
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2034,7 +2036,7 @@
           "top1Accuracy": 0.3333,
           "accuracyWhenDetected": 0.3333,
           "meanConfidence": 0.9768,
-          "medianLatencyMs": 60.27
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2051,7 +2053,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8149,
-          "medianLatencyMs": 60.47
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2068,7 +2070,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9941,
-          "medianLatencyMs": 60.41
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2085,7 +2087,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9925,
-          "medianLatencyMs": 60.55
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2102,7 +2104,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8168,
-          "medianLatencyMs": 60.46
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2118,8 +2120,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.4,
           "accuracyWhenDetected": 0.4,
-          "meanConfidence": 0.7639,
-          "medianLatencyMs": 60.73
+          "meanConfidence": 0.7642,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2136,7 +2138,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9916,
-          "medianLatencyMs": 60.7
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2152,8 +2154,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8606,
-          "medianLatencyMs": 60.34
+          "meanConfidence": 0.8605,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2169,8 +2171,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.3333,
           "accuracyWhenDetected": 0.3333,
-          "meanConfidence": 0.7224,
-          "medianLatencyMs": 59.85
+          "meanConfidence": 0.7223,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2186,8 +2188,8 @@
           "detectionRate": 0.5333,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.125,
-          "meanConfidence": 0.4561,
-          "medianLatencyMs": 60.14
+          "meanConfidence": 0.456,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2203,8 +2205,8 @@
           "detectionRate": 0.8,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.5723,
-          "medianLatencyMs": 60.38
+          "meanConfidence": 0.5722,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2221,7 +2223,7 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1429,
           "meanConfidence": 0.5511,
-          "medianLatencyMs": 59.96
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2238,7 +2240,7 @@
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
           "meanConfidence": 0.9162,
-          "medianLatencyMs": 60.26
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2254,8 +2256,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8264,
-          "medianLatencyMs": 60.55
+          "meanConfidence": 0.8263,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2271,8 +2273,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9224,
-          "medianLatencyMs": 60.29
+          "meanConfidence": 0.9225,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2289,7 +2291,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9886,
-          "medianLatencyMs": 60.36
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2306,7 +2308,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8017,
-          "medianLatencyMs": 60.34
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2323,7 +2325,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9937,
-          "medianLatencyMs": 60.36
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2340,7 +2342,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9901,
-          "medianLatencyMs": 60.34
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2357,7 +2359,7 @@
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
           "meanConfidence": 0.8122,
-          "medianLatencyMs": 60.48
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2373,8 +2375,8 @@
           "detectionRate": 0.9333,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7059,
-          "medianLatencyMs": 60.47
+          "meanConfidence": 0.706,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2391,7 +2393,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9928,
-          "medianLatencyMs": 60.32
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2407,8 +2409,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.8003,
-          "medianLatencyMs": 60.48
+          "meanConfidence": 0.8002,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2424,8 +2426,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9663,
-          "medianLatencyMs": 59.42
+          "meanConfidence": 0.9662,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2442,7 +2444,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9046,
-          "medianLatencyMs": 59.67
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2458,8 +2460,8 @@
           "detectionRate": 0.9333,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.6488,
-          "medianLatencyMs": 60.12
+          "meanConfidence": 0.6487,
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2476,7 +2478,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.976,
-          "medianLatencyMs": 59.64
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2493,7 +2495,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9367,
-          "medianLatencyMs": 60.13
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2510,7 +2512,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7334,
-          "medianLatencyMs": 60.41
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2527,7 +2529,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9767,
-          "medianLatencyMs": 60.01
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2544,7 +2546,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9666,
-          "medianLatencyMs": 60.46
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2561,7 +2563,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.7915,
-          "medianLatencyMs": 60.54
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2578,7 +2580,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9911,
-          "medianLatencyMs": 60.41
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2595,7 +2597,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9884,
-          "medianLatencyMs": 60.28
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2612,7 +2614,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.8313,
-          "medianLatencyMs": 60.34
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2629,7 +2631,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9629,
-          "medianLatencyMs": 60.35
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2646,7 +2648,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 0.9921,
-          "medianLatencyMs": 60.33
+          "classificationMethod": "ml-detection+dsp-type"
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2662,8 +2664,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8367,
-          "medianLatencyMs": 60.62
+          "meanConfidence": 0.8366,
+          "classificationMethod": "ml-detection+dsp-type"
         }
       ],
       "falseAlarms": [
@@ -2675,8 +2677,7 @@
           "trials": 60,
           "falseDetections": 2,
           "falsePositiveRate": 0.0333,
-          "meanConfidence": 0.0901,
-          "medianLatencyMs": 60.09
+          "meanConfidence": 0.09
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2686,8 +2687,7 @@
           "trials": 60,
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
-          "meanConfidence": 0.2206,
-          "medianLatencyMs": 60.06
+          "meanConfidence": 0.2205
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2697,8 +2697,7 @@
           "trials": 60,
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
-          "meanConfidence": 0.2169,
-          "medianLatencyMs": 60.27
+          "meanConfidence": 0.217
         }
       ]
     }
@@ -3216,7 +3215,7 @@
       "detectorId": "ml-onnx-v1",
       "detected": true,
       "correctBinary": true,
-      "confidence": 0.9698
+      "confidence": 0.9697
     },
     {
       "file": "batear-mini-4-pro.wav",
@@ -3232,7 +3231,7 @@
       "detectorId": "ml-onnx-v1",
       "detected": true,
       "correctBinary": true,
-      "confidence": 0.9816
+      "confidence": 0.9815
     },
     {
       "file": "batear-rural-8s.wav",
@@ -3313,7 +3312,7 @@
       "top1Accuracy": 0.8667,
       "accuracyWhenDetected": 0.8667,
       "meanConfidence": 1,
-      "medianLatencyMs": 20.02
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3330,7 +3329,7 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.999,
-      "medianLatencyMs": 20.05
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3347,7 +3346,7 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.9274,
-      "medianLatencyMs": 20.13
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3364,7 +3363,7 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.9991,
-      "medianLatencyMs": 20.02
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3381,7 +3380,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9251,
-      "medianLatencyMs": 20.07
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3398,7 +3397,7 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.9648,
-      "medianLatencyMs": 20.17
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3415,7 +3414,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9884,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3432,7 +3431,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.8828,
-      "medianLatencyMs": 20.14
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3449,7 +3448,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9695,
-      "medianLatencyMs": 20.14
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3466,7 +3465,7 @@
       "top1Accuracy": 0.8,
       "accuracyWhenDetected": 0.8,
       "meanConfidence": 0.8658,
-      "medianLatencyMs": 20.15
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3483,7 +3482,7 @@
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.8724,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3500,7 +3499,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9683,
-      "medianLatencyMs": 20.28
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3517,7 +3516,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.4854,
-      "medianLatencyMs": 20.29
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3534,7 +3533,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.886,
-      "medianLatencyMs": 20.25
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3551,7 +3550,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9759,
-      "medianLatencyMs": 20.22
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3568,7 +3567,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9981,
-      "medianLatencyMs": 19.92
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3585,7 +3584,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.991,
-      "medianLatencyMs": 19.99
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3602,7 +3601,7 @@
       "top1Accuracy": 0.6667,
       "accuracyWhenDetected": 0.6667,
       "meanConfidence": 0.8055,
-      "medianLatencyMs": 20.14
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3619,7 +3618,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9953,
-      "medianLatencyMs": 20
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3636,7 +3635,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.8783,
-      "medianLatencyMs": 20.06
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3653,7 +3652,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9453,
-      "medianLatencyMs": 20.1
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3670,7 +3669,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.972,
-      "medianLatencyMs": 20.05
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3687,7 +3686,7 @@
       "top1Accuracy": 0.3333,
       "accuracyWhenDetected": 0.3333,
       "meanConfidence": 0.7995,
-      "medianLatencyMs": 20.07
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3704,7 +3703,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9752,
-      "medianLatencyMs": 20.13
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3721,7 +3720,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.8214,
-      "medianLatencyMs": 20.18
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3738,7 +3737,7 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.8853,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3755,7 +3754,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9713,
-      "medianLatencyMs": 20.17
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3772,7 +3771,7 @@
       "top1Accuracy": 0.4,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.4726,
-      "medianLatencyMs": 20.21
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3789,7 +3788,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8702,
-      "medianLatencyMs": 20.15
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3806,7 +3805,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.97,
-      "medianLatencyMs": 20.1
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3823,7 +3822,7 @@
       "top1Accuracy": 0.3333,
       "accuracyWhenDetected": 0.3333,
       "meanConfidence": 1,
-      "medianLatencyMs": 20.03
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3840,7 +3839,7 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.9848,
-      "medianLatencyMs": 20.07
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3857,7 +3856,7 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9139,
-      "medianLatencyMs": 20.17
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3874,7 +3873,7 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.9967,
-      "medianLatencyMs": 20.05
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3891,7 +3890,7 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9456,
-      "medianLatencyMs": 20.12
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3908,7 +3907,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9662,
-      "medianLatencyMs": 20.15
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3925,7 +3924,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9563,
-      "medianLatencyMs": 20.12
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3942,7 +3941,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8735,
-      "medianLatencyMs": 20.04
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3959,7 +3958,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9724,
-      "medianLatencyMs": 20.12
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3976,7 +3975,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.7493,
-      "medianLatencyMs": 20.1
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -3993,7 +3992,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8777,
-      "medianLatencyMs": 20.06
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4010,7 +4009,7 @@
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
       "meanConfidence": 0.9757,
-      "medianLatencyMs": 20.16
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4027,7 +4026,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.4814,
-      "medianLatencyMs": 20.14
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4044,7 +4043,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.868,
-      "medianLatencyMs": 20.12
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4061,7 +4060,7 @@
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
       "meanConfidence": 0.9748,
-      "medianLatencyMs": 20.16
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4078,7 +4077,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.85
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4095,7 +4094,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9991,
-      "medianLatencyMs": 19.92
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4112,7 +4111,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9505,
-      "medianLatencyMs": 19.95
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4129,7 +4128,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.91
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4146,7 +4145,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9676,
-      "medianLatencyMs": 20.07
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4163,7 +4162,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8643,
-      "medianLatencyMs": 20.17
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4180,7 +4179,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9953,
-      "medianLatencyMs": 19.99
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4197,7 +4196,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.7786,
-      "medianLatencyMs": 20.17
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4214,7 +4213,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9724,
-      "medianLatencyMs": 20.18
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4231,7 +4230,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9275,
-      "medianLatencyMs": 20.1
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4248,7 +4247,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8647,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4265,7 +4264,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9747,
-      "medianLatencyMs": 20.15
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4282,7 +4281,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.6416,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4299,7 +4298,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.8796,
-      "medianLatencyMs": 20.11
+      "classificationMethod": "dsp"
     },
     {
       "detectorId": "dsp-v1",
@@ -4316,7 +4315,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 0.9729,
-      "medianLatencyMs": 20.15
+      "classificationMethod": "dsp"
     }
   ],
   "falseAlarms": [
@@ -4328,8 +4327,7 @@
       "trials": 60,
       "falseDetections": 60,
       "falsePositiveRate": 1,
-      "meanConfidence": 0.8656,
-      "medianLatencyMs": 20.07
+      "meanConfidence": 0.8656
     },
     {
       "detectorId": "dsp-v1",
@@ -4339,8 +4337,7 @@
       "trials": 60,
       "falseDetections": 54,
       "falsePositiveRate": 0.9,
-      "meanConfidence": 0.8402,
-      "medianLatencyMs": 20.05
+      "meanConfidence": 0.8402
     },
     {
       "detectorId": "dsp-v1",
@@ -4350,8 +4347,7 @@
       "trials": 60,
       "falseDetections": 50,
       "falsePositiveRate": 0.8333,
-      "meanConfidence": 0.8258,
-      "medianLatencyMs": 20.09
+      "meanConfidence": 0.8258
     }
   ]
 }

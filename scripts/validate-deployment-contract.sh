@@ -4,6 +4,7 @@ set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 workflow="$repo_dir/.github/workflows/deploy-development.yml"
+validation_workflow="$repo_dir/.github/workflows/validate.yml"
 logger="$repo_dir/scripts/write-deployment-log.sh"
 
 fail() {
@@ -13,6 +14,7 @@ fail() {
 
 [[ -f "$repo_dir/AGENTS.md" ]] || fail "AGENTS.md is missing"
 [[ -f "$workflow" ]] || fail "deployment workflow is missing"
+[[ -f "$validation_workflow" ]] || fail "pull-request validation workflow is missing"
 [[ -x "$logger" ]] || fail "deployment log generator is missing or not executable"
 
 require_workflow_text() {
@@ -32,6 +34,23 @@ require_workflow_text './scripts/write-deployment-log.sh deployment-log.json' 'd
 require_workflow_text 'name: tael-deployment-log-${{ github.run_id }}' 'stable deployment artifact name is required'
 require_workflow_text 'retention-days: 90' '90-day deployment receipt retention is required'
 require_workflow_text 'if-no-files-found: error' 'missing deployment receipts must fail CI'
+require_workflow_text 'npm ci' 'locked dependency installation is required'
+require_workflow_text 'npm test' 'release tests are required'
+require_workflow_text 'npm run lint' 'release type checking is required'
+require_workflow_text 'npm run build' 'release build verification is required'
+require_workflow_text 'npm run data:validate' 'dataset provenance and checksum validation is required'
+require_workflow_text 'npm audit --omit=dev' 'production dependency audit is required'
+require_workflow_text 'aquasecurity/trivy-action@' 'published image scanning is required'
+require_workflow_text "'{{.Config.User}}'" 'non-root runtime verification is required'
+require_workflow_text "'{{.HostConfig.ReadonlyRootfs}}'" 'read-only runtime verification is required'
+require_workflow_text '/health/ready' 'runtime health verification is required'
+
+for expected in 'npm ci' 'npm test' 'npm run lint' 'npm run build' \
+  'npm run data:validate' 'npm audit --omit=dev' 'docker compose config --quiet' \
+  'aquasecurity/trivy-action@'; do
+  grep --fixed-strings --quiet -- "$expected" "$validation_workflow" || \
+    fail "pull-request validation is missing: $expected"
+done
 
 bash -n "$logger"
 echo "Tael deployment contract is valid."

@@ -15,6 +15,7 @@ export interface DetectionStatistic {
   top1Accuracy: number;
   accuracyWhenDetected: number;
   meanConfidence: number;
+  classificationMethod?: "dsp" | "ml-detection+dsp-type";
 }
 
 export interface FalseAlarmStatistic {
@@ -49,6 +50,9 @@ export interface HeadlessReport {
     localizationTrialsPerJitterLevel: number;
     distancesM: number[];
     attenuationModel: string;
+    trainingDomain?: string;
+    benchmarkDomain?: string;
+    reportTimestampPolicy?: string;
   };
   caveats: string[];
   models?: DetectorModelStatistic[];

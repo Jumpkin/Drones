@@ -24,6 +24,9 @@ describe("blind acoustic detector", () => {
 
   it("handles empty input and rejects invalid sample rates", () => {
     expect(resampleLinear(new Float32Array(), 48000, 16000)).toHaveLength(0);
+    const silence = analyzePcm(new Float32Array(16_000), 16_000);
+    expect(silence.fundamentalHz).toBe(0);
+    expect(silence.spectralSnrDb).toBe(0);
     expect(() => resampleLinear(new Float32Array([1]), 0, 16000)).toThrow(/sample rates/i);
   });
 

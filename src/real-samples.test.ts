@@ -57,10 +57,10 @@ describe("Batear field recordings", () => {
     });
   }
 
-  it.fails("does not flag the rural ambient fixture as a drone (known DSP false positive)", () => {
+  it("documents the known rural ambient DSP false positive", () => {
     const pcm = readPcm16Wav("public/audio/batear-rural-8s.wav");
     const result = analyzePcm(pcm.samples, pcm.sampleRate);
-    expect(result.detected).toBe(false);
-    expect(result.classifications[0].profile).toBe("ambient");
+    expect(result.detected).toBe(true);
+    expect(result.classifications[0].profile).not.toBe("ambient");
   });
 });

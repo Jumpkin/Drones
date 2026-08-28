@@ -209,7 +209,16 @@ export async function playAudioBuffer(buffer: AudioBuffer, maxDurationS = 8): Pr
   source.buffer = buffer;
   source.connect(gain);
   gain.connect(audioContext.destination);
-  source.start(0, 0, Math.min(buffer.duration, maxDurationS));
+  const durationS = Math.min(buffer.duration, maxDurationS);
+  const completed = new Promise<void>((resolve) => {
+    source.addEventListener("ended", () => {
+      source.disconnect();
+      gain.disconnect();
+      resolve();
+    }, { once: true });
+  });
+  source.start(0, 0, durationS);
+  await completed;
 }
 
 export async function playPcm(
@@ -272,4 +281,6 @@ export async function playDroneMixture(
       oscillator.stop(now + durationS);
     });
   });
+  await new Promise<void>((resolve) => window.setTimeout(resolve, durationS * 1000));
+  master.disconnect();
 }

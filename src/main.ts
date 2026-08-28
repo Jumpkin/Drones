@@ -479,7 +479,7 @@ app.innerHTML = `
         <option value="top1Accuracy">Correct detection + type</option>
       </select></label>
       <div class="statistics-run-info">
-        <span>Latest run</span>
+        <span>Model snapshot</span>
         <strong id="statisticsGenerated">Loading…</strong>
         <small id="statisticsSeed">—</small>
       </div>
@@ -545,7 +545,7 @@ app.innerHTML = `
       </div>
 
       <section class="lab-card statistics-comparison-card">
-        <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>DSP versus ML on the same benchmark</h3></div><span class="data-badge">SAME DATA · SAME SEED</span></div>
+        <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>DSP versus ML on the same synthetic benchmark</h3></div><span class="data-badge">SAME GENERATOR · SAME SEED</span></div>
         <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detector</th><th>Default</th><th>Precision</th><th>Recall</th><th>False alarms</th><th>F1</th><th>PR-AUC</th><th>Gate</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
       </section>
 
@@ -810,7 +810,7 @@ function renderMetrics(): void {
   setText("#marginOutput", formatSeconds(result.machineMarginS));
   const hasBearing = Number.isFinite(result.estimatedBearingDeg);
   setText("#bearingOutput", hasBearing ? `${Math.round(result.estimatedBearingDeg)}°` : "Unknown");
-  setText("#bearingErrorOutput", hasBearing ? `±${result.bearingErrorDeg.toFixed(1)}° estimated` : "requires at least 2 nodes");
+  setText("#bearingErrorOutput", hasBearing ? `±${result.bearingErrorDeg.toFixed(1)}° estimated` : "requires at least 3 nodes");
   setText("#syncOutput", `${result.arrayTimingErrorMs.toFixed(result.arrayTimingErrorMs < 0.1 ? 2 : 1)} ms`);
   setText("#syncDistanceOutput", `${result.arraySpatialErrorM.toFixed(result.arraySpatialErrorM < 0.1 ? 3 : 2)} m`);
   setText("#snrOutput", config.dronePresent ? `${result.snrDb.toFixed(1)} dB` : "—");
@@ -1261,7 +1261,11 @@ function renderStatistics(): void {
   setText("#statisticsThresholdBadge", model ? `THRESHOLD ${model.threshold.toFixed(2)}` : "V1 REPORT");
   setText(
     "#statisticsDetectionTitle",
-    metric === "detectionRate" ? "Detection rate by drone type" : "Correct detection + type",
+    metric === "detectionRate"
+      ? "Detection rate by drone type"
+      : detectorId === "ml-onnx-v1"
+        ? "Correct ML detection + DSP type"
+        : "Correct DSP detection + type",
   );
   requiredElement("#statisticsProfileLegend").innerHTML = profileComparison.map((item) =>
     `<span><i style="--series:${statisticsColors[item.profile]}"></i>${escapeHtml(item.label)}</span>`
@@ -1325,6 +1329,9 @@ requiredElement<HTMLSelectElement>("#statisticsDetector").addEventListener("chan
 requiredElement<HTMLSelectElement>("#statisticsEnvironment").addEventListener("change", renderStatistics);
 requiredElement<HTMLSelectElement>("#statisticsMetric").addEventListener("change", renderStatistics);
 window.addEventListener("resize", () => {
+  if (!viewElements.simulator.hidden) renderAll();
+  if (!viewElements.soundLab.hidden) drawLabSpectrum();
+  if (!viewElements.experiment.hidden) drawExperiment();
   if (!viewElements.statistics.hidden && statisticsReport) renderStatistics();
 });
 
@@ -1535,12 +1542,14 @@ function drawLabSpectrum(): void {
 
 labSampleSelect.addEventListener("change", syncLabSample);
 labRpmInput.addEventListener("input", () => {
+  labInputMode = "sample";
   setText("#labRpmOutput", `${Number(labRpmInput.value) > 0 ? "+" : ""}${labRpmInput.value}%`);
   labResult = undefined;
   labDetectorOutput = undefined;
   renderLabResult();
 });
 labDetectorSelect.addEventListener("change", async () => {
+  labInputMode = "sample";
   const requestedId = labDetectorSelect.value;
   labResult = undefined;
   labDetectorOutput = undefined;
@@ -1593,6 +1602,9 @@ requiredElement<HTMLButtonElement>("#labAnalyzeButton").addEventListener("click"
   button.disabled = true;
   button.textContent = "Analyzing…";
   try {
+    // getLabPcm always returns the selected sample. Keep the result provenance
+    // coupled to that input instead of carrying over a previous microphone truth.
+    labInputMode = "sample";
     const pcm = await getLabPcm();
     await new Promise<void>((resolve) => window.setTimeout(resolve, 30));
     labResult = analyzePcm(pcm.samples, pcm.sampleRate);

@@ -47,8 +47,6 @@ export interface SimulationConfig {
   spoofLevelDb: number;
   sensorCount: number;
   arrayMode: ArrayMode;
-  droneCount: number;
-  secondaryProfiles: DroneProfileId[];
   sensors: SensorToggles;
 }
 
@@ -57,7 +55,6 @@ export interface SimulationState {
   drone: Point;
   target: Point;
   sensorNodes: Point[];
-  secondaryDrones: Point[];
   spoofSource: Point;
 }
 
@@ -76,7 +73,7 @@ export interface SimulationResult {
   alert: boolean;
   acousticSource: "drone" | "replay" | "noise" | "none";
   spoofRisk: number;
-  bearingDeg: number;
+  trueBearingDeg: number;
   estimatedBearingDeg: number;
   bearingErrorDeg: number;
   arrayTimingErrorMs: number;
@@ -136,10 +133,7 @@ export const DRONE_PROFILES: Record<DroneProfileId, DroneProfile> = {
 interface ScenarioDefinition {
   label: string;
   description: string;
-  config: Omit<SimulationConfig, "scenario" | "droneCount" | "secondaryProfiles"> & {
-    droneCount?: number;
-    secondaryProfiles?: DroneProfileId[];
-  };
+  config: Omit<SimulationConfig, "scenario">;
   droneStart: Point;
 }
 
@@ -370,8 +364,6 @@ export function createConfig(scenario: ScenarioId): SimulationConfig {
   return {
     ...source,
     scenario,
-    droneCount: source.droneCount ?? (source.dronePresent ? 1 : 0),
-    secondaryProfiles: [...(source.secondaryProfiles ?? ["fpv", "fixedWing"])],
     sensors: { ...source.sensors },
   };
 }
@@ -385,10 +377,6 @@ export function createState(scenario: ScenarioId): SimulationState {
       { x: 150, y: 220 },
       { x: 245, y: 112 },
       { x: 245, y: 328 },
-    ],
-    secondaryDrones: [
-      { x: 585, y: 335 },
-      { x: 665, y: 245 },
     ],
     spoofSource: { x: 212, y: 270 },
   };
@@ -416,9 +404,6 @@ export function stepSimulation(
     ...state,
     elapsedS: state.elapsedS + deltaSeconds,
     drone: movePoint(state.drone, 1),
-    secondaryDrones: state.secondaryDrones.map((point, index) =>
-      movePoint(point, index === 0 ? 0.82 : 1.12),
-    ),
   };
 }
 
@@ -484,12 +469,14 @@ export function evaluateSimulation(
     : 0;
 
   let acousticSource: SimulationResult["acousticSource"] = "none";
-  if (config.spoofMode === "broadband" && spoofReceived > receivedDrone + 3) {
-    acousticSource = "noise";
-  } else if (replayAcoustic > realAcoustic) {
-    acousticSource = "replay";
-  } else if (realAcoustic > 0.1) {
-    acousticSource = "drone";
+  if (config.sensors.acoustic) {
+    if (config.spoofMode === "broadband" && spoofReceived > receivedDrone + 3) {
+      acousticSource = "noise";
+    } else if (replayAcoustic > realAcoustic) {
+      acousticSource = "replay";
+    } else if (realAcoustic > 0.1) {
+      acousticSource = "drone";
+    }
   }
 
   const radarRange = 500 * profile.radarFactor;
@@ -524,7 +511,7 @@ export function evaluateSimulation(
   );
 
   const replaySpatialMismatch =
-    config.spoofMode === "replay"
+    acousticSource === "replay"
       ? clamp(0.68 + 0.1 * deterministicNoise(state.elapsedS, 3))
       : 0;
   const noCorroboration = acousticProbability > 0.65 && corroboratingSensors <= 1 ? 0.22 : 0;
@@ -552,7 +539,9 @@ export function evaluateSimulation(
   const arraySpatialError = arrayMode.timingErrorMs * 0.343;
   const timingAngularPenalty =
     (Math.atan2(arraySpatialError, 18) * 180) / Math.PI;
-  const bearingObservable = config.sensorCount >= 2 && acousticProbability > 0.1;
+  // A pair of spatially separated nodes provides only one TDOA constraint and
+  // therefore cannot produce a unique 2D bearing in this simulator.
+  const bearingObservable = config.sensorCount >= 3 && acousticProbability > 0.1;
   const bearingError =
     bearingObservable
       ? Math.max(
@@ -565,30 +554,22 @@ export function evaluateSimulation(
       ? (trueBearing + bearingError * deterministicNoise(state.elapsedS, 7) + 360) % 360
       : Number.NaN;
 
-  const altitudeObservable =
-    acousticSource === "drone" && config.sensorCount >= 2 && acousticProbability > 0.22;
-  const altitudeError = altitudeObservable
-    ? Math.max(
-        7,
-        (1 - acousticProbability) * 65 +
-          arraySpatialError * 7 +
-          (config.sensorCount === 2 ? 14 : 0),
-      )
-    : Number.POSITIVE_INFINITY;
-  const estimatedAltitude = altitudeObservable
-    ? Math.max(
-        0,
-        config.altitudeM +
-          altitudeError * 0.55 * deterministicNoise(state.elapsedS, 11),
-      )
-    : Number.NaN;
+  // All available nodes are coplanar. Keep altitude explicitly unobservable
+  // until the state can represent a non-coplanar fourth node or another sensor.
+  const altitudeError = Number.POSITIVE_INFINITY;
+  const estimatedAltitude = Number.NaN;
 
   const eta = config.dronePresent
     ? arrivalTime(targetDistance, config.speedKmh)
     : Number.POSITIVE_INFINITY;
-  const delay = acousticSource !== "none" ? soundDelay(acousticSourceDistance) : 0;
+  const delay = config.sensors.acoustic && acousticSource !== "none"
+    ? soundDelay(acousticSourceDistance)
+    : 0;
+  const acousticPathLatency = config.sensors.acoustic && acousticSource !== "none"
+    ? delay + arrayMode.networkLatencyS
+    : 0;
   const systemLatency =
-    delay + 0.8 + arrayMode.networkLatencyS + (fusionConfidence < 0.6 ? 0.7 : 0);
+    acousticPathLatency + 0.8 + (fusionConfidence < 0.6 ? 0.7 : 0);
   const machineMargin = Number.isFinite(eta) ? eta - systemLatency : eta;
   const humanMargin = Number.isFinite(machineMargin) ? machineMargin - 3 : machineMargin;
   const nominalAcousticRange = Math.max(
@@ -597,7 +578,7 @@ export function evaluateSimulation(
   );
 
   let status: SimulationResult["status"] = "clear";
-  if (config.spoofMode === "broadband" && spoofReceived > receivedDrone + 3) {
+  if (acousticSource === "noise") {
     status = "jammed";
   } else if (spoofRisk > 0.58 && acousticSource === "replay") {
     status = "spoof";
@@ -622,7 +603,7 @@ export function evaluateSimulation(
     alert: status === "confirmed",
     acousticSource,
     spoofRisk,
-    bearingDeg: trueBearing,
+    trueBearingDeg: trueBearing,
     estimatedBearingDeg: estimatedBearing,
     bearingErrorDeg: bearingError,
     arrayTimingErrorMs: arrayMode.timingErrorMs,

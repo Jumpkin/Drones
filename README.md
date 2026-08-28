@@ -85,13 +85,18 @@ The headless simulation writes aggregate JSON and CSV reports to
 - The detector is a harmonic FFT baseline, not a trained production ML model.
 - The experimental ML detector reduces structured false positives sharply but
   still fails the 5% held-out false-positive gate, so DSP remains the default.
+- ML training and the Monte Carlo benchmark currently use the same synthetic
+  generator family. Real Batear files remain external-test fixtures and are
+  not represented as independent field validation.
 - The DSP baseline currently flags the real rural ambient fixture as a drone;
-  this known failing expectation is retained in the test suite and makes the
-  live negative trials a required part of evaluation.
+  this known false positive is asserted explicitly in the regression suite and
+  makes the live negative trials a required part of evaluation.
 - The distance model uses simplified free-field attenuation with an assumed
   reference gain, not calibrated sound-pressure measurements.
 - The localization benchmark does not yet model reverberation or multipath.
 - Three coplanar microphones provide a 2D estimate; altitude remains unknown.
+- Multiple simultaneous drones are not modeled yet; that requires explicit
+  source separation and track association rather than duplicated map icons.
 
 See [PROJECT.md](PROJECT.md) for the complete research context.
 

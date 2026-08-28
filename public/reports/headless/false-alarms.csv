@@ -1,0 +1,4 @@
+environment,ambientRms,trials,falseDetections,falsePositiveRate,meanConfidence
+quiet,0.02,120,0,0,0.3849
+urban,0.05,120,120,1,0.8802
+loud-structured,0.1,120,120,1,0.9755

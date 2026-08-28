@@ -1,0 +1,78 @@
+name: Validate Drones
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  product:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Configure Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Test product
+        run: npm test
+
+      - name: Lint product source
+        run: npm run lint
+
+      - name: Build production assets
+        run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev
+
+      - name: Enforce Tael deployment contract
+        run: ./scripts/validate-deployment-contract.sh
+
+      - name: Validate Compose configuration
+        run: docker compose config --quiet
+
+      - name: Build product image
+        run: docker compose build drones
+
+      - name: Exercise hardened product runtime
+        run: |
+          set -euo pipefail
+          docker network create tael-platform-dev_edge
+          docker compose up --detach --wait drones
+          container_id="$(docker compose ps --quiet drones)"
+          docker compose exec -T drones wget --quiet -O - http://127.0.0.1:8080/ | grep --quiet 'Drones · Acoustic Sensor Lab'
+          test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = '65532:65532'
+          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' "$container_id")" = 'true'
+          docker inspect --format '{{json .HostConfig.CapDrop}}' "$container_id" | grep --quiet 'ALL'
+          docker inspect --format '{{json .HostConfig.SecurityOpt}}' "$container_id" | grep --quiet 'no-new-privileges'
+          bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$container_id")"
+          test "$bindings" = 'null' || test "$bindings" = '{}'
+
+      - name: Scan product image for fixable critical vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: tael-drones-dev:latest
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: CRITICAL
+
+      - name: Stop validation stack
+        if: always()
+        run: |
+          docker compose down --remove-orphans
+          docker network rm tael-platform-dev_edge || true

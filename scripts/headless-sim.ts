@@ -9,7 +9,14 @@ import {
   mulberry32,
 } from "../src/benchmark-audio";
 import { analyzePcm } from "../src/detector";
-import { analyzeWithArtifact, binaryMetrics, type BinaryMetrics, type MlModelArtifact } from "../src/ml/model";
+import {
+  analyzeWithArtifact,
+  averagePrecision,
+  binaryMetrics,
+  rocAuc,
+  type BinaryMetrics,
+  type MlModelArtifact,
+} from "../src/ml/model";
 import {
   distance,
   localizeGrid,
@@ -35,7 +42,7 @@ interface DetectionRow {
   top1Accuracy: number;
   accuracyWhenDetected: number;
   meanConfidence: number;
-  medianLatencyMs: number;
+  classificationMethod: "dsp" | "ml-detection+dsp-type";
 }
 
 interface FalseAlarmRow {
@@ -47,7 +54,6 @@ interface FalseAlarmRow {
   falseDetections: number;
   falsePositiveRate: number;
   meanConfidence: number;
-  medianLatencyMs: number;
 }
 
 interface Observation {
@@ -120,12 +126,6 @@ function angularDifference(a: number, b: number): number {
   return Math.abs(((a - b + 540) % 360) - 180);
 }
 
-function timed<T>(callback: () => T): { value: T; elapsedMs: number } {
-  const started = performance.now();
-  const value = callback();
-  return { value, elapsedMs: performance.now() - started };
-}
-
 function runDetectionBenchmark(
   trials: number,
   random: () => number,
@@ -141,25 +141,25 @@ function runDetectionBenchmark(
           detected: number;
           correct: number;
           confidences: number[];
-          latencies: number[];
         }>([
-          ["dsp-v1", { label: "FFT / harmonic DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
-          ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
+          ["dsp-v1", { label: "FFT / harmonic DSP", detected: 0, correct: 0, confidences: [] as number[] }],
+          ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[] }],
         ]);
         for (let trial = 0; trial < trials; trial += 1) {
           const samples = makeDroneObservation(profile, DURATION_S, SAMPLE_RATE, distanceM, environment, random);
-          const dspTimed = timed(() => analyzePcm(samples, SAMPLE_RATE));
-          const mlTimed = timed(() => analyzeWithArtifact(samples, SAMPLE_RATE, artifact));
+          const dsp = analyzePcm(samples, SAMPLE_RATE);
+          const ml = analyzeWithArtifact(samples, SAMPLE_RATE, artifact);
           const outcomes = [
-            { id: "dsp-v1" as const, detected: dspTimed.value.detected, probability: dspTimed.value.confidence, latency: dspTimed.elapsedMs },
-            { id: "ml-onnx-v1" as const, detected: mlTimed.value.detected, probability: mlTimed.value.confidence, latency: mlTimed.elapsedMs },
+            { id: "dsp-v1" as const, detected: dsp.detected, probability: dsp.confidence },
+            { id: "ml-onnx-v1" as const, detected: ml.detected, probability: ml.confidence },
           ];
           for (const outcome of outcomes) {
             const accumulator = accumulators.get(outcome.id)!;
             if (outcome.detected) accumulator.detected += 1;
-            if (outcome.detected && dspTimed.value.classifications[0]?.profile === profile) accumulator.correct += 1;
+            // The ONNX model is binary. Type attribution is deliberately and
+            // explicitly supplied by the DSP classifier for both rows.
+            if (outcome.detected && dsp.classifications[0]?.profile === profile) accumulator.correct += 1;
             accumulator.confidences.push(outcome.probability);
-            accumulator.latencies.push(outcome.latency);
             observations.push({
               id: `${outcome.id}-${profile}-${distanceM}-${environment.id}-${trial}`,
               detectorId: outcome.id,
@@ -189,7 +189,7 @@ function runDetectionBenchmark(
             top1Accuracy: round(rate(accumulator.correct, trials)),
             accuracyWhenDetected: round(rate(accumulator.correct, accumulator.detected)),
             meanConfidence: round(mean(accumulator.confidences)),
-            medianLatencyMs: round(percentile(accumulator.latencies, 0.5), 2),
+            classificationMethod: detectorId === "dsp-v1" ? "dsp" : "ml-detection+dsp-type",
           });
         }
       }
@@ -203,24 +203,22 @@ function runDetectionBenchmark(
       label: string;
       falseDetections: number;
       confidences: number[];
-      latencies: number[];
     }>([
-      ["dsp-v1", { label: "FFT / harmonic DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
-      ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
+      ["dsp-v1", { label: "FFT / harmonic DSP", falseDetections: 0, confidences: [] as number[] }],
+      ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[] }],
     ]);
     for (let trial = 0; trial < ambientTrials; trial += 1) {
       const kind = HARD_NEGATIVE_KINDS[trial % HARD_NEGATIVE_KINDS.length];
       const samples = makeHardNegative(kind, DURATION_S, SAMPLE_RATE, environment, random);
-      const dspTimed = timed(() => analyzePcm(samples, SAMPLE_RATE));
-      const mlTimed = timed(() => analyzeWithArtifact(samples, SAMPLE_RATE, artifact));
+      const dsp = analyzePcm(samples, SAMPLE_RATE);
+      const ml = analyzeWithArtifact(samples, SAMPLE_RATE, artifact);
       for (const outcome of [
-        { id: "dsp-v1" as const, detected: dspTimed.value.detected, probability: dspTimed.value.confidence, latency: dspTimed.elapsedMs },
-        { id: "ml-onnx-v1" as const, detected: mlTimed.value.detected, probability: mlTimed.value.confidence, latency: mlTimed.elapsedMs },
+        { id: "dsp-v1" as const, detected: dsp.detected, probability: dsp.confidence },
+        { id: "ml-onnx-v1" as const, detected: ml.detected, probability: ml.confidence },
       ]) {
         const accumulator = accumulators.get(outcome.id)!;
         if (outcome.detected) accumulator.falseDetections += 1;
         accumulator.confidences.push(outcome.probability);
-        accumulator.latencies.push(outcome.latency);
         observations.push({
           id: `${outcome.id}-negative-${environment.id}-${trial}`,
           detectorId: outcome.id,
@@ -244,7 +242,6 @@ function runDetectionBenchmark(
         falseDetections: accumulator.falseDetections,
         falsePositiveRate: round(rate(accumulator.falseDetections, ambientTrials)),
         meanConfidence: round(mean(accumulator.confidences)),
-        medianLatencyMs: round(percentile(accumulator.latencies, 0.5), 2),
       });
     }
   }
@@ -272,15 +269,6 @@ function curveFor(observations: Observation[]): Array<{ threshold: number; preci
   return curve;
 }
 
-function areaUnderCurve(points: Array<{ x: number; y: number }>): number {
-  const sorted = [...points].sort((a, b) => a.x - b.x);
-  let area = 0;
-  for (let index = 1; index < sorted.length; index += 1) {
-    area += (sorted[index].x - sorted[index - 1].x) * (sorted[index].y + sorted[index - 1].y) / 2;
-  }
-  return round(Math.abs(area));
-}
-
 function modelReport(
   detectorId: "dsp-v1" | "ml-onnx-v1",
   observations: Observation[],
@@ -298,8 +286,14 @@ function modelReport(
     isDefault: detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : !artifact.qualityGate.passed,
     qualityGate: detectorId === "ml-onnx-v1" ? artifact.qualityGate : null,
     overall: metricsFor(selected),
-    prAuc: areaUnderCurve(curve.map((point) => ({ x: point.recall, y: point.precision }))),
-    rocAuc: areaUnderCurve(curve.map((point) => ({ x: point.falsePositiveRate, y: point.recall }))),
+    prAuc: round(averagePrecision(
+      selected.map((item) => item.truth),
+      selected.map((item) => item.probability),
+    )),
+    rocAuc: round(rocAuc(
+      selected.map((item) => item.truth),
+      selected.map((item) => item.probability),
+    )),
     brierScore: round(mean(selected.map((item) => (item.probability - Number(item.truth)) ** 2))),
     curve,
     detection: detection.filter((row) => row.detectorId === detectorId),
@@ -447,7 +441,9 @@ async function main(): Promise<void> {
     .map((item) => ({ ...item, failureKind: item.truth ? "false-negative" : "false-positive" }));
   const summary = {
     schemaVersion: 2,
-    generatedAt: new Date().toISOString(),
+    // Tie the report timestamp to the immutable model artifact so repeated
+    // runs with the same seed and inputs are byte-for-byte reproducible.
+    generatedAt: artifact.trainedAt,
     seed,
     configuration: {
       sampleRate: SAMPLE_RATE,
@@ -458,10 +454,15 @@ async function main(): Promise<void> {
       environments: BENCHMARK_ENVIRONMENTS,
       attenuationModel: "free-field 1/r, reference gain 0.72 at 25 m",
       splitPolicy: "grouped by source recording/session; 70/15/15",
+      trainingDomain: "synthetic-only",
+      benchmarkDomain: "synthetic signals from the same generator family",
+      reportTimestampPolicy: "model artifact timestamp for reproducible output",
     },
     caveats: [
       "Synthetic results are regression benchmarks, not validated field range.",
       "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
+      "Training and Monte Carlo benchmarking use the same synthetic generator family; results measure regression behavior, not independent generalization.",
+      "The ML detector is binary. Every ML 'detection + type' row uses ML for detection and the DSP classifier for type attribution.",
       "Distance uses assumed source gain rather than calibrated SPL data.",
       "Localization omits reverberation and multipath.",
       "Three coplanar listeners estimate 2D only; altitude remains unknown.",

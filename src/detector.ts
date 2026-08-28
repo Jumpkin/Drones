@@ -12,6 +12,7 @@ export interface DetectorResult {
   confidence: number;
   fundamentalHz: number;
   harmonicScoreDb: number;
+  spectralSnrDb: number;
   noiseFloorDb: number;
   positiveFrames: number;
   analyzedFrames: number;
@@ -151,6 +152,7 @@ export function analyzePcm(
   let fundamentalWeight = 0;
   let bestScore = -120;
   let bestNoiseFloor = -120;
+  let bestSignalPeak = -120;
   let accumulatedSpectrum = new Array<number>(FFT_SIZE / 2).fill(0);
   const positiveFundamentalBins: number[] = [];
 
@@ -205,13 +207,14 @@ export function analyzePcm(
     if (framePositive) {
       positiveFrames += 1;
       positiveFundamentalBins.push(Math.round(frameBestFundamental / binHz));
+      weightedFundamental += frameBestFundamental * frameConfidence;
+      fundamentalWeight += frameConfidence;
     }
     confidenceSum += frameConfidence;
-    weightedFundamental += frameBestFundamental * frameConfidence;
-    fundamentalWeight += frameConfidence;
     if (frameBestScore > bestScore) {
       bestScore = frameBestScore;
       bestNoiseFloor = noiseFloor;
+      bestSignalPeak = localPeak(spectrum, Math.round(frameBestFundamental / binHz));
     }
     analyzedFrames += 1;
   }
@@ -234,6 +237,7 @@ export function analyzePcm(
     confidence,
     fundamentalHz,
     harmonicScoreDb: bestScore,
+    spectralSnrDb: Math.max(0, bestSignalPeak - bestNoiseFloor),
     noiseFloorDb: bestNoiseFloor,
     positiveFrames,
     analyzedFrames,

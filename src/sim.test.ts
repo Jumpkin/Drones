@@ -42,7 +42,7 @@ describe("simulation", () => {
     expect(result.acousticSource).toBe("replay");
     expect(result.spoofRisk).toBeGreaterThan(0.5);
     expect(result.alert).toBe(false);
-    expect(result.bearingDeg).toBeCloseTo(240.36, 1);
+    expect(result.trueBearingDeg).toBeCloseTo(240.36, 1);
     expect(result.nearestAcousticDistanceM).toBeCloseTo(Math.hypot(33, 58), 4);
     expect(result.soundDelayS).toBeGreaterThan(0);
     expect(Number.isNaN(result.estimatedAltitudeM)).toBe(true);
@@ -62,6 +62,36 @@ describe("simulation", () => {
     expect(config.sensorCount).toBe(1);
     expect(Number.isNaN(result.estimatedBearingDeg)).toBe(true);
     expect(result.altitudeErrorM).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("requires three nodes for a unique 2D bearing and never invents altitude", () => {
+    const state = createState("phoneMesh");
+    state.drone = { x: 300, y: 112 };
+    const twoNodes = createConfig("phoneMesh");
+    twoNodes.sensorCount = 2;
+    const twoNodeResult = evaluateSimulation(state, twoNodes);
+    expect(Number.isNaN(twoNodeResult.estimatedBearingDeg)).toBe(true);
+    expect(Number.isNaN(twoNodeResult.estimatedAltitudeM)).toBe(true);
+
+    const threeNodes = createConfig("phoneMesh");
+    threeNodes.sensorCount = 3;
+    const threeNodeResult = evaluateSimulation(state, threeNodes);
+    expect(Number.isFinite(threeNodeResult.estimatedBearingDeg)).toBe(true);
+    expect(Number.isNaN(threeNodeResult.estimatedAltitudeM)).toBe(true);
+    expect(threeNodeResult.altitudeErrorM).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("removes acoustic transport and phone-network latency when acoustics are disabled", () => {
+    const state = createState("phoneMesh");
+    state.drone = { x: 300, y: 112 };
+    const acoustic = createConfig("phoneMesh");
+    const nonAcoustic = createConfig("phoneMesh");
+    nonAcoustic.sensors.acoustic = false;
+    const acousticResult = evaluateSimulation(state, acoustic);
+    const nonAcousticResult = evaluateSimulation(state, nonAcoustic);
+    expect(acousticResult.soundDelayS).toBeGreaterThan(0);
+    expect(nonAcousticResult.soundDelayS).toBe(0);
+    expect(nonAcousticResult.systemLatencyS).toBeLessThan(acousticResult.systemLatencyS);
   });
 
   it("loses acoustic SNR under broadband masking", () => {

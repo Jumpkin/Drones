@@ -255,6 +255,7 @@ async function main(): Promise<void> {
     temporal: { requiredPositiveWindows: 3, windowCount: 5 },
     modelUrl: "/models/drone-binary-v1.onnx",
     modelBytes,
+    trainingDomain: "synthetic-only",
     trainedAt: new Date().toISOString(),
     seed: SEED,
     qualityGate: {

@@ -28,6 +28,7 @@ export interface MlModelArtifact {
   temporal: { requiredPositiveWindows: number; windowCount: number };
   modelUrl: string;
   modelBytes: number;
+  trainingDomain: "synthetic-only";
   trainedAt: string;
   seed: number;
   qualityGate: {
@@ -58,6 +59,9 @@ export function parseMlModelArtifact(value: unknown): MlModelArtifact {
     !Number.isFinite(artifact.bias) || typeof artifact.threshold !== "number" ||
     !Number.isFinite(artifact.threshold) || artifact.threshold < 0 || artifact.threshold > 1 ||
     typeof artifact.modelUrl !== "string" || !artifact.modelUrl.startsWith("/models/") ||
+    artifact.trainingDomain !== "synthetic-only" ||
+    typeof artifact.modelBytes !== "number" ||
+    !Number.isInteger(artifact.modelBytes) || artifact.modelBytes <= 0 ||
     !artifact.temporal || !Number.isInteger(artifact.temporal.requiredPositiveWindows) ||
     !Number.isInteger(artifact.temporal.windowCount) || artifact.temporal.requiredPositiveWindows < 1 ||
     artifact.temporal.windowCount < artifact.temporal.requiredPositiveWindows ||
@@ -111,6 +115,10 @@ export function aggregateProbabilities(
   threshold: number,
   temporal = { requiredPositiveWindows: 3, windowCount: 5 },
 ): TemporalMlResult {
+  if (!Number.isFinite(threshold) || threshold < 0 || threshold > 1 ||
+    probabilities.some((value) => !Number.isFinite(value) || value < 0 || value > 1)) {
+    throw new Error("ML probabilities and threshold must be finite values between zero and one");
+  }
   if (!Number.isInteger(temporal.requiredPositiveWindows) ||
     !Number.isInteger(temporal.windowCount) || temporal.requiredPositiveWindows < 1 ||
     temporal.windowCount < temporal.requiredPositiveWindows) {
@@ -131,6 +139,49 @@ export function aggregateProbabilities(
     analyzedWindows: recent.length,
     probabilities: recent,
   };
+}
+
+export function averagePrecision(truth: boolean[], probabilities: number[]): number {
+  if (truth.length !== probabilities.length || probabilities.some((value) => !Number.isFinite(value))) {
+    throw new Error("Metric inputs must have matching lengths and finite probabilities");
+  }
+  const positives = truth.filter(Boolean).length;
+  if (positives === 0) return 0;
+  const ranked = probabilities.map((probability, index) => ({ probability, positive: truth[index] }))
+    .sort((a, b) => b.probability - a.probability);
+  let truePositive = 0;
+  let predictedPositive = 0;
+  let area = 0;
+  for (let start = 0; start < ranked.length;) {
+    let end = start;
+    let groupTruePositive = 0;
+    while (end < ranked.length && ranked[end].probability === ranked[start].probability) {
+      if (ranked[end].positive) groupTruePositive += 1;
+      end += 1;
+    }
+    truePositive += groupTruePositive;
+    predictedPositive += end - start;
+    area += (groupTruePositive / positives) * (truePositive / predictedPositive);
+    start = end;
+  }
+  return area;
+}
+
+export function rocAuc(truth: boolean[], probabilities: number[]): number {
+  if (truth.length !== probabilities.length || probabilities.some((value) => !Number.isFinite(value))) {
+    throw new Error("Metric inputs must have matching lengths and finite probabilities");
+  }
+  const positives = probabilities.filter((_, index) => truth[index]);
+  const negatives = probabilities.filter((_, index) => !truth[index]);
+  if (positives.length === 0 || negatives.length === 0) return 0;
+  let wins = 0;
+  for (const positive of positives) {
+    for (const negative of negatives) {
+      if (positive > negative) wins += 1;
+      else if (positive === negative) wins += 0.5;
+    }
+  }
+  return wins / (positives.length * negatives.length);
 }
 
 export function analyzeWithArtifact(

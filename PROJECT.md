@@ -85,3 +85,7 @@ model-specific: play a randomized mix of drone and non-drone sounds from a
 computer, capture them on a phone over HTTPS, and measure recall, false-alarm
 rate, and inference latency. Laptop playback validates the capture and
 classification path, not real drone range or sound pressure.
+
+Multiple simultaneous drones are deliberately outside the current simulator
+contract. They require source-separation and track-association metrics rather
+than reusing a single-drone confidence value for several aircraft.

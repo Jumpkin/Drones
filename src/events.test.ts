@@ -10,5 +10,7 @@ describe("acoustic event metadata", () => {
     const expectedSamples = result.spectrumDb.length * 2 + (result.analyzedFrames - 1) * 512;
     expect(event.windowMs).toBe(Math.round(expectedSamples / result.spectrumSampleRate * 1000));
     expect(event.windowMs).toBeGreaterThan(result.analyzedFrames * 512 / 16_000 * 1000);
+    expect(event.snrEstimateDb).toBe(result.spectralSnrDb);
+    expect(event.snrEstimateDb).not.toBe(event.harmonicScoreDb);
   });
 });

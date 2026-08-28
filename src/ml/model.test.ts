@@ -5,8 +5,10 @@ import { generateDronePcm } from "../audio";
 import { ML_FEATURE_NAMES, extractMlFeatures, pcmWindows } from "./features";
 import {
   aggregateProbabilities,
+  averagePrecision,
   normalizeFeatures,
   parseMlModelArtifact,
+  rocAuc,
   scoreMlFeatures,
   type MlModelArtifact,
 } from "./model";
@@ -28,6 +30,13 @@ describe("ML detector artifact", () => {
       requiredPositiveWindows: 2,
       windowCount: 3,
     }).detected).toBe(true);
+    expect(() => aggregateProbabilities([Number.NaN], 0.5)).toThrow(/finite values/);
+  });
+
+  it("computes ranking metrics from unrounded probabilities", () => {
+    const truth = [true, false, true, false];
+    expect(averagePrecision(truth, [0.9, 0.8, 0.7, 0.1])).toBeCloseTo(5 / 6, 8);
+    expect(rocAuc(truth, [0.9, 0.8, 0.7, 0.1])).toBeCloseTo(0.75, 8);
   });
 
   it("includes the trailing audio in a final overlapping window", () => {

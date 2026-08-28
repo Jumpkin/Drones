@@ -42,10 +42,18 @@ describe("offline phone localization", () => {
   });
 
   it("finds sample delay by correlation", () => {
-    const reference = new Float32Array(256);
-    const delayed = new Float32Array(256);
-    reference[80] = 1;
-    delayed[92] = 1;
-    expect(estimateDelaySamples(reference, delayed, 30)).toBe(12);
+    for (const impulseIndex of [80, 81, 82, 83]) {
+      const reference = new Float32Array(256);
+      const delayed = new Float32Array(256);
+      reference[impulseIndex] = 1;
+      delayed[impulseIndex + 12] = 1;
+      expect(estimateDelaySamples(reference, delayed, 30)).toBe(12);
+    }
+  });
+
+  it("does not invent a delay for silent recordings", () => {
+    const silence = new Float32Array(256);
+    expect(estimateDelaySamples(silence, silence, 30)).toBe(0);
+    expect(() => estimateDelaySamples(silence, silence, -1)).toThrow(/maximum lag/i);
   });
 });

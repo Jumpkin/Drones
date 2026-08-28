@@ -1,20 +1,25 @@
 {
   "name": "drones-acoustic-simulator",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
+    "train:model": "tsx scripts/train-model.ts",
+    "data:fsd50k": "tsx scripts/ingest-fsd50k.ts",
+    "data:validate": "tsx scripts/validate-data.ts",
     "simulate": "tsx scripts/headless-sim.ts",
-    "simulate:quick": "tsx scripts/headless-sim.ts --trials 5 --localization-trials 40"
+    "simulate:quick": "tsx scripts/headless-sim.ts --trials 3 --localization-trials 40"
   },
   "dependencies": {
-    "fft.js": "^4.0.4"
+    "fft.js": "^4.0.4",
+    "onnxruntime-web": "^1.29.0"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "protobufjs": "^7.6.6",
     "tsx": "^4.23.12",
     "typescript": "^5.9.2",
     "vite": "^7.1.3",

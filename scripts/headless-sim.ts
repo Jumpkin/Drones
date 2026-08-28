@@ -1,8 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { generateDronePcm } from "../src/audio";
+import {
+  BENCHMARK_ENVIRONMENTS,
+  HARD_NEGATIVE_KINDS,
+  makeDroneObservation,
+  makeHardNegative,
+  mulberry32,
+} from "../src/benchmark-audio";
 import { analyzePcm } from "../src/detector";
+import { analyzeWithArtifact, binaryMetrics, type BinaryMetrics, type MlModelArtifact } from "../src/ml/model";
 import {
   distance,
   localizeGrid,
@@ -14,6 +21,8 @@ import {
 import { DRONE_PROFILES, type DroneProfileId } from "../src/sim";
 
 interface DetectionRow {
+  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorLabel: string;
   profile: DroneProfileId;
   label: string;
   distanceM: number;
@@ -26,15 +35,31 @@ interface DetectionRow {
   top1Accuracy: number;
   accuracyWhenDetected: number;
   meanConfidence: number;
+  medianLatencyMs: number;
 }
 
 interface FalseAlarmRow {
+  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorLabel: string;
   environment: string;
   ambientRms: number;
   trials: number;
   falseDetections: number;
   falsePositiveRate: number;
   meanConfidence: number;
+  medianLatencyMs: number;
+}
+
+interface Observation {
+  id: string;
+  detectorId: "dsp-v1" | "ml-onnx-v1";
+  truth: boolean;
+  detected: boolean;
+  probability: number;
+  environment: string;
+  distanceM: number | null;
+  sourceLabel: string;
+  license: string;
 }
 
 interface LocalizationRow {
@@ -49,22 +74,11 @@ interface LocalizationRow {
   medianResidualMs: number;
 }
 
-interface Environment {
-  id: string;
-  ambientRms: number;
-  machineryAmplitude: number;
-}
-
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SAMPLE_RATE = 16_000;
-const DURATION_S = 1.6;
+const DURATION_S = 3;
 const DISTANCES_M = [25, 50, 100, 200, 400];
 const PROFILES = Object.keys(DRONE_PROFILES) as DroneProfileId[];
-const ENVIRONMENTS: Environment[] = [
-  { id: "quiet", ambientRms: 0.02, machineryAmplitude: 0 },
-  { id: "urban", ambientRms: 0.05, machineryAmplitude: 0.018 },
-  { id: "loud-structured", ambientRms: 0.1, machineryAmplitude: 0.05 },
-];
 
 function argumentNumber(name: string, fallback: number): number {
   const index = process.argv.indexOf(name);
@@ -77,17 +91,6 @@ function argumentNumber(name: string, fallback: number): number {
 function argumentString(name: string, fallback: string): string {
   const index = process.argv.indexOf(name);
   return index < 0 ? fallback : (process.argv[index + 1] ?? fallback);
-}
-
-function mulberry32(seed: number): () => number {
-  let state = seed >>> 0;
-  return () => {
-    state += 0x6d2b79f5;
-    let value = state;
-    value = Math.imul(value ^ (value >>> 15), value | 1);
-    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
-    return ((value ^ (value >>> 14)) >>> 0) / 4_294_967_296;
-  };
 }
 
 function gaussian(random: () => number): number {
@@ -116,108 +119,191 @@ function angularDifference(a: number, b: number): number {
   return Math.abs(((a - b + 540) % 360) - 180);
 }
 
-function makeAmbient(length: number, environment: Environment, random: () => number): Float32Array {
-  const output = new Float32Array(length);
-  const machineryFundamental = 105 + random() * 85;
-  const machineryPhase = random() * Math.PI * 2;
-  for (let index = 0; index < length; index += 1) {
-    const time = index / SAMPLE_RATE;
-    let machinery = 0;
-    for (let harmonic = 1; harmonic <= 3; harmonic += 1) {
-      machinery += Math.sin(2 * Math.PI * machineryFundamental * harmonic * time + machineryPhase) *
-        environment.machineryAmplitude / harmonic;
-    }
-    output[index] = Math.max(-1, Math.min(1,
-      gaussian(random) * environment.ambientRms +
-      Math.sin(2 * Math.PI * 57 * time) * environment.ambientRms * 0.22 +
-      machinery,
-    ));
-  }
-  return output;
+function timed<T>(callback: () => T): { value: T; elapsedMs: number } {
+  const started = performance.now();
+  const value = callback();
+  return { value, elapsedMs: performance.now() - started };
 }
 
-function makeDroneObservation(
-  profile: DroneProfileId,
-  distanceM: number,
-  environment: Environment,
+function runDetectionBenchmark(
+  trials: number,
   random: () => number,
-): Float32Array {
-  const drone = generateDronePcm(
-    profile,
-    DURATION_S,
-    SAMPLE_RATE,
-    -20 + random() * 40,
-    0,
-  );
-  const observation = makeAmbient(drone.length, environment, random);
-  // Förenklad fri-fältsmodell. Referensnivån är ett antagande, inte kalibrerad SPL.
-  const gain = Math.min(1, 0.72 * 25 / Math.max(1, distanceM)) * (0.75 + random() * 0.5);
-  for (let index = 0; index < observation.length; index += 1) {
-    observation[index] = Math.max(-1, Math.min(1, observation[index] + drone[index] * gain));
-  }
-  return observation;
-}
-
-function runDetectionBenchmark(trials: number, random: () => number): {
-  detection: DetectionRow[];
-  falseAlarms: FalseAlarmRow[];
-} {
+  artifact: MlModelArtifact,
+): { detection: DetectionRow[]; falseAlarms: FalseAlarmRow[]; observations: Observation[] } {
   const detection: DetectionRow[] = [];
+  const observations: Observation[] = [];
   for (const profile of PROFILES) {
     for (const distanceM of DISTANCES_M) {
-      for (const environment of ENVIRONMENTS) {
-        let detected = 0;
-        let correctTop1 = 0;
-        const confidences: number[] = [];
+      for (const environment of BENCHMARK_ENVIRONMENTS) {
+        const accumulators = new Map<"dsp-v1" | "ml-onnx-v1", {
+          label: string;
+          detected: number;
+          correct: number;
+          confidences: number[];
+          latencies: number[];
+        }>([
+          ["dsp-v1", { label: "FFT / harmonik DSP", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
+          ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[], latencies: [] as number[] }],
+        ]);
         for (let trial = 0; trial < trials; trial += 1) {
-          const result = analyzePcm(
-            makeDroneObservation(profile, distanceM, environment, random),
-            SAMPLE_RATE,
-          );
-          if (result.detected) detected += 1;
-          if (result.detected && result.classifications[0]?.profile === profile) correctTop1 += 1;
-          confidences.push(result.confidence);
+          const samples = makeDroneObservation(profile, DURATION_S, SAMPLE_RATE, distanceM, environment, random);
+          const dspTimed = timed(() => analyzePcm(samples, SAMPLE_RATE));
+          const mlTimed = timed(() => analyzeWithArtifact(samples, SAMPLE_RATE, artifact));
+          const outcomes = [
+            { id: "dsp-v1" as const, detected: dspTimed.value.detected, probability: dspTimed.value.confidence, latency: dspTimed.elapsedMs },
+            { id: "ml-onnx-v1" as const, detected: mlTimed.value.detected, probability: mlTimed.value.confidence, latency: mlTimed.elapsedMs },
+          ];
+          for (const outcome of outcomes) {
+            const accumulator = accumulators.get(outcome.id)!;
+            if (outcome.detected) accumulator.detected += 1;
+            if (outcome.detected && dspTimed.value.classifications[0]?.profile === profile) accumulator.correct += 1;
+            accumulator.confidences.push(outcome.probability);
+            accumulator.latencies.push(outcome.latency);
+            observations.push({
+              id: `${outcome.id}-${profile}-${distanceM}-${environment.id}-${trial}`,
+              detectorId: outcome.id,
+              truth: true,
+              detected: outcome.detected,
+              probability: outcome.probability,
+              environment: environment.id,
+              distanceM,
+              sourceLabel: DRONE_PROFILES[profile].label,
+              license: "Projektgenererad",
+            });
+          }
         }
-        detection.push({
-          profile,
-          label: DRONE_PROFILES[profile].label,
-          distanceM,
-          environment: environment.id,
-          ambientRms: environment.ambientRms,
-          trials,
-          detected,
-          correctTop1,
-          detectionRate: round(rate(detected, trials)),
-          top1Accuracy: round(rate(correctTop1, trials)),
-          accuracyWhenDetected: round(rate(correctTop1, detected)),
-          meanConfidence: round(mean(confidences)),
-        });
+        for (const [detectorId, accumulator] of accumulators) {
+          detection.push({
+            detectorId,
+            detectorLabel: accumulator.label,
+            profile,
+            label: DRONE_PROFILES[profile].label,
+            distanceM,
+            environment: environment.id,
+            ambientRms: environment.ambientRms,
+            trials,
+            detected: accumulator.detected,
+            correctTop1: accumulator.correct,
+            detectionRate: round(rate(accumulator.detected, trials)),
+            top1Accuracy: round(rate(accumulator.correct, trials)),
+            accuracyWhenDetected: round(rate(accumulator.correct, accumulator.detected)),
+            meanConfidence: round(mean(accumulator.confidences)),
+            medianLatencyMs: round(percentile(accumulator.latencies, 0.5), 2),
+          });
+        }
       }
     }
   }
 
-  const falseAlarms = ENVIRONMENTS.map((environment): FalseAlarmRow => {
+  const falseAlarms: FalseAlarmRow[] = [];
+  for (const environment of BENCHMARK_ENVIRONMENTS) {
     const ambientTrials = trials * PROFILES.length;
-    let falseDetections = 0;
-    const confidences: number[] = [];
+    const accumulators = new Map<"dsp-v1" | "ml-onnx-v1", {
+      label: string;
+      falseDetections: number;
+      confidences: number[];
+      latencies: number[];
+    }>([
+      ["dsp-v1", { label: "FFT / harmonik DSP", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
+      ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[], latencies: [] as number[] }],
+    ]);
     for (let trial = 0; trial < ambientTrials; trial += 1) {
-      const result = analyzePcm(
-        makeAmbient(Math.round(DURATION_S * SAMPLE_RATE), environment, random),
-        SAMPLE_RATE,
-      );
-      if (result.detected) falseDetections += 1;
-      confidences.push(result.confidence);
+      const kind = HARD_NEGATIVE_KINDS[trial % HARD_NEGATIVE_KINDS.length];
+      const samples = makeHardNegative(kind, DURATION_S, SAMPLE_RATE, environment, random);
+      const dspTimed = timed(() => analyzePcm(samples, SAMPLE_RATE));
+      const mlTimed = timed(() => analyzeWithArtifact(samples, SAMPLE_RATE, artifact));
+      for (const outcome of [
+        { id: "dsp-v1" as const, detected: dspTimed.value.detected, probability: dspTimed.value.confidence, latency: dspTimed.elapsedMs },
+        { id: "ml-onnx-v1" as const, detected: mlTimed.value.detected, probability: mlTimed.value.confidence, latency: mlTimed.elapsedMs },
+      ]) {
+        const accumulator = accumulators.get(outcome.id)!;
+        if (outcome.detected) accumulator.falseDetections += 1;
+        accumulator.confidences.push(outcome.probability);
+        accumulator.latencies.push(outcome.latency);
+        observations.push({
+          id: `${outcome.id}-negative-${environment.id}-${trial}`,
+          detectorId: outcome.id,
+          truth: false,
+          detected: outcome.detected,
+          probability: outcome.probability,
+          environment: environment.id,
+          distanceM: null,
+          sourceLabel: kind,
+          license: "Projektgenererad",
+        });
+      }
     }
-    return {
-      environment: environment.id,
-      ambientRms: environment.ambientRms,
-      trials: ambientTrials,
-      falseDetections,
-      falsePositiveRate: round(rate(falseDetections, ambientTrials)),
-      meanConfidence: round(mean(confidences)),
-    };
-  });
-  return { detection, falseAlarms };
+    for (const [detectorId, accumulator] of accumulators) {
+      falseAlarms.push({
+        detectorId,
+        detectorLabel: accumulator.label,
+        environment: environment.id,
+        ambientRms: environment.ambientRms,
+        trials: ambientTrials,
+        falseDetections: accumulator.falseDetections,
+        falsePositiveRate: round(rate(accumulator.falseDetections, ambientTrials)),
+        meanConfidence: round(mean(accumulator.confidences)),
+        medianLatencyMs: round(percentile(accumulator.latencies, 0.5), 2),
+      });
+    }
+  }
+  return { detection, falseAlarms, observations };
+}
+
+function metricsFor(observations: Observation[], threshold?: number): BinaryMetrics {
+  return binaryMetrics(
+    observations.map((item) => item.truth),
+    observations.map((item) => threshold === undefined ? item.detected : item.probability >= threshold),
+  );
+}
+
+function curveFor(observations: Observation[]): Array<{ threshold: number; precision: number; recall: number; falsePositiveRate: number }> {
+  const curve = [];
+  for (let threshold = 0; threshold <= 1.001; threshold += 0.025) {
+    const metrics = metricsFor(observations, threshold);
+    curve.push({
+      threshold: round(threshold, 3),
+      precision: round(metrics.precision),
+      recall: round(metrics.recall),
+      falsePositiveRate: round(metrics.falsePositiveRate),
+    });
+  }
+  return curve;
+}
+
+function areaUnderCurve(points: Array<{ x: number; y: number }>): number {
+  const sorted = [...points].sort((a, b) => a.x - b.x);
+  let area = 0;
+  for (let index = 1; index < sorted.length; index += 1) {
+    area += (sorted[index].x - sorted[index - 1].x) * (sorted[index].y + sorted[index - 1].y) / 2;
+  }
+  return round(Math.abs(area));
+}
+
+function modelReport(
+  detectorId: "dsp-v1" | "ml-onnx-v1",
+  observations: Observation[],
+  detection: DetectionRow[],
+  falseAlarms: FalseAlarmRow[],
+  artifact: MlModelArtifact,
+): Record<string, unknown> {
+  const selected = observations.filter((item) => item.detectorId === detectorId);
+  const curve = curveFor(selected);
+  return {
+    id: detectorId,
+    label: detectorId === "dsp-v1" ? "FFT / harmonik DSP" : "Feature Conv ML",
+    version: "1.0.0",
+    threshold: detectorId === "dsp-v1" ? 0.42 : artifact.threshold,
+    isDefault: detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : !artifact.qualityGate.passed,
+    qualityGate: detectorId === "ml-onnx-v1" ? artifact.qualityGate : null,
+    overall: metricsFor(selected),
+    prAuc: areaUnderCurve(curve.map((point) => ({ x: point.recall, y: point.precision }))),
+    rocAuc: areaUnderCurve(curve.map((point) => ({ x: point.falsePositiveRate, y: point.recall }))),
+    brierScore: round(mean(selected.map((item) => (item.probability - Number(item.truth)) ** 2))),
+    curve,
+    detection: detection.filter((row) => row.detectorId === detectorId),
+    falseAlarms: falseAlarms.filter((row) => row.detectorId === detectorId),
+  };
 }
 
 function runLocalizationBenchmark(trials: number, random: () => number): LocalizationRow[] {
@@ -245,10 +331,7 @@ function runLocalizationBenchmark(trials: number, random: () => number): Localiz
         { x: 0, y: 0 },
       );
       const trueBearing = Math.atan2(source.y - centroid.y, source.x - centroid.x) * 180 / Math.PI;
-      const estimatedBearing = Math.atan2(
-        localized.position.y - centroid.y,
-        localized.position.x - centroid.x,
-      ) * 180 / Math.PI;
+      const estimatedBearing = Math.atan2(localized.position.y - centroid.y, localized.position.x - centroid.x) * 180 / Math.PI;
       errors.push(distance(localized.position, source));
       bearingErrors.push(angularDifference(trueBearing, estimatedBearing));
       residuals.push(localized.residualMs);
@@ -278,11 +361,7 @@ function decodePcm16Wav(buffer: Buffer): { samples: Float32Array; sampleRate: nu
     const body = offset + 8;
     if (id === "fmt ") {
       if (buffer.readUInt16LE(body) !== 1) throw new Error("Only PCM WAV is supported");
-      format = {
-        channels: buffer.readUInt16LE(body + 2),
-        sampleRate: buffer.readUInt32LE(body + 4),
-        bits: buffer.readUInt16LE(body + 14),
-      };
+      format = { channels: buffer.readUInt16LE(body + 2), sampleRate: buffer.readUInt32LE(body + 4), bits: buffer.readUInt16LE(body + 14) };
     } else if (id === "data") {
       dataOffset = body;
       dataSize = size;
@@ -295,32 +374,41 @@ function decodePcm16Wav(buffer: Buffer): { samples: Float32Array; sampleRate: nu
   const samples = new Float32Array(frames);
   for (let frame = 0; frame < frames; frame += 1) {
     for (let channel = 0; channel < format.channels; channel += 1) {
-      samples[frame] += buffer.readInt16LE(dataOffset + (frame * format.channels + channel) * 2) /
-        32768 / format.channels;
+      samples[frame] += buffer.readInt16LE(dataOffset + (frame * format.channels + channel) * 2) / 32768 / format.channels;
     }
   }
   return { samples, sampleRate: format.sampleRate };
 }
 
-async function runRealSamples(): Promise<Array<Record<string, unknown>>> {
-  const fixtures: Array<{ file: string; expected: DroneProfileId }> = [
+async function runRealSamples(artifact: MlModelArtifact): Promise<Array<Record<string, unknown>>> {
+  const fixtures: Array<{ file: string; expected: DroneProfileId | "ambient" }> = [
     { file: "batear-fpv-5inch.wav", expected: "fpv" },
     { file: "batear-mavic-pro.wav", expected: "camera" },
     { file: "batear-mini-4-pro.wav", expected: "camera" },
+    { file: "batear-rural-8s.wav", expected: "ambient" },
   ];
-  return Promise.all(fixtures.map(async ({ file, expected }) => {
-    const wav = decodePcm16Wav(await readFile(path.join(PROJECT_ROOT, "public/audio", file)));
-    const result = analyzePcm(wav.samples.slice(0, wav.sampleRate * 8), wav.sampleRate);
-    const top1 = result.classifications[0]?.profile ?? "ambient";
-    return {
-      file,
-      expected,
-      detected: result.detected,
-      top1,
-      correct: result.detected && top1 === expected,
-      confidence: round(result.confidence),
-    };
-  }));
+  const rows: Array<Record<string, unknown>> = [];
+  for (const fixture of fixtures) {
+    const wav = decodePcm16Wav(await readFile(path.join(PROJECT_ROOT, "public/audio", fixture.file)));
+    const samples = wav.samples.slice(0, wav.sampleRate * 8);
+    const dsp = analyzePcm(samples, wav.sampleRate);
+    const ml = analyzeWithArtifact(samples, wav.sampleRate, artifact);
+    for (const outcome of [
+      { detectorId: "dsp-v1", detected: dsp.detected, confidence: dsp.confidence },
+      { detectorId: "ml-onnx-v1", detected: ml.detected, confidence: ml.confidence },
+    ]) {
+      const expectedDrone = fixture.expected !== "ambient";
+      rows.push({
+        file: fixture.file,
+        expected: fixture.expected,
+        detectorId: outcome.detectorId,
+        detected: outcome.detected,
+        correctBinary: outcome.detected === expectedDrone,
+        confidence: round(outcome.confidence),
+      });
+    }
+  }
+  return rows;
 }
 
 function csv(rows: Array<Record<string, unknown>>): string {
@@ -330,25 +418,34 @@ function csv(rows: Array<Record<string, unknown>>): string {
     const text = String(value ?? "");
     return /[\n,"]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
   };
-  return `${columns.join(",")}\n${rows.map((row) =>
-    columns.map((column) => cell(row[column])).join(",")
-  ).join("\n")}\n`;
+  return `${columns.join(",")}\n${rows.map((row) => columns.map((column) => cell(row[column])).join(",")).join("\n")}\n`;
 }
 
 async function main(): Promise<void> {
-  const trials = argumentNumber("--trials", 30);
+  const trials = argumentNumber("--trials", 15);
   const localizationTrials = argumentNumber("--localization-trials", 300);
   const seed = argumentNumber("--seed", 20260828);
-  const reportDirectory = path.resolve(
-    PROJECT_ROOT,
-    argumentString("--out", "public/reports/headless"),
-  );
+  const reportDirectory = path.resolve(PROJECT_ROOT, argumentString("--out", "public/reports/headless"));
+  const artifact = JSON.parse(
+    await readFile(path.join(PROJECT_ROOT, "public/models/drone-binary-v1.json"), "utf8"),
+  ) as MlModelArtifact;
   const random = mulberry32(seed);
-  const detector = runDetectionBenchmark(trials, random);
+  const detector = runDetectionBenchmark(trials, random, artifact);
   const localization = runLocalizationBenchmark(localizationTrials, random);
-  const realSamples = await runRealSamples();
+  const realSamples = await runRealSamples(artifact);
+  const models = (["dsp-v1", "ml-onnx-v1"] as const).map((id) => modelReport(
+    id,
+    detector.observations,
+    detector.detection,
+    detector.falseAlarms,
+    artifact,
+  ));
+  const failures = detector.observations.filter((item) => item.truth !== item.detected)
+    .sort((a, b) => Math.abs(b.probability - 0.5) - Math.abs(a.probability - 0.5))
+    .slice(0, 40)
+    .map((item) => ({ ...item, failureKind: item.truth ? "false-negative" : "false-positive" }));
   const summary = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: new Date().toISOString(),
     seed,
     configuration: {
@@ -357,20 +454,24 @@ async function main(): Promise<void> {
       trialsPerDroneCondition: trials,
       localizationTrialsPerJitterLevel: localizationTrials,
       distancesM: DISTANCES_M,
-      environments: ENVIRONMENTS,
+      environments: BENCHMARK_ENVIRONMENTS,
       attenuationModel: "free-field 1/r, reference gain 0.72 at 25 m",
+      splitPolicy: "grouped by source recording/session; 70/15/15",
     },
     caveats: [
       "Synthetic results are regression benchmarks, not validated field range.",
+      "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
       "Distance uses assumed source gain rather than calibrated SPL data.",
       "Localization omits reverberation and multipath.",
       "Three coplanar listeners estimate 2D only; altitude remains unknown.",
-      "Reports contain aggregate metrics only, never raw audio.",
+      "Reports contain aggregate metrics and failure metadata only, never raw audio.",
     ],
+    models,
+    failures,
     realSamples,
-    detection: detector.detection,
-    falseAlarms: detector.falseAlarms,
     localization,
+    detection: detector.detection.filter((row) => row.detectorId === "dsp-v1"),
+    falseAlarms: detector.falseAlarms.filter((row) => row.detectorId === "dsp-v1"),
   };
   await mkdir(reportDirectory, { recursive: true });
   await Promise.all([
@@ -378,11 +479,14 @@ async function main(): Promise<void> {
     writeFile(path.join(reportDirectory, "detection.csv"), csv(detector.detection as unknown as Array<Record<string, unknown>>)),
     writeFile(path.join(reportDirectory, "false-alarms.csv"), csv(detector.falseAlarms as unknown as Array<Record<string, unknown>>)),
     writeFile(path.join(reportDirectory, "localization.csv"), csv(localization as unknown as Array<Record<string, unknown>>)),
+    writeFile(path.join(reportDirectory, "failures.csv"), csv(failures as unknown as Array<Record<string, unknown>>)),
   ]);
-  console.log(`Headless simulation complete (seed ${seed}).`);
-  console.log(`Mean detection: ${(mean(detector.detection.map((row) => row.detectionRate)) * 100).toFixed(1)}%`);
-  console.log(`Mean correct top-1: ${(mean(detector.detection.map((row) => row.top1Accuracy)) * 100).toFixed(1)}%`);
-  console.log(`Reports: ${reportDirectory}`);
+  console.log(JSON.stringify({
+    seed,
+    models: models.map((model) => ({ id: model.id, isDefault: model.isDefault, overall: model.overall })),
+    realSamples,
+    reports: reportDirectory,
+  }, null, 2));
 }
 
 await main();

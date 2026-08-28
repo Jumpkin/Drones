@@ -7,4 +7,5 @@ dist/
 !.env.example
 .vite/
 coverage/
-
+.venv/
+data/generated/

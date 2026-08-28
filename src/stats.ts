@@ -1,6 +1,8 @@
 import type { DroneProfileId } from "./sim";
 
 export interface DetectionStatistic {
+  detectorId?: string;
+  detectorLabel?: string;
   profile: DroneProfileId;
   label: string;
   distanceM: number;
@@ -16,6 +18,8 @@ export interface DetectionStatistic {
 }
 
 export interface FalseAlarmStatistic {
+  detectorId?: string;
+  detectorLabel?: string;
   environment: string;
   ambientRms: number;
   trials: number;
@@ -47,6 +51,8 @@ export interface HeadlessReport {
     attenuationModel: string;
   };
   caveats: string[];
+  models?: DetectorModelStatistic[];
+  failures?: FailureStatistic[];
   realSamples: Array<{
     file: string;
     expected: string;
@@ -60,6 +66,55 @@ export interface HeadlessReport {
   localization: LocalizationStatistic[];
 }
 
+export interface DetectorModelStatistic {
+  id: "dsp-v1" | "ml-onnx-v1";
+  label: string;
+  version: string;
+  threshold: number;
+  isDefault: boolean;
+  qualityGate: null | {
+    maximumFalsePositiveRate: number;
+    minimumRecall: number;
+    beatsDspF1: boolean;
+    passed: boolean;
+  };
+  overall: {
+    truePositive: number;
+    falsePositive: number;
+    trueNegative: number;
+    falseNegative: number;
+    precision: number;
+    recall: number;
+    falsePositiveRate: number;
+    f1: number;
+    accuracy: number;
+  };
+  prAuc: number;
+  rocAuc: number;
+  brierScore: number;
+  curve: Array<{
+    threshold: number;
+    precision: number;
+    recall: number;
+    falsePositiveRate: number;
+  }>;
+  detection: DetectionStatistic[];
+  falseAlarms: FalseAlarmStatistic[];
+}
+
+export interface FailureStatistic {
+  id: string;
+  detectorId: string;
+  truth: boolean;
+  detected: boolean;
+  probability: number;
+  environment: string;
+  distanceM: number | null;
+  sourceLabel: string;
+  license: string;
+  failureKind: "false-positive" | "false-negative";
+}
+
 export type DetectionMetric = "detectionRate" | "top1Accuracy";
 
 export function mean(values: number[]): number {
@@ -69,16 +124,19 @@ export function mean(values: number[]): number {
 export function rowsForEnvironment(
   report: HeadlessReport,
   environment: string,
+  detectorId = "dsp-v1",
 ): DetectionStatistic[] {
-  return report.detection.filter((row) => row.environment === environment);
+  const rows = report.models?.find((model) => model.id === detectorId)?.detection ?? report.detection;
+  return rows.filter((row) => row.environment === environment);
 }
 
 export function compareProfiles(
   report: HeadlessReport,
   environment: string,
   metric: DetectionMetric,
+  detectorId = "dsp-v1",
 ): Array<{ profile: DroneProfileId; label: string; average: number }> {
-  const rows = rowsForEnvironment(report, environment);
+  const rows = rowsForEnvironment(report, environment, detectorId);
   const profileIds = [...new Set(rows.map((row) => row.profile))];
   return profileIds.map((profile) => {
     const profileRows = rows.filter((row) => row.profile === profile);
@@ -88,4 +146,8 @@ export function compareProfiles(
       average: mean(profileRows.map((row) => row[metric])),
     };
   }).sort((a, b) => b.average - a.average);
+}
+
+export function modelFor(report: HeadlessReport, detectorId: string): DetectorModelStatistic | undefined {
+  return report.models?.find((model) => model.id === detectorId);
 }

@@ -49,6 +49,17 @@ export const AUDIO_SAMPLES: AudioSampleDefinition[] = [
     note: "Fältinspelning. Exakt modell-ID används bara som facit i UI:t.",
   },
   {
+    id: "batear-rural-8s",
+    label: "Landsbygd · verkligt negativt WAV",
+    kind: "real",
+    expectedProfile: "ambient",
+    localUrl: "/audio/batear-rural-8s.wav",
+    sourceUrl: "https://github.com/batear-io/batear-datasets/blob/main/field-tests/ambient/rural/20230701_054200.WAV",
+    sourceLabel: "Batear Datasets",
+    license: "MIT",
+    note: "Åtta sekunder verklig bakgrund utan etiketterad drönare.",
+  },
+  {
     id: "synth-camera",
     label: "Kameramultirotor · syntetisk",
     kind: "synthetic",

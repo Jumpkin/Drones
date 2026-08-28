@@ -8,6 +8,9 @@ import {
   playPcm,
 } from "./audio";
 import { analyzePcm, type DetectorResult } from "./detector";
+import { loadDetectorSuite } from "./detectors/ml-adapter";
+import { DspDetectorAdapter } from "./detectors/dsp-adapter";
+import type { DetectorAdapter, DetectorOutput } from "./detectors/types";
 import { createAcousticEvent, fuseSingleNodeEvent } from "./events";
 import {
   analyzeOfflineTrial,
@@ -18,6 +21,7 @@ import { AUDIO_SAMPLES, getAudioSample } from "./samples";
 import {
   compareProfiles,
   mean as statisticsMean,
+  modelFor,
   rowsForEnvironment,
   type DetectionMetric,
   type HeadlessReport,
@@ -307,6 +311,11 @@ app.innerHTML = `
       <aside class="lab-card lab-controls">
         <p class="section-kicker">01 · Välj källa</p>
         <label class="field"><span>Ljudprov</span><select id="labSampleSelect"></select></label>
+        <label class="field"><span>Detektor</span><select id="labDetectorSelect">
+          <option value="dsp-v1">FFT / harmonik DSP</option>
+          <option value="ml-onnx-v1">Feature Conv ML</option>
+        </select></label>
+        <p id="labDetectorStatus" class="field-help">Laddar detektorer…</p>
         <p id="labSampleNote" class="field-help"></p>
         <label class="range-field" id="labRpmField">
           <span><span>RPM-förskjutning</span><output id="labRpmOutput">0%</output></span>
@@ -413,6 +422,10 @@ app.innerHTML = `
     </div>
 
     <div class="statistics-toolbar lab-card">
+      <label class="field"><span>Detektor</span><select id="statisticsDetector">
+        <option value="dsp-v1">FFT / harmonik DSP</option>
+        <option value="ml-onnx-v1">Feature Conv ML</option>
+      </select></label>
       <label class="field"><span>Brusmiljö</span><select id="statisticsEnvironment">
         <option value="quiet">Tyst</option>
         <option value="urban">Stad</option>
@@ -431,16 +444,17 @@ app.innerHTML = `
         <a href="/reports/headless/summary.json" download>JSON</a>
         <a href="/reports/headless/detection.csv" download>Detektion CSV</a>
         <a href="/reports/headless/localization.csv" download>Position CSV</a>
+        <a href="/reports/headless/failures.csv" download>Fel CSV</a>
       </div>
     </div>
 
     <div id="statisticsLoading" class="statistics-loading">Läser headless-rapport…</div>
     <div id="statisticsContent" hidden>
       <div class="statistics-kpis">
-        <article><span>Riktiga ljudprov</span><strong id="statisticsRealSamples">—</strong><small>korrekt detekterade och typade</small></article>
-        <article><span>Genomsnittlig detektion</span><strong id="statisticsDetectionMean">—</strong><small>vald miljö, alla avstånd</small></article>
+        <article id="statisticsGateCard"><span>Kvalitetsgrind</span><strong id="statisticsQualityGate">—</strong><small>≤5% FPR · ≥85% recall · bättre F1</small></article>
+        <article><span>Recall</span><strong id="statisticsRecall">—</strong><small>alla positiva benchmarkfall</small></article>
         <article><span>Falsklarm</span><strong id="statisticsFalseAlarm">—</strong><small>vald bakgrund utan drönare</small></article>
-        <article><span>Position p90</span><strong id="statisticsLocalizationP90">—</strong><small>vid 0,5 ms tidsjitter</small></article>
+        <article><span>F1</span><strong id="statisticsF1">—</strong><small>precision och recall i balans</small></article>
       </div>
 
       <div class="statistics-chart-grid">
@@ -454,6 +468,11 @@ app.innerHTML = `
           <canvas id="statisticsLocalizationCanvas" aria-label="Jämförelse av positioneringsfel mot tidsjitter"></canvas>
           <div class="chart-legend"><span><i style="--series:#53e2bf"></i>Median</span><span><i style="--series:#ffb45c"></i>p90</span></div>
         </section>
+        <section class="lab-card statistics-chart-card">
+          <div class="subpanel-heading"><div><p class="eyebrow">Tröskelanalys</p><h3>Precision–recall</h3></div><span id="statisticsThresholdBadge" class="data-badge">—</span></div>
+          <canvas id="statisticsCurveCanvas" aria-label="Precision och recall vid olika detektionströsklar"></canvas>
+          <div class="chart-legend"><span><i style="--series:#53e2bf"></i>Precision</span><span><i style="--series:#ff746d"></i>Recall</span></div>
+        </section>
       </div>
 
       <div class="statistics-table-grid">
@@ -466,6 +485,26 @@ app.innerHTML = `
           <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Jitter</th><th>Median</th><th>p90</th><th>≤ 5 m</th><th>Riktningsfel p90</th></tr></thead><tbody id="statisticsLocalizationBody"></tbody></table></div>
         </section>
       </div>
+
+      <div class="statistics-table-grid">
+        <section class="lab-card">
+          <div class="subpanel-heading"><div><p class="eyebrow">Confusion matrix</p><h3>Binärt beslut</h3></div></div>
+          <div class="confusion-grid">
+            <span></span><strong>Pred. drönare</strong><strong>Pred. bakgrund</strong>
+            <strong>Drönare</strong><article class="confusion-good"><span>TP</span><b id="statisticsTp">—</b></article><article class="confusion-bad"><span>FN</span><b id="statisticsFn">—</b></article>
+            <strong>Bakgrund</strong><article class="confusion-bad"><span>FP</span><b id="statisticsFp">—</b></article><article class="confusion-good"><span>TN</span><b id="statisticsTn">—</b></article>
+          </div>
+        </section>
+        <section class="lab-card">
+          <div class="subpanel-heading"><div><p class="eyebrow">Failure explorer</p><h3>Falsklarm och missar</h3></div><span id="statisticsFailureCount" class="data-badge">—</span></div>
+          <div class="table-scroll failure-scroll"><table class="statistics-table"><thead><tr><th>Fel</th><th>Källa</th><th>Miljö</th><th>Sannolikhet</th></tr></thead><tbody id="statisticsFailureBody"></tbody></table></div>
+        </section>
+      </div>
+
+      <section class="lab-card statistics-comparison-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Direkt jämförelse</p><h3>DSP mot ML på samma benchmark</h3></div><span class="data-badge">SAMMA DATA · SAMMA FRÖ</span></div>
+        <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detektor</th><th>Standard</th><th>Precision</th><th>Recall</th><th>Falsklarm</th><th>F1</th><th>PR-AUC</th><th>Grind</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
+      </section>
 
       <div class="statistics-caveat lab-card">
         <strong>Så ska statistiken läsas</strong>
@@ -1045,9 +1084,10 @@ function drawChartFrame(
 
 function drawDetectionStatistics(): void {
   if (!statisticsReport) return;
+  const detectorId = requiredElement<HTMLSelectElement>("#statisticsDetector").value;
   const environment = requiredElement<HTMLSelectElement>("#statisticsEnvironment").value;
   const metric = requiredElement<HTMLSelectElement>("#statisticsMetric").value as DetectionMetric;
-  const rows = rowsForEnvironment(statisticsReport, environment);
+  const rows = rowsForEnvironment(statisticsReport, environment, detectorId);
   const distances = [...new Set(rows.map((row) => row.distanceM))].sort((a, b) => a - b);
   const canvas = requiredElement<HTMLCanvasElement>("#statisticsDetectionCanvas");
   const { ctx, left, top, width, height } = drawChartFrame(canvas, 1, percent);
@@ -1077,6 +1117,39 @@ function drawDetectionStatistics(): void {
       ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
     });
   }
+}
+
+function drawDetectorCurve(): void {
+  if (!statisticsReport) return;
+  const detectorId = requiredElement<HTMLSelectElement>("#statisticsDetector").value;
+  const model = modelFor(statisticsReport, detectorId);
+  const canvas = requiredElement<HTMLCanvasElement>("#statisticsCurveCanvas");
+  const { ctx, left, top, width, height } = drawChartFrame(canvas, 1, percent);
+  if (!model) return;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let step = 0; step <= 4; step += 1) {
+    const threshold = step / 4;
+    const x = left + width * threshold;
+    ctx.fillStyle = "#78918f";
+    ctx.fillText(threshold.toFixed(2).replace(".", ","), x, top + height + 10);
+  }
+  for (const [key, color] of [["precision", "#53e2bf"], ["recall", "#ff746d"]] as const) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    model.curve.forEach((point, index) => {
+      const x = left + width * point.threshold;
+      const y = top + height * (1 - point[key]);
+      if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+  const thresholdX = left + width * model.threshold;
+  ctx.strokeStyle = "#ffb45c";
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(thresholdX, top); ctx.lineTo(thresholdX, top + height); ctx.stroke();
+  ctx.setLineDash([]);
 }
 
 function drawLocalizationStatistics(): void {
@@ -1113,21 +1186,23 @@ function drawLocalizationStatistics(): void {
 
 function renderStatistics(): void {
   if (!statisticsReport) return;
+  const detectorId = requiredElement<HTMLSelectElement>("#statisticsDetector").value;
   const environment = requiredElement<HTMLSelectElement>("#statisticsEnvironment").value;
   const metric = requiredElement<HTMLSelectElement>("#statisticsMetric").value as DetectionMetric;
-  const rows = rowsForEnvironment(statisticsReport, environment);
-  const profileComparison = compareProfiles(statisticsReport, environment, metric);
-  const falseAlarm = statisticsReport.falseAlarms.find((row) => row.environment === environment);
-  const localizationAtHalfMs = statisticsReport.localization.find((row) => row.timingJitterMs === 0.5);
+  const model = modelFor(statisticsReport, detectorId);
+  const rows = rowsForEnvironment(statisticsReport, environment, detectorId);
+  const profileComparison = compareProfiles(statisticsReport, environment, metric, detectorId);
+  const falseAlarmRows = model?.falseAlarms ?? statisticsReport.falseAlarms;
+  const falseAlarm = falseAlarmRows.find((row) => row.environment === environment);
   setText("#statisticsGenerated", new Date(statisticsReport.generatedAt).toLocaleString("sv-SE"));
   setText("#statisticsSeed", `Frö ${statisticsReport.seed} · ${statisticsReport.configuration.trialsPerDroneCondition} försök per villkor`);
-  setText(
-    "#statisticsRealSamples",
-    `${statisticsReport.realSamples.filter((sample) => sample.correct).length}/${statisticsReport.realSamples.length}`,
-  );
-  setText("#statisticsDetectionMean", percent(statisticsMean(rows.map((row) => row.detectionRate))));
+  const gatePassed = model?.qualityGate?.passed;
+  setText("#statisticsQualityGate", model?.qualityGate ? (gatePassed ? "GODKÄND" : "UNDERKÄND") : "BASLINJE");
+  requiredElement("#statisticsGateCard").dataset.status = gatePassed ? "passed" : model?.qualityGate ? "failed" : "baseline";
+  setText("#statisticsRecall", model ? percent(model.overall.recall) : percent(statisticsMean(rows.map((row) => row.detectionRate))));
   setText("#statisticsFalseAlarm", percent(falseAlarm?.falsePositiveRate ?? 0));
-  setText("#statisticsLocalizationP90", `${localizationAtHalfMs?.p90ErrorM.toFixed(1).replace(".", ",") ?? "—"} m`);
+  setText("#statisticsF1", model ? percent(model.overall.f1) : "—");
+  setText("#statisticsThresholdBadge", model ? `TRÖSKEL ${model.threshold.toFixed(2)}` : "V1-RAPPORT");
   setText(
     "#statisticsDetectionTitle",
     metric === "detectionRate" ? "Detektionsgrad per drönartyp" : "Korrekt detektion + typ",
@@ -1143,10 +1218,27 @@ function renderStatistics(): void {
   requiredElement<HTMLTableSectionElement>("#statisticsLocalizationBody").innerHTML = statisticsReport.localization.map((row) =>
     `<tr><td>${String(row.timingJitterMs).replace(".", ",")} ms</td><td>${row.medianErrorM.toFixed(1).replace(".", ",")} m</td><td>${row.p90ErrorM.toFixed(1).replace(".", ",")} m</td><td>${percent(row.within5MRate)}</td><td>${row.p90BearingErrorDeg.toFixed(1).replace(".", ",")}°</td></tr>`
   ).join("");
+  if (model) {
+    setText("#statisticsTp", String(model.overall.truePositive));
+    setText("#statisticsFp", String(model.overall.falsePositive));
+    setText("#statisticsTn", String(model.overall.trueNegative));
+    setText("#statisticsFn", String(model.overall.falseNegative));
+  }
+  const failures = (statisticsReport.failures ?? []).filter((failure) => failure.detectorId === detectorId);
+  setText("#statisticsFailureCount", `${failures.length} VISAS`);
+  requiredElement<HTMLTableSectionElement>("#statisticsFailureBody").innerHTML = failures.length > 0
+    ? failures.slice(0, 12).map((failure) =>
+      `<tr><td>${failure.failureKind === "false-positive" ? "Falsklarm" : "Miss"}</td><td>${failure.sourceLabel}</td><td>${failure.environment}</td><td>${percent(failure.probability)}</td></tr>`
+    ).join("")
+    : `<tr><td colspan="4">Inga sparade fel för vald detektor.</td></tr>`;
+  requiredElement<HTMLTableSectionElement>("#statisticsDetectorComparisonBody").innerHTML = (statisticsReport.models ?? []).map((item) =>
+    `<tr><td>${item.label}</td><td>${item.isDefault ? "Ja" : "Nej"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Godkänd" : "Underkänd") : "Baslinje"}</td></tr>`
+  ).join("");
   requiredElement("#statisticsCaveats").innerHTML = statisticsReport.caveats
     .map((caveat) => `<li>${caveat}</li>`).join("");
   drawDetectionStatistics();
   drawLocalizationStatistics();
+  drawDetectorCurve();
 }
 
 async function loadStatistics(): Promise<void> {
@@ -1160,6 +1252,8 @@ async function loadStatistics(): Promise<void> {
       const response = await fetch("/reports/headless/summary.json", { cache: "no-store" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       statisticsReport = await response.json() as HeadlessReport;
+      const defaultModel = statisticsReport.models?.find((model) => model.isDefault);
+      if (defaultModel) requiredElement<HTMLSelectElement>("#statisticsDetector").value = defaultModel.id;
       loading.hidden = true;
       requiredElement("#statisticsContent").hidden = false;
       renderStatistics();
@@ -1171,6 +1265,7 @@ async function loadStatistics(): Promise<void> {
   await statisticsPromise;
 }
 
+requiredElement<HTMLSelectElement>("#statisticsDetector").addEventListener("change", renderStatistics);
 requiredElement<HTMLSelectElement>("#statisticsEnvironment").addEventListener("change", renderStatistics);
 requiredElement<HTMLSelectElement>("#statisticsMetric").addEventListener("change", renderStatistics);
 window.addEventListener("resize", () => {
@@ -1182,9 +1277,32 @@ for (const sample of AUDIO_SAMPLES) {
   labSampleSelect.add(new Option(sample.label, sample.id));
 }
 const labRpmInput = requiredElement<HTMLInputElement>("#labRpmInput");
+const labDetectorSelect = requiredElement<HTMLSelectElement>("#labDetectorSelect");
 const labSpectrumCanvas = requiredElement<HTMLCanvasElement>("#labSpectrumCanvas");
 const realAudioCache = new Map<string, Awaited<ReturnType<typeof loadMonoPcm>>>();
 let labResult: DetectorResult | undefined;
+let labDetectorOutput: DetectorOutput | undefined;
+const initialDspDetector = new DspDetectorAdapter();
+let detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
+let selectedDetector: DetectorAdapter = initialDspDetector;
+
+void loadDetectorSuite().then((suite) => {
+  detectorAdapters = new Map<string, DetectorAdapter>([
+    [suite.dsp.id, suite.dsp],
+    [suite.ml.id, suite.ml],
+  ]);
+  selectedDetector = suite.defaultDetector;
+  labDetectorSelect.value = selectedDetector.id;
+  const gate = suite.ml.artifact.qualityGate;
+  setText(
+    "#labDetectorStatus",
+    gate.passed
+      ? "ML klarade kvalitetsgrinden och är standard."
+      : `ML är experimentell: FPR ${Math.round(suite.ml.artifact.testMetrics.falsePositiveRate * 100)}%, recall ${Math.round(suite.ml.artifact.testMetrics.recall * 100)}%. DSP är standard.`,
+  );
+}).catch((error) => {
+  setText("#labDetectorStatus", `ML kunde inte laddas: ${String(error)}. DSP används.`);
+});
 
 function syncLabSample(): void {
   const sample = getAudioSample(labSampleSelect.value);
@@ -1198,6 +1316,7 @@ function syncLabSample(): void {
   setText("#labTruth", "Dolt tills analys");
   setText("#labVerdict", "Detektorn testas utan etikettläckage.");
   labResult = undefined;
+  labDetectorOutput = undefined;
   renderLabResult();
 }
 
@@ -1232,7 +1351,7 @@ async function getLabPcm(): Promise<{
 }
 
 function renderLabResult(): void {
-  if (!labResult) {
+  if (!labResult || !labDetectorOutput) {
     setText("#labDetectionTitle", "Väntar på analys");
     setText("#labDetectionBadge", "INGEN DATA");
     setText("#labConfidence", "—");
@@ -1244,25 +1363,25 @@ function renderLabResult(): void {
     drawLabSpectrum();
     return;
   }
-  setText("#labDetectionTitle", labResult.detected ? "Harmonisk drönarsignatur hittad" : "Ingen stabil drönarsignatur");
-  setText("#labDetectionBadge", labResult.detected ? "DETEKTERAD" : "NEGATIV");
-  setText("#labConfidence", `${Math.round(labResult.confidence * 100)}%`);
+  setText("#labDetectionTitle", labDetectorOutput.detected ? "Drönarsignatur hittad" : "Ingen stabil drönarsignatur");
+  setText("#labDetectionBadge", labDetectorOutput.detected ? "DETEKTERAD" : "NEGATIV");
+  setText("#labConfidence", `${Math.round(labDetectorOutput.probability * 100)}%`);
   setText("#labFundamental", `${Math.round(labResult.fundamentalHz)} Hz`);
   setText("#labHarmonic", `${labResult.harmonicScoreDb.toFixed(1)} dB`);
-  setText("#labFrames", `${labResult.positiveFrames}/${labResult.analyzedFrames}`);
-  requiredElement<HTMLOListElement>("#labClassifications").innerHTML = labResult.classifications
+  setText("#labFrames", `${labDetectorOutput.positiveWindows}/${labDetectorOutput.analyzedWindows}`);
+  requiredElement<HTMLOListElement>("#labClassifications").innerHTML = labDetectorOutput.classifications
     .map((item, index) => `<li><span>${index + 1}. ${item.label}</span><strong>${Math.round(item.confidence * 100)}%</strong></li>`)
     .join("");
-  const event = createAcousticEvent("P1", labResult);
+  const event = createAcousticEvent("P1", labResult, labDetectorOutput);
   const track = fuseSingleNodeEvent(event);
   setText("#labEventJson", JSON.stringify({ event, fusedTrack: track }, null, 2));
   const sample = getAudioSample(labSampleSelect.value);
   const truthLabel = sample.expectedProfile === "ambient"
     ? "Bakgrund / ingen drönare"
     : DRONE_PROFILES[sample.expectedProfile].label;
-  const topProfile = labResult.classifications[0]?.profile;
+  const topProfile = labDetectorOutput.classifications[0]?.profile;
   const correct = topProfile === sample.expectedProfile ||
-    (sample.expectedProfile === "ambient" && !labResult.detected);
+    (sample.expectedProfile === "ambient" && !labDetectorOutput.detected);
   setText("#labTruth", truthLabel);
   setText("#labVerdict", correct ? "Lyssnaren matchade facit." : "Lyssnaren matchade inte facit — ett viktigt negativt resultat.");
   drawLabSpectrum();
@@ -1318,6 +1437,13 @@ labSampleSelect.addEventListener("change", syncLabSample);
 labRpmInput.addEventListener("input", () => {
   setText("#labRpmOutput", `${Number(labRpmInput.value) > 0 ? "+" : ""}${labRpmInput.value}%`);
   labResult = undefined;
+  labDetectorOutput = undefined;
+  renderLabResult();
+});
+labDetectorSelect.addEventListener("change", () => {
+  selectedDetector = detectorAdapters.get(labDetectorSelect.value) ?? initialDspDetector;
+  labResult = undefined;
+  labDetectorOutput = undefined;
   renderLabResult();
 });
 requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", async () => {
@@ -1342,6 +1468,15 @@ requiredElement<HTMLButtonElement>("#labAnalyzeButton").addEventListener("click"
     const pcm = await getLabPcm();
     await new Promise<void>((resolve) => window.setTimeout(resolve, 30));
     labResult = analyzePcm(pcm.samples, pcm.sampleRate);
+    const detector = selectedDetector ?? detectorAdapters.get("dsp-v1");
+    if (!detector) throw new Error("Detektorn laddas fortfarande");
+    labDetectorOutput = await detector.analyze(pcm.samples, pcm.sampleRate);
+    setText(
+      "#labDetectorStatus",
+      labDetectorOutput.fallbackReason
+        ? `Fallback: ${labDetectorOutput.fallbackReason}`
+        : `${labDetectorOutput.detectorLabel} · ${labDetectorOutput.latencyMs.toFixed(1).replace(".", ",")} ms`,
+    );
     renderLabResult();
   } catch (error) {
     setText("#labDetectionTitle", error instanceof Error ? error.message : "Analysen misslyckades");

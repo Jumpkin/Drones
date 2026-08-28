@@ -23,6 +23,12 @@ views:
 - **Statistics** compares headless Monte Carlo results across drone profiles,
   assumed distance, noise environment, false alarms, and clock jitter.
 
+The detection layer exposes the same asynchronous adapter contract for the
+FFT baseline and an experimental ONNX binary classifier. The ML model uses
+five overlapping one-second windows and requires three positives before an
+event is emitted. It is not selected as the default unless the committed
+held-out report passes the recall, false-positive, and DSP-comparison gate.
+
 It is an educational research environment rather than an operational
 detection or countermeasure system. All ranges and probabilities are treated
 as simulated estimates until calibrated against controlled field trials.
@@ -54,6 +60,10 @@ npm run dev
 ```
 
 Validate changes with `npm test` and `npm run build`.
+
+Validate dataset licensing, split isolation, and checksums with
+`npm run data:validate`. Rebuild the readable coefficients and ONNX graph with
+`npm run train:model` before generating a new schema-v2 comparison report.
 
 Run `npm run simulate` for the full deterministic headless benchmark, or
 `npm run simulate:quick` for a short development check. Aggregate JSON and CSV

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "batear",
+      "url": "https://github.com/batear-io/batear-datasets",
+      "datasetLicense": "MIT",
+      "usage": "Drone positives and environmental negatives"
+    },
+    {
+      "id": "fsd50k",
+      "url": "https://zenodo.org/records/4060432",
+      "datasetLicense": "CC-BY-4.0 with per-clip Creative Commons licenses",
+      "allowedClipLicenses": ["CC0", "CC-BY"],
+      "rejectedClipLicenses": ["CC-BY-NC", "Sampling+"],
+      "hardNegativeLabels": [
+        "Engine",
+        "Motor vehicle (road)",
+        "Motorcycle",
+        "Helicopter",
+        "Lawn mower",
+        "Chainsaw",
+        "Vacuum cleaner",
+        "Mechanical fan",
+        "Traffic noise, roadway noise"
+      ]
+    }
+  ]
+}

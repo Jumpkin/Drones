@@ -217,7 +217,7 @@ input[type="range"] { width: 100%; height: 3px; margin: 5px 0; cursor: pointer; 
 .warning-box { margin-top: 18px; padding: 11px; border: 1px solid rgba(255,180,92,.25); border-radius: 6px; background: rgba(255,180,92,.05); color: #b9a78f; font-size: 9px; line-height: 1.5; }
 
 .statistics-view { padding-bottom: 46px; }
-.statistics-toolbar { max-width: 1420px; margin: 0 auto 14px; padding: 13px 17px; display: grid; grid-template-columns: 210px 230px 1fr auto; gap: 16px; align-items: center; }
+.statistics-toolbar { max-width: 1420px; margin: 0 auto 14px; padding: 13px 17px; display: grid; grid-template-columns: 175px 190px 210px 1fr auto; gap: 14px; align-items: center; }
 .statistics-toolbar .field { margin: 0; }
 .statistics-run-info { display: grid; gap: 3px; }
 .statistics-run-info span, .statistics-run-info small { color: var(--muted); font-size: 9px; }
@@ -230,9 +230,12 @@ input[type="range"] { width: 100%; height: 3px; margin: 5px 0; cursor: pointer; 
 .statistics-kpis article { display: grid; gap: 4px; padding: 15px; border: 1px solid var(--line); border-radius: 8px; background: rgba(9,23,28,.9); }
 .statistics-kpis span, .statistics-kpis small { color: var(--muted); font-size: 9px; }
 .statistics-kpis strong { color: var(--green); font: 600 23px "JetBrains Mono", monospace; }
+.statistics-kpis article[data-status="failed"] strong { color: var(--red); }
+.statistics-kpis article[data-status="passed"] strong { color: var(--green); }
+.statistics-kpis article[data-status="baseline"] strong { color: var(--amber); }
 .statistics-chart-grid, .statistics-table-grid { max-width: 1420px; margin: 0 auto 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .statistics-chart-card { min-height: 390px; }
-#statisticsDetectionCanvas, #statisticsLocalizationCanvas { width: 100%; height: 285px; display: block; margin-top: 14px; }
+#statisticsDetectionCanvas, #statisticsLocalizationCanvas, #statisticsCurveCanvas { width: 100%; height: 285px; display: block; margin-top: 14px; }
 .chart-legend { min-height: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; color: var(--muted); font-size: 9px; }
 .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .chart-legend i, .table-series { width: 12px; height: 3px; display: inline-block; background: var(--series); }
@@ -247,6 +250,17 @@ input[type="range"] { width: 100%; height: 3px; margin: 5px 0; cursor: pointer; 
 .statistics-caveat strong { color: var(--amber); font-size: 11px; }
 .statistics-caveat ul { margin: 0; padding-left: 18px; columns: 2; color: var(--muted); font-size: 9px; line-height: 1.55; }
 .statistics-caveat li { break-inside: avoid; margin-bottom: 4px; }
+.confusion-grid { margin-top: 18px; display: grid; grid-template-columns: 90px 1fr 1fr; gap: 6px; align-items: stretch; }
+.confusion-grid > strong { display: grid; place-items: center; min-height: 34px; color: var(--muted); font-size: 9px; text-align: center; }
+.confusion-grid article { min-height: 72px; display: grid; place-items: center; align-content: center; gap: 4px; border: 1px solid var(--line); border-radius: 6px; }
+.confusion-grid article span { color: var(--muted); font-size: 9px; }
+.confusion-grid article b { font: 600 21px "JetBrains Mono", monospace; }
+.confusion-good { background: rgba(83,226,191,.055); }
+.confusion-good b { color: var(--green); }
+.confusion-bad { background: rgba(255,116,109,.055); }
+.confusion-bad b { color: var(--red); }
+.failure-scroll { max-height: 235px; overflow-y: auto; }
+.statistics-comparison-card { max-width: 1420px; margin: 0 auto 14px; }
 
 @media (max-height: 820px) {
   .map-shell { min-height: 335px; height: 45vh; }

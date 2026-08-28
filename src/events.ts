@@ -1,7 +1,10 @@
 import type { DetectorResult } from "./detector";
+import type { DetectorOutput } from "./detectors/types";
 
 export interface AcousticEvent {
-  schemaVersion: 1;
+  schemaVersion: 2;
+  detectorId: string;
+  detectorVersion: string;
   nodeId: string;
   capturedAtMs: number;
   windowMs: number;
@@ -32,18 +35,21 @@ export interface FusedTrack {
 export function createAcousticEvent(
   nodeId: string,
   result: DetectorResult,
+  detector?: DetectorOutput,
   capturedAtMs = Date.now(),
 ): AcousticEvent {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
+    detectorId: detector?.detectorId ?? "dsp-v1",
+    detectorVersion: detector?.version ?? "1.0.0",
     nodeId,
     capturedAtMs,
     windowMs: Math.round(result.analyzedFrames * 512 / result.spectrumSampleRate * 1000),
     snrEstimateDb: result.harmonicScoreDb,
     fundamentalHz: result.fundamentalHz,
     harmonicScoreDb: result.harmonicScoreDb,
-    detectionConfidence: result.confidence,
-    classificationTopK: result.classifications.map((item) => ({
+    detectionConfidence: detector?.probability ?? result.confidence,
+    classificationTopK: (detector?.classifications ?? result.classifications).map((item) => ({
       label: item.label,
       confidence: item.confidence,
     })),

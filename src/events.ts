@@ -38,13 +38,17 @@ export function createAcousticEvent(
   detector?: DetectorOutput,
   capturedAtMs = Date.now(),
 ): AcousticEvent {
+  const fftWindowSamples = result.spectrumDb.length * 2;
+  const analyzedSamples = result.analyzedFrames > 0
+    ? fftWindowSamples + (result.analyzedFrames - 1) * 512
+    : 0;
   return {
     schemaVersion: 2,
     detectorId: detector?.detectorId ?? "dsp-v1",
     detectorVersion: detector?.version ?? "1.0.0",
     nodeId,
     capturedAtMs,
-    windowMs: Math.round(result.analyzedFrames * 512 / result.spectrumSampleRate * 1000),
+    windowMs: Math.round(analyzedSamples / result.spectrumSampleRate * 1000),
     snrEstimateDb: result.harmonicScoreDb,
     fundamentalHz: result.fundamentalHz,
     harmonicScoreDb: result.harmonicScoreDb,

@@ -10,6 +10,9 @@ describe("committed headless report", () => {
     expect(report.schemaVersion).toBe(2);
     expect(report.models?.map((model) => model.id)).toEqual(["dsp-v1", "ml-onnx-v1"]);
     expect(report.failures?.length).toBeGreaterThan(0);
+    expect(report.realSamples.every((sample) =>
+      typeof sample.detectorId === "string" && typeof sample.correctBinary === "boolean"
+    )).toBe(true);
   });
 
   it("keeps ML experimental while its quality gate fails", async () => {

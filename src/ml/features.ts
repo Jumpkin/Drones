@@ -131,8 +131,14 @@ export function pcmWindows(
     return [padded];
   }
   const windows: Float32Array[] = [];
+  let lastOffset = -1;
   for (let offset = 0; offset + ML_WINDOW_SAMPLES <= samples.length; offset += ML_HOP_SAMPLES) {
     windows.push(samples.slice(offset, offset + ML_WINDOW_SAMPLES));
+    lastOffset = offset;
+  }
+  const finalOffset = samples.length - ML_WINDOW_SAMPLES;
+  if (finalOffset !== lastOffset) {
+    windows.push(samples.slice(finalOffset));
   }
   return windows;
 }

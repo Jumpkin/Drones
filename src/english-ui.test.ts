@@ -12,6 +12,8 @@ const userFacingSources = [
   "src/detectors/dsp-adapter.ts",
   "src/detectors/ml-adapter.ts",
   "src/events.ts",
+  "scripts/headless-sim.ts",
+  "public/reports/headless/summary.json",
 ];
 
 describe("English interface", () => {
@@ -29,5 +31,6 @@ describe("English interface", () => {
     expect(content).not.toMatch(
       /\b(?:Arbetsläge|Stadssimulering|Ljudlabb|Drönare|Bakgrund|Analysen|Försök|Statistik)\b/,
     );
+    expect(content).not.toContain("Projektgenererad");
   });
 });

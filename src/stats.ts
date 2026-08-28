@@ -56,9 +56,9 @@ export interface HeadlessReport {
   realSamples: Array<{
     file: string;
     expected: string;
+    detectorId: string;
     detected: boolean;
-    top1: string;
-    correct: boolean;
+    correctBinary: boolean;
     confidence: number;
   }>;
   detection: DetectionStatistic[];

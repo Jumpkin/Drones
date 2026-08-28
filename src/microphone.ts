@@ -97,6 +97,9 @@ export async function captureMicrophone(
   durationMs = 5000,
   onStarted?: (settings: MediaTrackSettings) => void,
 ): Promise<CapturedMicrophoneAudio> {
+  if (!Number.isFinite(durationMs) || durationMs <= 0 || durationMs > 60_000) {
+    throw new Error("Microphone duration must be between 1 ms and 60 seconds.");
+  }
   if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error("This browser does not support microphone capture.");
   }
@@ -109,44 +112,58 @@ export async function captureMicrophone(
     audio: requestedConstraints,
     video: false,
   });
-  const track = stream.getAudioTracks()[0];
-  const context = new AudioContext();
-  const source = context.createMediaStreamSource(stream);
-  // ScriptProcessor is deliberately used for this short compatibility test:
-  // it works on current mobile Safari without requiring a separately served
-  // AudioWorklet module. It can be replaced after the experiment is validated.
-  const processor = context.createScriptProcessor(4096, 1, 1);
-  const silentOutput = context.createGain();
-  silentOutput.gain.value = 0;
   const chunks: Float32Array[] = [];
-
-  processor.addEventListener("audioprocess", (event) => {
-    chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
-  });
-  source.connect(processor);
-  processor.connect(silentOutput);
-  silentOutput.connect(context.destination);
+  let context: AudioContext | undefined;
+  let source: MediaStreamAudioSourceNode | undefined;
+  let processor: ScriptProcessorNode | undefined;
+  let silentOutput: GainNode | undefined;
+  let sampleRate = 0;
+  let appliedSettings: MediaTrackSettings = {};
 
   try {
+    const track = stream.getAudioTracks()[0];
+    if (!track) throw new Error("The microphone stream returned no audio track.");
+    appliedSettings = track.getSettings();
+    context = new AudioContext();
+    sampleRate = context.sampleRate;
+    source = context.createMediaStreamSource(stream);
+    // ScriptProcessor is deliberately used for this short compatibility test:
+    // it works on current mobile Safari without requiring a separately served
+    // AudioWorklet module. It can be replaced after the experiment is validated.
+    processor = context.createScriptProcessor(4096, 1, 1);
+    silentOutput = context.createGain();
+    silentOutput.gain.value = 0;
+    processor.addEventListener("audioprocess", (event) => {
+      chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+    });
+    source.connect(processor);
+    processor.connect(silentOutput);
+    silentOutput.connect(context.destination);
     await context.resume();
-    onStarted?.(track?.getSettings() ?? {});
+    onStarted?.(appliedSettings);
     await new Promise<void>((resolve) => window.setTimeout(resolve, durationMs));
   } finally {
-    source.disconnect();
-    processor.disconnect();
-    silentOutput.disconnect();
+    for (const node of [source, processor, silentOutput]) {
+      try {
+        node?.disconnect();
+      } catch {
+        // Cleanup must continue so the physical microphone track is stopped.
+      }
+    }
     for (const streamTrack of stream.getTracks()) streamTrack.stop();
-    await context.close();
+    if (context && context.state !== "closed") {
+      await context.close().catch(() => undefined);
+    }
   }
 
   const samples = concatenate(chunks);
   if (samples.length === 0) throw new Error("The microphone returned no audio samples.");
   return {
     samples,
-    sampleRate: context.sampleRate,
-    durationMs: samples.length / context.sampleRate * 1000,
+    sampleRate,
+    durationMs: samples.length / sampleRate * 1000,
     rms: rootMeanSquare(samples),
     requestedConstraints,
-    appliedSettings: track?.getSettings() ?? {},
+    appliedSettings,
   };
 }

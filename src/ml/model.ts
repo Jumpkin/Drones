@@ -25,7 +25,7 @@ export interface MlModelArtifact {
   weights: number[];
   bias: number;
   threshold: number;
-  temporal: { requiredPositiveWindows: 3; windowCount: 5 };
+  temporal: { requiredPositiveWindows: number; windowCount: number };
   modelUrl: string;
   modelBytes: number;
   trainedAt: string;
@@ -39,6 +39,32 @@ export interface MlModelArtifact {
   validationMetrics: BinaryMetrics;
   testMetrics: BinaryMetrics;
   dspTestMetrics: BinaryMetrics;
+}
+
+export function parseMlModelArtifact(value: unknown): MlModelArtifact {
+  if (!value || typeof value !== "object") throw new Error("Invalid ML metadata");
+  const artifact = value as Partial<MlModelArtifact>;
+  const featureCount = ML_FEATURE_NAMES.length;
+  const finiteVector = (vector: unknown): vector is number[] =>
+    Array.isArray(vector) && vector.length === featureCount && vector.every(Number.isFinite);
+  if (artifact.schemaVersion !== 1 || artifact.id !== "ml-onnx-v1" ||
+    artifact.inputName !== "features" || artifact.outputName !== "probability" ||
+    !Array.isArray(artifact.featureNames) ||
+    artifact.featureNames.length !== featureCount ||
+    artifact.featureNames.some((name, index) => name !== ML_FEATURE_NAMES[index]) ||
+    !finiteVector(artifact.featureMean) || !finiteVector(artifact.featureStd) ||
+    artifact.featureStd.some((value) => value <= 0) ||
+    !finiteVector(artifact.weights) || typeof artifact.bias !== "number" ||
+    !Number.isFinite(artifact.bias) || typeof artifact.threshold !== "number" ||
+    !Number.isFinite(artifact.threshold) || artifact.threshold < 0 || artifact.threshold > 1 ||
+    typeof artifact.modelUrl !== "string" || !artifact.modelUrl.startsWith("/models/") ||
+    !artifact.temporal || !Number.isInteger(artifact.temporal.requiredPositiveWindows) ||
+    !Number.isInteger(artifact.temporal.windowCount) || artifact.temporal.requiredPositiveWindows < 1 ||
+    artifact.temporal.windowCount < artifact.temporal.requiredPositiveWindows ||
+    !artifact.qualityGate || typeof artifact.qualityGate.passed !== "boolean") {
+    throw new Error("ML metadata does not match the supported model schema");
+  }
+  return artifact as MlModelArtifact;
 }
 
 export function sigmoid(value: number): number {
@@ -83,10 +109,21 @@ export interface TemporalMlResult {
 export function aggregateProbabilities(
   probabilities: number[],
   threshold: number,
+  temporal = { requiredPositiveWindows: 3, windowCount: 5 },
 ): TemporalMlResult {
-  const recent = probabilities.slice(-5);
+  if (!Number.isInteger(temporal.requiredPositiveWindows) ||
+    !Number.isInteger(temporal.windowCount) || temporal.requiredPositiveWindows < 1 ||
+    temporal.windowCount < temporal.requiredPositiveWindows) {
+    throw new Error("Invalid temporal ML configuration");
+  }
+  const recent = probabilities.slice(-temporal.windowCount);
   const positiveWindows = recent.filter((value) => value >= threshold).length;
-  const required = recent.length >= 5 ? 3 : Math.max(1, Math.ceil(recent.length * 0.6));
+  const required = recent.length >= temporal.windowCount
+    ? temporal.requiredPositiveWindows
+    : Math.max(
+        1,
+        Math.ceil(recent.length * temporal.requiredPositiveWindows / temporal.windowCount),
+      );
   return {
     detected: positiveWindows >= required,
     confidence: recent.reduce((sum, value) => sum + value, 0) / Math.max(1, recent.length),
@@ -104,7 +141,7 @@ export function analyzeWithArtifact(
   const probabilities = pcmWindows(samples, sampleRate).map((window) =>
     scoreMlFeatures(extractMlFeatures(window, 16_000), artifact)
   );
-  return aggregateProbabilities(probabilities, artifact.threshold);
+  return aggregateProbabilities(probabilities, artifact.threshold, artifact.temporal);
 }
 
 export function binaryMetrics(truth: boolean[], predicted: boolean[]): BinaryMetrics {

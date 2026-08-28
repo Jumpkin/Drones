@@ -112,7 +112,8 @@ function mean(values: number[]): number {
 
 function percentile(values: number[], fraction: number): number {
   const sorted = [...values].sort((a, b) => a - b);
-  return sorted[Math.min(sorted.length - 1, Math.floor(fraction * sorted.length))] ?? 0;
+  const index = Math.round(Math.max(0, Math.min(1, fraction)) * Math.max(0, sorted.length - 1));
+  return sorted[index] ?? 0;
 }
 
 function angularDifference(a: number, b: number): number {
@@ -168,7 +169,7 @@ function runDetectionBenchmark(
               environment: environment.id,
               distanceM,
               sourceLabel: DRONE_PROFILES[profile].label,
-              license: "Projektgenererad",
+              license: "Project-generated",
             });
           }
         }
@@ -229,7 +230,7 @@ function runDetectionBenchmark(
           environment: environment.id,
           distanceM: null,
           sourceLabel: kind,
-          license: "Projektgenererad",
+          license: "Project-generated",
         });
       }
     }

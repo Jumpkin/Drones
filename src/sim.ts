@@ -440,12 +440,13 @@ export function evaluateSimulation(
   const profile = DRONE_PROFILES[config.profile];
   const arrayMode = ARRAY_MODES[config.arrayMode];
   const nodes = state.sensorNodes.slice(0, config.sensorCount);
-  const nearestNode = nodes.reduce((best, node) =>
+  if (nodes.length === 0) throw new Error("At least one sensor node is required");
+  const nearestDroneNode = nodes.reduce((best, node) =>
     distance2d(state.drone, node) < distance2d(state.drone, best) ? node : best,
   );
   const droneDistance3d = distance3d(
     state.drone,
-    nearestNode,
+    nearestDroneNode,
     config.altitudeM,
   );
   const targetDistance = distance2d(state.drone, state.target);
@@ -529,8 +530,21 @@ export function evaluateSimulation(
   const noCorroboration = acousticProbability > 0.65 && corroboratingSensors <= 1 ? 0.22 : 0;
   const spoofRisk = clamp(Math.max(replaySpatialMismatch, noCorroboration));
 
+  const localizedSource = acousticSource === "replay" || acousticSource === "noise"
+    ? state.spoofSource
+    : state.drone;
+  const nearestSourceNode = nodes.reduce((best, node) =>
+    distance2d(localizedSource, node) < distance2d(localizedSource, best) ? node : best,
+  );
+  const acousticSourceDistance = acousticSource === "replay" || acousticSource === "noise"
+    ? spoofDistance
+    : droneDistance3d;
+
   const trueBearing =
-    ((Math.atan2(state.drone.y - nearestNode.y, state.drone.x - nearestNode.x) *
+    ((Math.atan2(
+      localizedSource.y - nearestSourceNode.y,
+      localizedSource.x - nearestSourceNode.x,
+    ) *
       180) /
       Math.PI +
       360) %
@@ -551,7 +565,8 @@ export function evaluateSimulation(
       ? (trueBearing + bearingError * deterministicNoise(state.elapsedS, 7) + 360) % 360
       : Number.NaN;
 
-  const altitudeObservable = config.sensorCount >= 2 && acousticProbability > 0.22;
+  const altitudeObservable =
+    acousticSource === "drone" && config.sensorCount >= 2 && acousticProbability > 0.22;
   const altitudeError = altitudeObservable
     ? Math.max(
         7,
@@ -571,7 +586,7 @@ export function evaluateSimulation(
   const eta = config.dronePresent
     ? arrivalTime(targetDistance, config.speedKmh)
     : Number.POSITIVE_INFINITY;
-  const delay = config.dronePresent ? soundDelay(droneDistance3d) : 0;
+  const delay = acousticSource !== "none" ? soundDelay(acousticSourceDistance) : 0;
   const systemLatency =
     delay + 0.8 + arrayMode.networkLatencyS + (fusionConfidence < 0.6 ? 0.7 : 0);
   const machineMargin = Number.isFinite(eta) ? eta - systemLatency : eta;
@@ -594,7 +609,7 @@ export function evaluateSimulation(
 
   return {
     droneDistanceToTargetM: targetDistance,
-    nearestAcousticDistanceM: droneDistance3d,
+    nearestAcousticDistanceM: acousticSourceDistance,
     bladePassFrequencyHz: bpf,
     receivedDroneDb: receivedDrone,
     effectiveNoiseDb: effectiveNoise,

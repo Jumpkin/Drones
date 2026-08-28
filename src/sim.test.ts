@@ -42,6 +42,16 @@ describe("simulation", () => {
     expect(result.acousticSource).toBe("replay");
     expect(result.spoofRisk).toBeGreaterThan(0.5);
     expect(result.alert).toBe(false);
+    expect(result.bearingDeg).toBeCloseTo(240.36, 1);
+    expect(result.nearestAcousticDistanceM).toBeCloseTo(Math.hypot(33, 58), 4);
+    expect(result.soundDelayS).toBeGreaterThan(0);
+    expect(Number.isNaN(result.estimatedAltitudeM)).toBe(true);
+  });
+
+  it("requires at least one sensor node", () => {
+    const config = createConfig("quiet");
+    config.sensorCount = 0;
+    expect(() => evaluateSimulation(createState("quiet"), config)).toThrow(/sensor node/);
   });
 
   it("does not invent bearing from one phone", () => {

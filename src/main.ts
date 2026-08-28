@@ -8,7 +8,6 @@ import {
   playPcm,
 } from "./audio";
 import { analyzePcm, type DetectorResult } from "./detector";
-import { loadDetectorSuite } from "./detectors/ml-adapter";
 import { DspDetectorAdapter } from "./detectors/dsp-adapter";
 import type { DetectorAdapter, DetectorOutput } from "./detectors/types";
 import { createAcousticEvent, fuseSingleNodeEvent } from "./events";
@@ -64,10 +63,10 @@ app.innerHTML = `
       </div>
     </div>
     <nav class="view-tabs" aria-label="Workspace view">
-      <button class="view-tab is-active" data-view="simulator" type="button">City simulation</button>
-      <button class="view-tab" data-view="soundLab" type="button">Sound lab</button>
-      <button class="view-tab" data-view="experiment" type="button">Multi-phone test</button>
-      <button class="view-tab" data-view="statistics" type="button">Statistics</button>
+      <button class="view-tab is-active" data-view="simulator" type="button" aria-pressed="true">City simulation</button>
+      <button class="view-tab" data-view="soundLab" type="button" aria-pressed="false">Sound lab</button>
+      <button class="view-tab" data-view="experiment" type="button" aria-pressed="false">Multi-phone test</button>
+      <button class="view-tab" data-view="statistics" type="button" aria-pressed="false">Statistics</button>
     </nav>
     <div class="model-notice">
       <span class="notice-dot"></span>
@@ -322,7 +321,7 @@ app.innerHTML = `
           <option value="dsp-v1">FFT / harmonic DSP</option>
           <option value="ml-onnx-v1">Feature Conv ML</option>
         </select></label>
-        <p id="labDetectorStatus" class="field-help">Loading detectors…</p>
+        <p id="labDetectorStatus" class="field-help">DSP is ready. The experimental ML runtime loads only when selected.</p>
         <p id="labSampleNote" class="field-help"></p>
         <label class="range-field" id="labRpmField">
           <span><span>RPM shift</span><output id="labRpmOutput">0%</output></span>
@@ -590,10 +589,20 @@ let running = false;
 let playbackRate = 1;
 let previousTimestamp = performance.now();
 let previousStatus = result.status;
-const events: Array<{ time: number; text: string; tone: string }> = [];
+type EventTone = "neutral" | "warning" | "danger";
+const events: Array<{ time: number; text: string; tone: EventTone }> = [];
 
 function setText(selector: string, value: string): void {
   requiredElement(selector).textContent = value;
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function setRangeValue(
@@ -627,7 +636,7 @@ function syncControls(): void {
   requiredElement<HTMLInputElement>("#toggleCamera").checked = config.sensors.camera;
 }
 
-function addEvent(text: string, tone = "neutral"): void {
+function addEvent(text: string, tone: EventTone = "neutral"): void {
   if (events[0]?.text === text) return;
   events.unshift({ time: state.elapsedS, text, tone });
   events.splice(5);
@@ -641,7 +650,7 @@ function renderEvents(): void {
       (event) => `
         <li class="event-item event-item--${event.tone}">
           <time>${formatClock(event.time)}</time>
-          <span>${event.text}</span>
+          <span>${escapeHtml(event.text)}</span>
         </li>`,
     )
     .join("");
@@ -1061,8 +1070,8 @@ function animate(timestamp: number): void {
     state = stepSimulation(state, config, rawDelta * playbackRate);
     result = evaluateSimulation(state, config);
     updateStatusEvent();
+    if (!viewElements.simulator.hidden) renderAll();
   }
-  renderAll();
   requestAnimationFrame(animate);
 }
 
@@ -1080,8 +1089,11 @@ function selectView(view: AppViewId): void {
     element.hidden = id !== view;
   }
   document.querySelectorAll<HTMLButtonElement>(".view-tab").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.view === view);
+    const selected = button.dataset.view === view;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
   });
+  if (view === "simulator") renderAll();
   if (view === "soundLab") drawLabSpectrum();
   if (view === "experiment") drawExperiment();
   if (view === "statistics") void loadStatistics();
@@ -1252,12 +1264,12 @@ function renderStatistics(): void {
     metric === "detectionRate" ? "Detection rate by drone type" : "Correct detection + type",
   );
   requiredElement("#statisticsProfileLegend").innerHTML = profileComparison.map((item) =>
-    `<span><i style="--series:${statisticsColors[item.profile]}"></i>${item.label}</span>`
+    `<span><i style="--series:${statisticsColors[item.profile]}"></i>${escapeHtml(item.label)}</span>`
   ).join("");
   requiredElement<HTMLTableSectionElement>("#statisticsRankingBody").innerHTML = profileComparison.map((item) => {
     const profileRows = rows.filter((row) => row.profile === item.profile);
     const values = profileRows.map((row) => row[metric]);
-    return `<tr><td><i class="table-series" style="--series:${statisticsColors[item.profile]}"></i>${item.label}</td><td>${percent(item.average)}</td><td>${percent(Math.max(...values))}</td><td>${percent(Math.min(...values))}</td></tr>`;
+    return `<tr><td><i class="table-series" style="--series:${statisticsColors[item.profile]}"></i>${escapeHtml(item.label)}</td><td>${percent(item.average)}</td><td>${percent(Math.max(...values))}</td><td>${percent(Math.min(...values))}</td></tr>`;
   }).join("");
   requiredElement<HTMLTableSectionElement>("#statisticsLocalizationBody").innerHTML = statisticsReport.localization.map((row) =>
     `<tr><td>${String(row.timingJitterMs)} ms</td><td>${row.medianErrorM.toFixed(1)} m</td><td>${row.p90ErrorM.toFixed(1)} m</td><td>${percent(row.within5MRate)}</td><td>${row.p90BearingErrorDeg.toFixed(1)}°</td></tr>`
@@ -1272,14 +1284,14 @@ function renderStatistics(): void {
   setText("#statisticsFailureCount", `${failures.length} SHOWN`);
   requiredElement<HTMLTableSectionElement>("#statisticsFailureBody").innerHTML = failures.length > 0
     ? failures.slice(0, 12).map((failure) =>
-      `<tr><td>${failure.failureKind === "false-positive" ? "False alarm" : "Miss"}</td><td>${failure.sourceLabel}</td><td>${failure.environment}</td><td>${percent(failure.probability)}</td></tr>`
+      `<tr><td>${failure.failureKind === "false-positive" ? "False alarm" : "Miss"}</td><td>${escapeHtml(failure.sourceLabel)}</td><td>${escapeHtml(failure.environment)}</td><td>${percent(failure.probability)}</td></tr>`
     ).join("")
     : `<tr><td colspan="4">No saved failures for the selected detector.</td></tr>`;
   requiredElement<HTMLTableSectionElement>("#statisticsDetectorComparisonBody").innerHTML = (statisticsReport.models ?? []).map((item) =>
-    `<tr><td>${item.label}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : "Baseline"}</td></tr>`
+    `<tr><td>${escapeHtml(item.label)}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : "Baseline"}</td></tr>`
   ).join("");
   requiredElement("#statisticsCaveats").innerHTML = statisticsReport.caveats
-    .map((caveat) => `<li>${caveat}</li>`).join("");
+    .map((caveat) => `<li>${escapeHtml(caveat)}</li>`).join("");
   drawDetectionStatistics();
   drawLocalizationStatistics();
   drawDetectorCurve();
@@ -1329,26 +1341,63 @@ let labDetectorOutput: DetectorOutput | undefined;
 let labInputMode: "sample" | "microphone" = "sample";
 let microphoneTruthForResult: TrialTruth = "drone";
 const initialDspDetector = new DspDetectorAdapter();
-let detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
+const detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
 let selectedDetector: DetectorAdapter = initialDspDetector;
+let mlDetectorPromise: Promise<DetectorAdapter> | undefined;
 
-void loadDetectorSuite().then((suite) => {
-  detectorAdapters = new Map<string, DetectorAdapter>([
-    [suite.dsp.id, suite.dsp],
-    [suite.ml.id, suite.ml],
-  ]);
-  selectedDetector = suite.defaultDetector;
-  labDetectorSelect.value = selectedDetector.id;
-  const gate = suite.ml.artifact.qualityGate;
-  setText(
-    "#labDetectorStatus",
-    gate.passed
-      ? "ML passed the quality gate and is the default."
-      : `ML is experimental: FPR ${Math.round(suite.ml.artifact.testMetrics.falsePositiveRate * 100)}%, recall ${Math.round(suite.ml.artifact.testMetrics.recall * 100)}%. DSP is the default.`,
-  );
-}).catch((error) => {
-  setText("#labDetectorStatus", `ML could not be loaded: ${String(error)}. DSP is in use.`);
-});
+async function loadMlDetector(): Promise<DetectorAdapter> {
+  const loaded = detectorAdapters.get("ml-onnx-v1");
+  if (loaded) return loaded;
+  mlDetectorPromise ??= import("./detectors/ml-adapter")
+    .then(({ MlOnnxDetectorAdapter }) => MlOnnxDetectorAdapter.create())
+    .then((detector) => {
+      detectorAdapters.set(detector.id, detector);
+      return detector;
+    })
+    .catch((error) => {
+      mlDetectorPromise = undefined;
+      throw error;
+    });
+  return mlDetectorPromise;
+}
+
+void (async () => {
+  try {
+    const response = await fetch("/models/drone-binary-v1.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const metadata = await response.json() as {
+      qualityGate?: { passed?: boolean };
+      testMetrics?: { falsePositiveRate?: number; recall?: number };
+    };
+    if (metadata.qualityGate?.passed && labDetectorSelect.value === "dsp-v1") {
+      setText("#labDetectorStatus", "ML passed the quality gate. Loading the default detector…");
+      const detector = await loadMlDetector();
+      if (detector.isOperational && labDetectorSelect.value === "dsp-v1") {
+        selectedDetector = detector;
+        labDetectorSelect.value = detector.id;
+        setText("#labDetectorStatus", "ML passed the quality gate and is the default.");
+      } else if (labDetectorSelect.value === "dsp-v1") {
+        setText("#labDetectorStatus", "ML passed its metrics gate but could not start. DSP is in use.");
+      }
+      return;
+    }
+    if (labDetectorSelect.value === "dsp-v1") {
+      const fpr = metadata.testMetrics?.falsePositiveRate;
+      const recall = metadata.testMetrics?.recall;
+      setText(
+        "#labDetectorStatus",
+        typeof fpr === "number" && Number.isFinite(fpr) &&
+          typeof recall === "number" && Number.isFinite(recall)
+          ? `ML is experimental: FPR ${Math.round(fpr * 100)}%, recall ${Math.round(recall * 100)}%. DSP is the default.`
+          : "ML is experimental and loads only when selected. DSP is the default.",
+      );
+    }
+  } catch (error) {
+    if (labDetectorSelect.value === "dsp-v1") {
+      setText("#labDetectorStatus", `ML metadata could not be loaded: ${String(error)}. DSP is in use.`);
+    }
+  }
+})();
 
 function syncLabSample(): void {
   labInputMode = "sample";
@@ -1417,7 +1466,7 @@ function renderLabResult(): void {
   setText("#labHarmonic", `${labResult.harmonicScoreDb.toFixed(1)} dB`);
   setText("#labFrames", `${labDetectorOutput.positiveWindows}/${labDetectorOutput.analyzedWindows}`);
   requiredElement<HTMLOListElement>("#labClassifications").innerHTML = labDetectorOutput.classifications
-    .map((item, index) => `<li><span>${index + 1}. ${item.label}</span><strong>${Math.round(item.confidence * 100)}%</strong></li>`)
+    .map((item, index) => `<li><span>${index + 1}. ${escapeHtml(item.label)}</span><strong>${Math.round(item.confidence * 100)}%</strong></li>`)
     .join("");
   const event = createAcousticEvent("P1", labResult, labDetectorOutput);
   const track = fuseSingleNodeEvent(event);
@@ -1491,11 +1540,37 @@ labRpmInput.addEventListener("input", () => {
   labDetectorOutput = undefined;
   renderLabResult();
 });
-labDetectorSelect.addEventListener("change", () => {
-  selectedDetector = detectorAdapters.get(labDetectorSelect.value) ?? initialDspDetector;
+labDetectorSelect.addEventListener("change", async () => {
+  const requestedId = labDetectorSelect.value;
   labResult = undefined;
   labDetectorOutput = undefined;
   renderLabResult();
+  if (requestedId === "dsp-v1") {
+    selectedDetector = initialDspDetector;
+    setText("#labDetectorStatus", "FFT / harmonic DSP is ready.");
+    return;
+  }
+  const analyzeButton = requiredElement<HTMLButtonElement>("#labAnalyzeButton");
+  labDetectorSelect.disabled = true;
+  analyzeButton.disabled = true;
+  setText("#labDetectorStatus", "Loading the experimental ML runtime…");
+  try {
+    const detector = await loadMlDetector();
+    if (labDetectorSelect.value === requestedId) selectedDetector = detector;
+    setText(
+      "#labDetectorStatus",
+      detector.isOperational
+        ? "Experimental ML detector ready."
+        : "The ML runtime could not start; analysis will fall back to DSP.",
+    );
+  } catch (error) {
+    selectedDetector = initialDspDetector;
+    labDetectorSelect.value = "dsp-v1";
+    setText("#labDetectorStatus", `ML could not be loaded: ${String(error)}. DSP is in use.`);
+  } finally {
+    labDetectorSelect.disabled = false;
+    analyzeButton.disabled = false;
+  }
 });
 requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", async () => {
   const button = requiredElement<HTMLButtonElement>("#labPlayButton");
@@ -1507,6 +1582,8 @@ requiredElement<HTMLButtonElement>("#labPlayButton").addEventListener("click", a
     else if (sample.kind === "synthetic") {
       await playDroneMixture([sample.expectedProfile as DroneProfileId], Number(labRpmInput.value));
     } else await playPcm(pcm.samples, pcm.sampleRate);
+  } catch (error) {
+    setText("#labDetectorStatus", error instanceof Error ? error.message : "Audio playback failed");
   } finally {
     window.setTimeout(() => { button.disabled = false; }, 500);
   }
@@ -1566,7 +1643,7 @@ function renderMicrophoneTrials(): void {
       <td>${trial.truth === "drone" ? "Drone" : "Background"}</td>
       <td>${trial.detected ? "Detected" : "Negative"}</td>
       <td>${Math.round(trial.probability * 100)}%</td>
-      <td>${trial.topLabel}</td>
+      <td>${escapeHtml(trial.topLabel)}</td>
       <td>${trial.latencyMs.toFixed(1)} ms</td>
     </tr>`;
   }).join("");
@@ -1586,7 +1663,12 @@ function microphoneTrialsCsv(): string {
       trial.topLabel,
     ]),
   ];
-  return rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+  const csvCell = (value: unknown): string => {
+    const text = String(value);
+    const formulaSafe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+    return `"${formulaSafe.replaceAll('"', '""')}"`;
+  };
+  return rows.map((row) => row.map(csvCell).join(",")).join("\n");
 }
 
 microphoneCaptureButton.addEventListener("click", async () => {
@@ -1652,8 +1734,10 @@ microphoneDownloadButton.addEventListener("click", () => {
   const link = document.createElement("a");
   link.href = url;
   link.download = `drones-microphone-trials-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.append(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 });
 
 const experimentCanvas = requiredElement<HTMLCanvasElement>("#experimentCanvas");
@@ -1750,7 +1834,7 @@ requiredElement<HTMLButtonElement>("#calibrateButton").addEventListener("click",
   requiredElement<HTMLButtonElement>("#localizeButton").disabled = false;
   setText("#experimentStatus", "CALIBRATED");
   requiredElement<HTMLOListElement>("#clockCorrections").innerHTML = pendingExperiment.observations
-    .map((item) => `<li><span>${item.nodeId}</span><strong>${item.clockCorrectionMs >= 0 ? "+" : ""}${item.clockCorrectionMs.toFixed(2)} ms</strong></li>`)
+    .map((item) => `<li><span>${escapeHtml(item.nodeId)}</span><strong>${item.clockCorrectionMs >= 0 ? "+" : ""}${item.clockCorrectionMs.toFixed(2)} ms</strong></li>`)
     .join("");
   drawExperiment();
 });

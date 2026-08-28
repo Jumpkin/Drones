@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-28T16:28:24.911Z",
+  "generatedAt": "2026-08-28T16:46:50.988Z",
   "seed": 20260828,
   "configuration": {
     "sampleRate": 16000,
@@ -51,19 +51,19 @@
       "isDefault": true,
       "qualityGate": null,
       "overall": {
-        "truePositive": 873,
+        "truePositive": 875,
         "falsePositive": 164,
         "trueNegative": 16,
-        "falseNegative": 27,
-        "precision": 0.8418514946962391,
-        "recall": 0.97,
+        "falseNegative": 25,
+        "precision": 0.8421559191530318,
+        "recall": 0.9722222222222222,
         "falsePositiveRate": 0.9111111111111111,
-        "f1": 0.9013939081053175,
-        "accuracy": 0.8231481481481482
+        "f1": 0.9025270758122743,
+        "accuracy": 0.825
       },
       "prAuc": 0.6535,
-      "rocAuc": 0.4585,
-      "brierScore": 0.1484,
+      "rocAuc": 0.4588,
+      "brierScore": 0.1482,
       "curve": [
         {
           "threshold": 0,
@@ -169,74 +169,74 @@
         },
         {
           "threshold": 0.425,
-          "precision": 0.8397,
-          "recall": 0.9956,
+          "precision": 0.8393,
+          "recall": 0.9922,
           "falsePositiveRate": 0.95
         },
         {
           "threshold": 0.45,
-          "precision": 0.8427,
-          "recall": 0.9878,
+          "precision": 0.8424,
+          "recall": 0.9856,
           "falsePositiveRate": 0.9222
         },
         {
           "threshold": 0.475,
-          "precision": 0.8428,
-          "recall": 0.9767,
+          "precision": 0.8429,
+          "recall": 0.9778,
           "falsePositiveRate": 0.9111
         },
         {
           "threshold": 0.5,
-          "precision": 0.8429,
-          "recall": 0.96,
+          "precision": 0.8437,
+          "recall": 0.9656,
           "falsePositiveRate": 0.8944
         },
         {
           "threshold": 0.525,
-          "precision": 0.8463,
-          "recall": 0.9544,
+          "precision": 0.8466,
+          "recall": 0.9567,
           "falsePositiveRate": 0.8667
         },
         {
           "threshold": 0.55,
-          "precision": 0.8507,
-          "recall": 0.95,
+          "precision": 0.851,
+          "recall": 0.9522,
           "falsePositiveRate": 0.8333
         },
         {
           "threshold": 0.575,
-          "precision": 0.8529,
-          "recall": 0.9467,
+          "precision": 0.8531,
+          "recall": 0.9489,
           "falsePositiveRate": 0.8167
         },
         {
           "threshold": 0.6,
-          "precision": 0.8629,
-          "recall": 0.9444,
+          "precision": 0.8634,
+          "recall": 0.9478,
           "falsePositiveRate": 0.75
         },
         {
           "threshold": 0.625,
-          "precision": 0.8681,
-          "recall": 0.9433,
+          "precision": 0.8678,
+          "recall": 0.9411,
           "falsePositiveRate": 0.7167
         },
         {
           "threshold": 0.65,
-          "precision": 0.8722,
-          "recall": 0.94,
+          "precision": 0.872,
+          "recall": 0.9389,
           "falsePositiveRate": 0.6889
         },
         {
           "threshold": 0.675,
-          "precision": 0.8742,
-          "recall": 0.9344,
+          "precision": 0.8736,
+          "recall": 0.9289,
           "falsePositiveRate": 0.6722
         },
         {
           "threshold": 0.7,
-          "precision": 0.8739,
-          "recall": 0.9244,
+          "precision": 0.8734,
+          "recall": 0.92,
           "falsePositiveRate": 0.6667
         },
         {
@@ -247,56 +247,56 @@
         },
         {
           "threshold": 0.75,
-          "precision": 0.8701,
-          "recall": 0.8933,
+          "precision": 0.8708,
+          "recall": 0.8989,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.775,
-          "precision": 0.8678,
-          "recall": 0.8756,
+          "precision": 0.8689,
+          "recall": 0.8833,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.8,
-          "precision": 0.8662,
-          "recall": 0.8633,
+          "precision": 0.8668,
+          "recall": 0.8678,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.825,
-          "precision": 0.8636,
-          "recall": 0.8444,
+          "precision": 0.8635,
+          "recall": 0.8433,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.85,
-          "precision": 0.8578,
-          "recall": 0.8044,
+          "precision": 0.8583,
+          "recall": 0.8078,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.875,
-          "precision": 0.8485,
-          "recall": 0.7467,
+          "precision": 0.8502,
+          "recall": 0.7567,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.9,
-          "precision": 0.8356,
-          "recall": 0.6778,
+          "precision": 0.8358,
+          "recall": 0.6789,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.925,
-          "precision": 0.8212,
-          "recall": 0.6122,
+          "precision": 0.8235,
+          "recall": 0.6222,
           "falsePositiveRate": 0.6667
         },
         {
           "threshold": 0.95,
-          "precision": 0.81,
-          "recall": 0.5589,
+          "precision": 0.8103,
+          "recall": 0.56,
           "falsePositiveRate": 0.6556
         },
         {
@@ -323,12 +323,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 13,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
+          "top1Accuracy": 0.8667,
+          "accuracyWhenDetected": 0.8667,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.98
+          "medianLatencyMs": 20.02
         },
         {
           "detectorId": "dsp-v1",
@@ -340,10 +340,10 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
           "meanConfidence": 0.999,
           "medianLatencyMs": 20.05
         },
@@ -357,12 +357,12 @@
           "ambientRms": 0.1,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9184,
-          "medianLatencyMs": 20.18
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.9274,
+          "medianLatencyMs": 20.13
         },
         {
           "detectorId": "dsp-v1",
@@ -374,12 +374,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9995,
-          "medianLatencyMs": 20.06
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.9991,
+          "medianLatencyMs": 20.02
         },
         {
           "detectorId": "dsp-v1",
@@ -395,24 +395,7 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9227,
-          "medianLatencyMs": 20.06
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 50,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 15,
-          "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9697,
+          "meanConfidence": 0.9251,
           "medianLatencyMs": 20.07
         },
         {
@@ -420,41 +403,7 @@
           "detectorLabel": "FFT / harmonic DSP",
           "profile": "camera",
           "label": "Camera multirotor",
-          "distanceM": 100,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 15,
-          "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9785,
-          "medianLatencyMs": 20.17
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 100,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 15,
-          "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8751,
-          "medianLatencyMs": 20.16
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 100,
+          "distanceM": 50,
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 15,
@@ -463,8 +412,59 @@
           "detectionRate": 1,
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
-          "meanConfidence": 0.9713,
-          "medianLatencyMs": 20.04
+          "meanConfidence": 0.9648,
+          "medianLatencyMs": 20.17
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 100,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 15,
+          "detectionRate": 1,
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.9884,
+          "medianLatencyMs": 20.11
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 100,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 15,
+          "detectionRate": 1,
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.8828,
+          "medianLatencyMs": 20.14
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 100,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 15,
+          "detectionRate": 1,
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.9695,
+          "medianLatencyMs": 20.14
         },
         {
           "detectorId": "dsp-v1",
@@ -476,12 +476,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 11,
+          "correctTop1": 12,
           "detectionRate": 1,
-          "top1Accuracy": 0.7333,
-          "accuracyWhenDetected": 0.7333,
-          "meanConfidence": 0.8632,
-          "medianLatencyMs": 20.65
+          "top1Accuracy": 0.8,
+          "accuracyWhenDetected": 0.8,
+          "meanConfidence": 0.8658,
+          "medianLatencyMs": 20.15
         },
         {
           "detectorId": "dsp-v1",
@@ -493,12 +493,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 13,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 0.8667,
-          "accuracyWhenDetected": 0.8667,
-          "meanConfidence": 0.8696,
-          "medianLatencyMs": 21.09
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.8724,
+          "medianLatencyMs": 20.11
         },
         {
           "detectorId": "dsp-v1",
@@ -514,8 +514,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9723,
-          "medianLatencyMs": 20.94
+          "meanConfidence": 0.9683,
+          "medianLatencyMs": 20.28
         },
         {
           "detectorId": "dsp-v1",
@@ -526,13 +526,13 @@
           "environment": "quiet",
           "ambientRms": 0.02,
           "trials": 15,
-          "detected": 6,
+          "detected": 8,
           "correctTop1": 0,
-          "detectionRate": 0.4,
+          "detectionRate": 0.5333,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.4815,
-          "medianLatencyMs": 21.31
+          "meanConfidence": 0.4854,
+          "medianLatencyMs": 20.29
         },
         {
           "detectorId": "dsp-v1",
@@ -544,12 +544,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 13,
+          "correctTop1": 15,
           "detectionRate": 1,
-          "top1Accuracy": 0.8667,
-          "accuracyWhenDetected": 0.8667,
-          "meanConfidence": 0.8793,
-          "medianLatencyMs": 21.99
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.886,
+          "medianLatencyMs": 20.25
         },
         {
           "detectorId": "dsp-v1",
@@ -565,8 +565,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9735,
-          "medianLatencyMs": 20.2
+          "meanConfidence": 0.9759,
+          "medianLatencyMs": 20.22
         },
         {
           "detectorId": "dsp-v1",
@@ -583,7 +583,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9981,
-          "medianLatencyMs": 20.03
+          "medianLatencyMs": 19.92
         },
         {
           "detectorId": "dsp-v1",
@@ -599,8 +599,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9939,
-          "medianLatencyMs": 19.96
+          "meanConfidence": 0.991,
+          "medianLatencyMs": 19.99
         },
         {
           "detectorId": "dsp-v1",
@@ -612,12 +612,12 @@
           "ambientRms": 0.1,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 11,
+          "correctTop1": 10,
           "detectionRate": 1,
-          "top1Accuracy": 0.7333,
-          "accuracyWhenDetected": 0.7333,
-          "meanConfidence": 0.7923,
-          "medianLatencyMs": 20.05
+          "top1Accuracy": 0.6667,
+          "accuracyWhenDetected": 0.6667,
+          "meanConfidence": 0.8055,
+          "medianLatencyMs": 20.14
         },
         {
           "detectorId": "dsp-v1",
@@ -634,7 +634,7 @@
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
           "meanConfidence": 0.9953,
-          "medianLatencyMs": 19.97
+          "medianLatencyMs": 20
         },
         {
           "detectorId": "dsp-v1",
@@ -650,8 +650,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8972,
-          "medianLatencyMs": 20.07
+          "meanConfidence": 0.8783,
+          "medianLatencyMs": 20.06
         },
         {
           "detectorId": "dsp-v1",
@@ -667,8 +667,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9313,
-          "medianLatencyMs": 20.12
+          "meanConfidence": 0.9453,
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
@@ -684,8 +684,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.971,
-          "medianLatencyMs": 20.08
+          "meanConfidence": 0.972,
+          "medianLatencyMs": 20.05
         },
         {
           "detectorId": "dsp-v1",
@@ -697,12 +697,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 4,
+          "correctTop1": 5,
           "detectionRate": 1,
-          "top1Accuracy": 0.2667,
-          "accuracyWhenDetected": 0.2667,
-          "meanConfidence": 0.7954,
-          "medianLatencyMs": 20.08
+          "top1Accuracy": 0.3333,
+          "accuracyWhenDetected": 0.3333,
+          "meanConfidence": 0.7995,
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
@@ -718,8 +718,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9764,
-          "medianLatencyMs": 20.06
+          "meanConfidence": 0.9752,
+          "medianLatencyMs": 20.13
         },
         {
           "detectorId": "dsp-v1",
@@ -735,8 +735,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.839,
-          "medianLatencyMs": 20.1
+          "meanConfidence": 0.8214,
+          "medianLatencyMs": 20.18
         },
         {
           "detectorId": "dsp-v1",
@@ -752,8 +752,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.8856,
-          "medianLatencyMs": 20.16
+          "meanConfidence": 0.8853,
+          "medianLatencyMs": 20.11
         },
         {
           "detectorId": "dsp-v1",
@@ -769,7 +769,7 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9692,
+          "meanConfidence": 0.9713,
           "medianLatencyMs": 20.17
         },
         {
@@ -786,8 +786,8 @@
           "detectionRate": 0.4,
           "top1Accuracy": 0.4,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.4677,
-          "medianLatencyMs": 20.15
+          "meanConfidence": 0.4726,
+          "medianLatencyMs": 20.21
         },
         {
           "detectorId": "dsp-v1",
@@ -799,12 +799,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 2,
+          "correctTop1": 0,
           "detectionRate": 1,
-          "top1Accuracy": 0.1333,
-          "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.8605,
-          "medianLatencyMs": 20.17
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8702,
+          "medianLatencyMs": 20.15
         },
         {
           "detectorId": "dsp-v1",
@@ -820,8 +820,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9696,
-          "medianLatencyMs": 20.22
+          "meanConfidence": 0.97,
+          "medianLatencyMs": 20.1
         },
         {
           "detectorId": "dsp-v1",
@@ -833,232 +833,11 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 4,
+          "correctTop1": 5,
           "detectionRate": 1,
-          "top1Accuracy": 0.2667,
-          "accuracyWhenDetected": 0.2667,
+          "top1Accuracy": 0.3333,
+          "accuracyWhenDetected": 0.3333,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.99
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 25,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.989,
-          "medianLatencyMs": 20.09
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 25,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9152,
-          "medianLatencyMs": 20.06
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 50,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9976,
-          "medianLatencyMs": 19.98
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 50,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9364,
-          "medianLatencyMs": 20.04
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 50,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9699,
-          "medianLatencyMs": 20.13
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 100,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 2,
-          "detectionRate": 1,
-          "top1Accuracy": 0.1333,
-          "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.9626,
-          "medianLatencyMs": 21.89
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 100,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8886,
-          "medianLatencyMs": 20.05
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 100,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9695,
-          "medianLatencyMs": 20.17
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 200,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7511,
-          "medianLatencyMs": 20.1
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 200,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8805,
-          "medianLatencyMs": 20.1
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 200,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9754,
-          "medianLatencyMs": 20.15
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 400,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 6,
-          "correctTop1": 0,
-          "detectionRate": 0.4,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.4795,
-          "medianLatencyMs": 20.04
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 400,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8682,
           "medianLatencyMs": 20.03
         },
         {
@@ -1066,7 +845,177 @@
           "detectorLabel": "FFT / harmonic DSP",
           "profile": "fixedWing",
           "label": "Electric fixed-wing",
-          "distanceM": 400,
+          "distanceM": 25,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 2,
+          "detectionRate": 1,
+          "top1Accuracy": 0.1333,
+          "accuracyWhenDetected": 0.1333,
+          "meanConfidence": 0.9848,
+          "medianLatencyMs": 20.07
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 25,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 1,
+          "detectionRate": 1,
+          "top1Accuracy": 0.0667,
+          "accuracyWhenDetected": 0.0667,
+          "meanConfidence": 0.9139,
+          "medianLatencyMs": 20.17
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 50,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 2,
+          "detectionRate": 1,
+          "top1Accuracy": 0.1333,
+          "accuracyWhenDetected": 0.1333,
+          "meanConfidence": 0.9967,
+          "medianLatencyMs": 20.05
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 50,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 1,
+          "detectionRate": 1,
+          "top1Accuracy": 0.0667,
+          "accuracyWhenDetected": 0.0667,
+          "meanConfidence": 0.9456,
+          "medianLatencyMs": 20.12
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 50,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9662,
+          "medianLatencyMs": 20.15
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 100,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9563,
+          "medianLatencyMs": 20.12
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 100,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8735,
+          "medianLatencyMs": 20.04
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 100,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9724,
+          "medianLatencyMs": 20.12
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 200,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.7493,
+          "medianLatencyMs": 20.1
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 200,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8777,
+          "medianLatencyMs": 20.06
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 200,
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 15,
@@ -1075,8 +1024,59 @@
           "detectionRate": 1,
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.9762,
-          "medianLatencyMs": 20.02
+          "meanConfidence": 0.9757,
+          "medianLatencyMs": 20.16
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 7,
+          "correctTop1": 0,
+          "detectionRate": 0.4667,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.4814,
+          "medianLatencyMs": 20.14
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.868,
+          "medianLatencyMs": 20.12
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 1,
+          "detectionRate": 1,
+          "top1Accuracy": 0.0667,
+          "accuracyWhenDetected": 0.0667,
+          "meanConfidence": 0.9748,
+          "medianLatencyMs": 20.16
         },
         {
           "detectorId": "dsp-v1",
@@ -1093,7 +1093,7 @@
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
           "meanConfidence": 1,
-          "medianLatencyMs": 19.87
+          "medianLatencyMs": 19.85
         },
         {
           "detectorId": "dsp-v1",
@@ -1109,8 +1109,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9981,
-          "medianLatencyMs": 19.95
+          "meanConfidence": 0.9991,
+          "medianLatencyMs": 19.92
         },
         {
           "detectorId": "dsp-v1",
@@ -1126,8 +1126,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9372,
-          "medianLatencyMs": 19.9
+          "meanConfidence": 0.9505,
+          "medianLatencyMs": 19.95
         },
         {
           "detectorId": "dsp-v1",
@@ -1143,7 +1143,7 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9995,
+          "meanConfidence": 1,
           "medianLatencyMs": 19.91
         },
         {
@@ -1160,8 +1160,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9653,
-          "medianLatencyMs": 19.99
+          "meanConfidence": 0.9676,
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
@@ -1177,8 +1177,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8489,
-          "medianLatencyMs": 20.85
+          "meanConfidence": 0.8643,
+          "medianLatencyMs": 20.17
         },
         {
           "detectorId": "dsp-v1",
@@ -1194,92 +1194,7 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9957,
-          "medianLatencyMs": 20.9
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 100,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7767,
-          "medianLatencyMs": 20.11
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 100,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9703,
-          "medianLatencyMs": 20.08
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 200,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9347,
-          "medianLatencyMs": 20.1
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 200,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8698,
-          "medianLatencyMs": 20.1
-        },
-        {
-          "detectorId": "dsp-v1",
-          "detectorLabel": "FFT / harmonic DSP",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 200,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9741,
+          "meanConfidence": 0.9953,
           "medianLatencyMs": 19.99
         },
         {
@@ -1287,7 +1202,41 @@
           "detectorLabel": "FFT / harmonic DSP",
           "profile": "combustion",
           "label": "Combustion engine",
-          "distanceM": 400,
+          "distanceM": 100,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.7786,
+          "medianLatencyMs": 20.17
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 100,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9724,
+          "medianLatencyMs": 20.18
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 200,
           "environment": "quiet",
           "ambientRms": 0.02,
           "trials": 15,
@@ -1296,8 +1245,59 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.6413,
-          "medianLatencyMs": 20.07
+          "meanConfidence": 0.9275,
+          "medianLatencyMs": 20.1
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 200,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8647,
+          "medianLatencyMs": 20.11
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 200,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9747,
+          "medianLatencyMs": 20.15
+        },
+        {
+          "detectorId": "dsp-v1",
+          "detectorLabel": "FFT / harmonic DSP",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 400,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 14,
+          "correctTop1": 0,
+          "detectionRate": 0.9333,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.6416,
+          "medianLatencyMs": 20.11
         },
         {
           "detectorId": "dsp-v1",
@@ -1313,8 +1313,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8719,
-          "medianLatencyMs": 20.09
+          "meanConfidence": 0.8796,
+          "medianLatencyMs": 20.11
         },
         {
           "detectorId": "dsp-v1",
@@ -1330,8 +1330,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9731,
-          "medianLatencyMs": 20.05
+          "meanConfidence": 0.9729,
+          "medianLatencyMs": 20.15
         }
       ],
       "falseAlarms": [
@@ -1344,7 +1344,7 @@
           "falseDetections": 60,
           "falsePositiveRate": 1,
           "meanConfidence": 0.8656,
-          "medianLatencyMs": 20.02
+          "medianLatencyMs": 20.07
         },
         {
           "detectorId": "dsp-v1",
@@ -1355,7 +1355,7 @@
           "falseDetections": 54,
           "falsePositiveRate": 0.9,
           "meanConfidence": 0.8402,
-          "medianLatencyMs": 21.77
+          "medianLatencyMs": 20.05
         },
         {
           "detectorId": "dsp-v1",
@@ -1366,7 +1366,7 @@
           "falseDetections": 50,
           "falsePositiveRate": 0.8333,
           "meanConfidence": 0.8258,
-          "medianLatencyMs": 20.18
+          "medianLatencyMs": 20.09
         }
       ]
     },
@@ -1374,7 +1374,7 @@
       "id": "ml-onnx-v1",
       "label": "Feature Conv ML",
       "version": "1.0.0",
-      "threshold": 0.42,
+      "threshold": 0.43,
       "isDefault": false,
       "qualityGate": {
         "maximumFalsePositiveRate": 0.05,
@@ -1383,19 +1383,19 @@
         "passed": false
       },
       "overall": {
-        "truePositive": 878,
-        "falsePositive": 19,
-        "trueNegative": 161,
-        "falseNegative": 22,
-        "precision": 0.9788182831661093,
-        "recall": 0.9755555555555555,
-        "falsePositiveRate": 0.10555555555555556,
-        "f1": 0.9771841958820255,
-        "accuracy": 0.962037037037037
+        "truePositive": 881,
+        "falsePositive": 20,
+        "trueNegative": 160,
+        "falseNegative": 19,
+        "precision": 0.9778024417314095,
+        "recall": 0.9788888888888889,
+        "falsePositiveRate": 0.1111111111111111,
+        "f1": 0.9783453636868406,
+        "accuracy": 0.9638888888888889
       },
-      "prAuc": 0.8227,
-      "rocAuc": 0.9786,
-      "brierScore": 0.0476,
+      "prAuc": 0.8166,
+      "rocAuc": 0.9787,
+      "brierScore": 0.0464,
       "curve": [
         {
           "threshold": 0,
@@ -1405,15 +1405,15 @@
         },
         {
           "threshold": 0.025,
-          "precision": 0.8654,
+          "precision": 0.8637,
           "recall": 1,
-          "falsePositiveRate": 0.7778
+          "falsePositiveRate": 0.7889
         },
         {
           "threshold": 0.05,
-          "precision": 0.892,
+          "precision": 0.8946,
           "recall": 1,
-          "falsePositiveRate": 0.6056
+          "falsePositiveRate": 0.5889
         },
         {
           "threshold": 0.075,
@@ -1429,152 +1429,152 @@
         },
         {
           "threshold": 0.125,
-          "precision": 0.9221,
+          "precision": 0.924,
           "recall": 1,
-          "falsePositiveRate": 0.4222
+          "falsePositiveRate": 0.4111
         },
         {
           "threshold": 0.15,
-          "precision": 0.9259,
+          "precision": 0.9269,
           "recall": 1,
-          "falsePositiveRate": 0.4
+          "falsePositiveRate": 0.3944
         },
         {
           "threshold": 0.175,
-          "precision": 0.9356,
+          "precision": 0.9336,
           "recall": 1,
-          "falsePositiveRate": 0.3444
+          "falsePositiveRate": 0.3556
         },
         {
           "threshold": 0.2,
-          "precision": 0.9434,
+          "precision": 0.9414,
           "recall": 1,
-          "falsePositiveRate": 0.3
+          "falsePositiveRate": 0.3111
         },
         {
           "threshold": 0.225,
-          "precision": 0.9484,
+          "precision": 0.9444,
           "recall": 1,
-          "falsePositiveRate": 0.2722
+          "falsePositiveRate": 0.2944
         },
         {
           "threshold": 0.25,
           "precision": 0.9544,
-          "recall": 1,
+          "recall": 0.9989,
           "falsePositiveRate": 0.2389
         },
         {
           "threshold": 0.275,
-          "precision": 0.9605,
+          "precision": 0.9584,
           "recall": 0.9989,
-          "falsePositiveRate": 0.2056
+          "falsePositiveRate": 0.2167
         },
         {
           "threshold": 0.3,
-          "precision": 0.9635,
-          "recall": 0.9978,
-          "falsePositiveRate": 0.1889
+          "precision": 0.9614,
+          "recall": 0.9967,
+          "falsePositiveRate": 0.2
         },
         {
           "threshold": 0.325,
-          "precision": 0.9676,
-          "recall": 0.9944,
-          "falsePositiveRate": 0.1667
+          "precision": 0.9666,
+          "recall": 0.9967,
+          "falsePositiveRate": 0.1722
         },
         {
           "threshold": 0.35,
-          "precision": 0.9707,
-          "recall": 0.9922,
-          "falsePositiveRate": 0.15
+          "precision": 0.9686,
+          "recall": 0.9944,
+          "falsePositiveRate": 0.1611
         },
         {
           "threshold": 0.375,
-          "precision": 0.9737,
-          "recall": 0.9889,
+          "precision": 0.9738,
+          "recall": 0.9911,
           "falsePositiveRate": 0.1333
         },
         {
           "threshold": 0.4,
-          "precision": 0.9758,
-          "recall": 0.9856,
+          "precision": 0.9759,
+          "recall": 0.99,
           "falsePositiveRate": 0.1222
         },
         {
           "threshold": 0.425,
-          "precision": 0.9768,
-          "recall": 0.9844,
-          "falsePositiveRate": 0.1167
+          "precision": 0.9758,
+          "recall": 0.9867,
+          "falsePositiveRate": 0.1222
         },
         {
           "threshold": 0.45,
-          "precision": 0.98,
+          "precision": 0.9778,
           "recall": 0.9789,
-          "falsePositiveRate": 0.1
+          "falsePositiveRate": 0.1111
         },
         {
           "threshold": 0.475,
-          "precision": 0.9808,
-          "recall": 0.9656,
+          "precision": 0.981,
+          "recall": 0.9744,
           "falsePositiveRate": 0.0944
         },
         {
           "threshold": 0.5,
           "precision": 0.9807,
-          "recall": 0.9589,
+          "recall": 0.9611,
           "falsePositiveRate": 0.0944
         },
         {
           "threshold": 0.525,
-          "precision": 0.9826,
-          "recall": 0.9422,
-          "falsePositiveRate": 0.0833
+          "precision": 0.9817,
+          "recall": 0.9544,
+          "falsePositiveRate": 0.0889
         },
         {
           "threshold": 0.55,
-          "precision": 0.9836,
-          "recall": 0.9322,
+          "precision": 0.9838,
+          "recall": 0.9456,
           "falsePositiveRate": 0.0778
         },
         {
           "threshold": 0.575,
-          "precision": 0.9846,
-          "recall": 0.9256,
+          "precision": 0.9847,
+          "recall": 0.9322,
           "falsePositiveRate": 0.0722
         },
         {
           "threshold": 0.6,
           "precision": 0.9857,
-          "recall": 0.9178,
+          "recall": 0.9211,
           "falsePositiveRate": 0.0667
         },
         {
           "threshold": 0.625,
-          "precision": 0.9878,
-          "recall": 0.9,
-          "falsePositiveRate": 0.0556
+          "precision": 0.9868,
+          "recall": 0.9122,
+          "falsePositiveRate": 0.0611
         },
         {
           "threshold": 0.65,
-          "precision": 0.9889,
-          "recall": 0.8922,
-          "falsePositiveRate": 0.05
+          "precision": 0.9878,
+          "recall": 0.9033,
+          "falsePositiveRate": 0.0556
         },
         {
           "threshold": 0.675,
-          "precision": 0.9887,
-          "recall": 0.8778,
+          "precision": 0.9888,
+          "recall": 0.88,
           "falsePositiveRate": 0.05
         },
         {
           "threshold": 0.7,
-          "precision": 0.9911,
-          "recall": 0.8644,
+          "precision": 0.991,
+          "recall": 0.8611,
           "falsePositiveRate": 0.0389
         },
         {
           "threshold": 0.725,
           "precision": 0.9908,
-          "recall": 0.8344,
+          "recall": 0.8422,
           "falsePositiveRate": 0.0389
         },
         {
@@ -1585,56 +1585,56 @@
         },
         {
           "threshold": 0.775,
-          "precision": 0.9928,
-          "recall": 0.7711,
+          "precision": 0.9929,
+          "recall": 0.7789,
           "falsePositiveRate": 0.0278
         },
         {
           "threshold": 0.8,
-          "precision": 0.9925,
-          "recall": 0.74,
+          "precision": 0.9926,
+          "recall": 0.7422,
           "falsePositiveRate": 0.0278
         },
         {
           "threshold": 0.825,
           "precision": 0.9937,
-          "recall": 0.6978,
+          "recall": 0.7011,
           "falsePositiveRate": 0.0222
         },
         {
           "threshold": 0.85,
-          "precision": 0.9931,
-          "recall": 0.6411,
+          "precision": 0.993,
+          "recall": 0.6322,
           "falsePositiveRate": 0.0222
         },
         {
           "threshold": 0.875,
-          "precision": 0.9943,
-          "recall": 0.5822,
+          "precision": 0.9942,
+          "recall": 0.5711,
           "falsePositiveRate": 0.0167
         },
         {
           "threshold": 0.9,
           "precision": 0.9958,
-          "recall": 0.5256,
+          "recall": 0.5233,
           "falsePositiveRate": 0.0111
         },
         {
           "threshold": 0.925,
           "precision": 0.9977,
-          "recall": 0.4756,
+          "recall": 0.4811,
           "falsePositiveRate": 0.0056
         },
         {
           "threshold": 0.95,
           "precision": 0.9974,
-          "recall": 0.4233,
+          "recall": 0.4256,
           "falsePositiveRate": 0.0056
         },
         {
           "threshold": 0.975,
           "precision": 1,
-          "recall": 0.3444,
+          "recall": 0.3567,
           "falsePositiveRate": 0
         },
         {
@@ -1655,12 +1655,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 13,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8279,
-          "medianLatencyMs": 60.59
+          "top1Accuracy": 0.8667,
+          "accuracyWhenDetected": 0.8667,
+          "meanConfidence": 0.8295,
+          "medianLatencyMs": 60.61
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1672,12 +1672,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.5906,
-          "medianLatencyMs": 60.16
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.6195,
+          "medianLatencyMs": 60.02
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1688,29 +1688,12 @@
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 15,
-          "detected": 10,
-          "correctTop1": 10,
-          "detectionRate": 0.6667,
-          "top1Accuracy": 0.6667,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.5247,
-          "medianLatencyMs": 60.37
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 50,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 15,
-          "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8156,
+          "detected": 12,
+          "correctTop1": 11,
+          "detectionRate": 0.8,
+          "top1Accuracy": 0.7333,
+          "accuracyWhenDetected": 0.9167,
+          "meanConfidence": 0.5898,
           "medianLatencyMs": 60.18
         },
         {
@@ -1719,6 +1702,23 @@
           "profile": "camera",
           "label": "Camera multirotor",
           "distanceM": 50,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 14,
+          "detectionRate": 1,
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.8523,
+          "medianLatencyMs": 59.86
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 50,
           "environment": "urban",
           "ambientRms": 0.05,
           "trials": 15,
@@ -1727,8 +1727,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9272,
-          "medianLatencyMs": 60.21
+          "meanConfidence": 0.9202,
+          "medianLatencyMs": 60.18
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1740,12 +1740,12 @@
           "ambientRms": 0.1,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 15,
+          "correctTop1": 14,
           "detectionRate": 1,
-          "top1Accuracy": 1,
-          "accuracyWhenDetected": 1,
-          "meanConfidence": 0.7497,
-          "medianLatencyMs": 60.16
+          "top1Accuracy": 0.9333,
+          "accuracyWhenDetected": 0.9333,
+          "meanConfidence": 0.7493,
+          "medianLatencyMs": 60.35
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1761,8 +1761,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9428,
-          "medianLatencyMs": 60.54
+          "meanConfidence": 0.9447,
+          "medianLatencyMs": 60.36
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1778,8 +1778,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.989,
-          "medianLatencyMs": 60.47
+          "meanConfidence": 0.988,
+          "medianLatencyMs": 60.39
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1789,48 +1789,48 @@
           "distanceM": 100,
           "environment": "loud-structured",
           "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 15,
+          "detectionRate": 1,
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.8149,
+          "medianLatencyMs": 60.41
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 200,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 12,
+          "detectionRate": 1,
+          "top1Accuracy": 0.8,
+          "accuracyWhenDetected": 0.8,
+          "meanConfidence": 0.9971,
+          "medianLatencyMs": 60.5
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "camera",
+          "label": "Camera multirotor",
+          "distanceM": 200,
+          "environment": "urban",
+          "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
           "correctTop1": 14,
           "detectionRate": 1,
           "top1Accuracy": 0.9333,
           "accuracyWhenDetected": 0.9333,
-          "meanConfidence": 0.8299,
-          "medianLatencyMs": 60.14
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 200,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 11,
-          "detectionRate": 1,
-          "top1Accuracy": 0.7333,
-          "accuracyWhenDetected": 0.7333,
-          "meanConfidence": 0.9974,
-          "medianLatencyMs": 62.32
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "camera",
-          "label": "Camera multirotor",
-          "distanceM": 200,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 13,
-          "detectionRate": 1,
-          "top1Accuracy": 0.8667,
-          "accuracyWhenDetected": 0.8667,
-          "meanConfidence": 0.9919,
-          "medianLatencyMs": 64.36
+          "meanConfidence": 0.9904,
+          "medianLatencyMs": 60.3
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1846,8 +1846,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8432,
-          "medianLatencyMs": 63.85
+          "meanConfidence": 0.8307,
+          "medianLatencyMs": 60.79
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1863,8 +1863,8 @@
           "detectionRate": 0.8667,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7343,
-          "medianLatencyMs": 65.21
+          "meanConfidence": 0.7819,
+          "medianLatencyMs": 60.87
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1876,12 +1876,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 13,
+          "correctTop1": 15,
           "detectionRate": 1,
-          "top1Accuracy": 0.8667,
-          "accuracyWhenDetected": 0.8667,
-          "meanConfidence": 0.993,
-          "medianLatencyMs": 64.75
+          "top1Accuracy": 1,
+          "accuracyWhenDetected": 1,
+          "meanConfidence": 0.9922,
+          "medianLatencyMs": 60.92
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1897,8 +1897,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.8217,
-          "medianLatencyMs": 60.67
+          "meanConfidence": 0.8239,
+          "medianLatencyMs": 60.52
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1914,8 +1914,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9897,
-          "medianLatencyMs": 59.89
+          "meanConfidence": 0.9942,
+          "medianLatencyMs": 59.76
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1931,8 +1931,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9335,
-          "medianLatencyMs": 60.1
+          "meanConfidence": 0.969,
+          "medianLatencyMs": 60.03
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1944,12 +1944,12 @@
           "ambientRms": 0.1,
           "trials": 15,
           "detected": 14,
-          "correctTop1": 11,
+          "correctTop1": 10,
           "detectionRate": 0.9333,
-          "top1Accuracy": 0.7333,
-          "accuracyWhenDetected": 0.7857,
-          "meanConfidence": 0.6554,
-          "medianLatencyMs": 60.09
+          "top1Accuracy": 0.6667,
+          "accuracyWhenDetected": 0.7143,
+          "meanConfidence": 0.688,
+          "medianLatencyMs": 60.22
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1965,8 +1965,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.984,
-          "medianLatencyMs": 59.83
+          "meanConfidence": 0.9941,
+          "medianLatencyMs": 59.91
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -1982,7 +1982,24 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9529,
+          "meanConfidence": 0.9483,
+          "medianLatencyMs": 60.11
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "fpv",
+          "label": "Fast FPV",
+          "distanceM": 50,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8216,
           "medianLatencyMs": 60.24
         },
         {
@@ -1990,23 +2007,6 @@
           "detectorLabel": "Feature Conv ML",
           "profile": "fpv",
           "label": "Fast FPV",
-          "distanceM": 50,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8338,
-          "medianLatencyMs": 60.38
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "fpv",
-          "label": "Fast FPV",
           "distanceM": 100,
           "environment": "quiet",
           "ambientRms": 0.02,
@@ -2016,8 +2016,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9894,
-          "medianLatencyMs": 60.34
+          "meanConfidence": 0.9915,
+          "medianLatencyMs": 60.22
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2029,12 +2029,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 4,
+          "correctTop1": 5,
           "detectionRate": 1,
-          "top1Accuracy": 0.2667,
-          "accuracyWhenDetected": 0.2667,
-          "meanConfidence": 0.9789,
-          "medianLatencyMs": 60.29
+          "top1Accuracy": 0.3333,
+          "accuracyWhenDetected": 0.3333,
+          "meanConfidence": 0.9768,
+          "medianLatencyMs": 60.27
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2050,8 +2050,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8226,
-          "medianLatencyMs": 60.29
+          "meanConfidence": 0.8149,
+          "medianLatencyMs": 60.47
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2067,8 +2067,8 @@
           "detectionRate": 1,
           "top1Accuracy": 1,
           "accuracyWhenDetected": 1,
-          "meanConfidence": 0.9942,
-          "medianLatencyMs": 60.23
+          "meanConfidence": 0.9941,
+          "medianLatencyMs": 60.41
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2084,8 +2084,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.9917,
-          "medianLatencyMs": 60.38
+          "meanConfidence": 0.9925,
+          "medianLatencyMs": 60.55
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2101,8 +2101,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8334,
-          "medianLatencyMs": 60.35
+          "meanConfidence": 0.8168,
+          "medianLatencyMs": 60.46
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2113,13 +2113,13 @@
           "environment": "quiet",
           "ambientRms": 0.02,
           "trials": 15,
-          "detected": 14,
+          "detected": 15,
           "correctTop1": 6,
-          "detectionRate": 0.9333,
+          "detectionRate": 1,
           "top1Accuracy": 0.4,
-          "accuracyWhenDetected": 0.4286,
-          "meanConfidence": 0.7334,
-          "medianLatencyMs": 60.42
+          "accuracyWhenDetected": 0.4,
+          "meanConfidence": 0.7639,
+          "medianLatencyMs": 60.73
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2131,12 +2131,12 @@
           "ambientRms": 0.05,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 2,
+          "correctTop1": 0,
           "detectionRate": 1,
-          "top1Accuracy": 0.1333,
-          "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.9922,
-          "medianLatencyMs": 60.56
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9916,
+          "medianLatencyMs": 60.7
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2152,8 +2152,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.861,
-          "medianLatencyMs": 60.66
+          "meanConfidence": 0.8606,
+          "medianLatencyMs": 60.34
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2165,12 +2165,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 4,
+          "correctTop1": 5,
           "detectionRate": 1,
-          "top1Accuracy": 0.2667,
-          "accuracyWhenDetected": 0.2667,
-          "meanConfidence": 0.6895,
-          "medianLatencyMs": 59.96
+          "top1Accuracy": 0.3333,
+          "accuracyWhenDetected": 0.3333,
+          "meanConfidence": 0.7224,
+          "medianLatencyMs": 59.85
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2186,7 +2186,7 @@
           "detectionRate": 0.5333,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.125,
-          "meanConfidence": 0.4422,
+          "meanConfidence": 0.4561,
           "medianLatencyMs": 60.14
         },
         {
@@ -2198,30 +2198,30 @@
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 15,
-          "detected": 13,
-          "correctTop1": 1,
-          "detectionRate": 0.8667,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0769,
-          "meanConfidence": 0.635,
-          "medianLatencyMs": 60.13
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 50,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
           "detected": 12,
-          "correctTop1": 1,
+          "correctTop1": 0,
           "detectionRate": 0.8,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0833,
-          "meanConfidence": 0.5083,
-          "medianLatencyMs": 59.93
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.5723,
+          "medianLatencyMs": 60.38
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 50,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 14,
+          "correctTop1": 2,
+          "detectionRate": 0.9333,
+          "top1Accuracy": 0.1333,
+          "accuracyWhenDetected": 0.1429,
+          "meanConfidence": 0.5511,
+          "medianLatencyMs": 59.96
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2237,8 +2237,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0.0667,
           "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.935,
-          "medianLatencyMs": 60.12
+          "meanConfidence": 0.9162,
+          "medianLatencyMs": 60.26
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2250,12 +2250,12 @@
           "ambientRms": 0.1,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 1,
+          "correctTop1": 0,
           "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.8309,
-          "medianLatencyMs": 60.31
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.8264,
+          "medianLatencyMs": 60.55
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2267,12 +2267,12 @@
           "ambientRms": 0.02,
           "trials": 15,
           "detected": 15,
-          "correctTop1": 2,
+          "correctTop1": 0,
           "detectionRate": 1,
-          "top1Accuracy": 0.1333,
-          "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.925,
-          "medianLatencyMs": 63.39
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9224,
+          "medianLatencyMs": 60.29
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2288,8 +2288,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9875,
-          "medianLatencyMs": 60.42
+          "meanConfidence": 0.9886,
+          "medianLatencyMs": 60.36
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2305,8 +2305,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8198,
-          "medianLatencyMs": 60.37
+          "meanConfidence": 0.8017,
+          "medianLatencyMs": 60.34
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2322,8 +2322,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9957,
-          "medianLatencyMs": 60.33
+          "meanConfidence": 0.9937,
+          "medianLatencyMs": 60.36
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2339,8 +2339,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9912,
-          "medianLatencyMs": 60.45
+          "meanConfidence": 0.9901,
+          "medianLatencyMs": 60.34
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2348,57 +2348,6 @@
           "profile": "fixedWing",
           "label": "Electric fixed-wing",
           "distanceM": 200,
-          "environment": "loud-structured",
-          "ambientRms": 0.1,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 1,
-          "detectionRate": 1,
-          "top1Accuracy": 0.0667,
-          "accuracyWhenDetected": 0.0667,
-          "meanConfidence": 0.8061,
-          "medianLatencyMs": 60.49
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 400,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.743,
-          "medianLatencyMs": 60.23
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 400,
-          "environment": "urban",
-          "ambientRms": 0.05,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9932,
-          "medianLatencyMs": 60.21
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "fixedWing",
-          "label": "Electric fixed-wing",
-          "distanceM": 400,
           "environment": "loud-structured",
           "ambientRms": 0.1,
           "trials": 15,
@@ -2407,8 +2356,59 @@
           "detectionRate": 1,
           "top1Accuracy": 0.1333,
           "accuracyWhenDetected": 0.1333,
-          "meanConfidence": 0.804,
-          "medianLatencyMs": 60.24
+          "meanConfidence": 0.8122,
+          "medianLatencyMs": 60.48
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 14,
+          "correctTop1": 0,
+          "detectionRate": 0.9333,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.7059,
+          "medianLatencyMs": 60.47
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "urban",
+          "ambientRms": 0.05,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9928,
+          "medianLatencyMs": 60.32
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "fixedWing",
+          "label": "Electric fixed-wing",
+          "distanceM": 400,
+          "environment": "loud-structured",
+          "ambientRms": 0.1,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 1,
+          "detectionRate": 1,
+          "top1Accuracy": 0.0667,
+          "accuracyWhenDetected": 0.0667,
+          "meanConfidence": 0.8003,
+          "medianLatencyMs": 60.48
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2424,8 +2424,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9605,
-          "medianLatencyMs": 59.6
+          "meanConfidence": 0.9663,
+          "medianLatencyMs": 59.42
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2441,7 +2441,7 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9054,
+          "meanConfidence": 0.9046,
           "medianLatencyMs": 59.67
         },
         {
@@ -2458,8 +2458,8 @@
           "detectionRate": 0.9333,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.6398,
-          "medianLatencyMs": 59.97
+          "meanConfidence": 0.6488,
+          "medianLatencyMs": 60.12
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2475,8 +2475,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9749,
-          "medianLatencyMs": 59.61
+          "meanConfidence": 0.976,
+          "medianLatencyMs": 59.64
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2492,8 +2492,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9299,
-          "medianLatencyMs": 60.02
+          "meanConfidence": 0.9367,
+          "medianLatencyMs": 60.13
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2509,8 +2509,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7612,
-          "medianLatencyMs": 63.53
+          "meanConfidence": 0.7334,
+          "medianLatencyMs": 60.41
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2526,8 +2526,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9717,
-          "medianLatencyMs": 62.55
+          "meanConfidence": 0.9767,
+          "medianLatencyMs": 60.01
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2543,8 +2543,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.974,
-          "medianLatencyMs": 60.23
+          "meanConfidence": 0.9666,
+          "medianLatencyMs": 60.46
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2560,8 +2560,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.7802,
-          "medianLatencyMs": 60.43
+          "meanConfidence": 0.7915,
+          "medianLatencyMs": 60.54
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2577,8 +2577,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9916,
-          "medianLatencyMs": 60.19
+          "meanConfidence": 0.9911,
+          "medianLatencyMs": 60.41
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2594,8 +2594,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9886,
-          "medianLatencyMs": 60.25
+          "meanConfidence": 0.9884,
+          "medianLatencyMs": 60.28
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2611,24 +2611,7 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8417,
-          "medianLatencyMs": 60.14
-        },
-        {
-          "detectorId": "ml-onnx-v1",
-          "detectorLabel": "Feature Conv ML",
-          "profile": "combustion",
-          "label": "Combustion engine",
-          "distanceM": 400,
-          "environment": "quiet",
-          "ambientRms": 0.02,
-          "trials": 15,
-          "detected": 15,
-          "correctTop1": 0,
-          "detectionRate": 1,
-          "top1Accuracy": 0,
-          "accuracyWhenDetected": 0,
-          "meanConfidence": 0.9768,
+          "meanConfidence": 0.8313,
           "medianLatencyMs": 60.34
         },
         {
@@ -2637,6 +2620,23 @@
           "profile": "combustion",
           "label": "Combustion engine",
           "distanceM": 400,
+          "environment": "quiet",
+          "ambientRms": 0.02,
+          "trials": 15,
+          "detected": 15,
+          "correctTop1": 0,
+          "detectionRate": 1,
+          "top1Accuracy": 0,
+          "accuracyWhenDetected": 0,
+          "meanConfidence": 0.9629,
+          "medianLatencyMs": 60.35
+        },
+        {
+          "detectorId": "ml-onnx-v1",
+          "detectorLabel": "Feature Conv ML",
+          "profile": "combustion",
+          "label": "Combustion engine",
+          "distanceM": 400,
           "environment": "urban",
           "ambientRms": 0.05,
           "trials": 15,
@@ -2645,8 +2645,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.993,
-          "medianLatencyMs": 60.48
+          "meanConfidence": 0.9921,
+          "medianLatencyMs": 60.33
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2662,8 +2662,8 @@
           "detectionRate": 1,
           "top1Accuracy": 0,
           "accuracyWhenDetected": 0,
-          "meanConfidence": 0.8442,
-          "medianLatencyMs": 60.29
+          "meanConfidence": 0.8367,
+          "medianLatencyMs": 60.62
         }
       ],
       "falseAlarms": [
@@ -2673,10 +2673,10 @@
           "environment": "quiet",
           "ambientRms": 0.02,
           "trials": 60,
-          "falseDetections": 1,
-          "falsePositiveRate": 0.0167,
-          "meanConfidence": 0.085,
-          "medianLatencyMs": 60.03
+          "falseDetections": 2,
+          "falsePositiveRate": 0.0333,
+          "meanConfidence": 0.0901,
+          "medianLatencyMs": 60.09
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2686,8 +2686,8 @@
           "trials": 60,
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
-          "meanConfidence": 0.2167,
-          "medianLatencyMs": 66.5
+          "meanConfidence": 0.2206,
+          "medianLatencyMs": 60.06
         },
         {
           "detectorId": "ml-onnx-v1",
@@ -2697,8 +2697,8 @@
           "trials": 60,
           "falseDetections": 9,
           "falsePositiveRate": 0.15,
-          "meanConfidence": 0.2181,
-          "medianLatencyMs": 60.89
+          "meanConfidence": 0.2169,
+          "medianLatencyMs": 60.27
         }
       ]
     }
@@ -2713,7 +2713,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2725,7 +2725,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2737,7 +2737,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2749,7 +2749,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2761,7 +2761,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2773,7 +2773,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2785,7 +2785,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2797,7 +2797,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2809,7 +2809,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2821,7 +2821,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2833,7 +2833,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2845,7 +2845,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2857,7 +2857,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2869,7 +2869,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2881,7 +2881,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2893,7 +2893,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2905,7 +2905,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2917,7 +2917,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2929,7 +2929,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2941,7 +2941,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2953,7 +2953,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2965,7 +2965,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2977,7 +2977,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -2989,7 +2989,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3001,7 +3001,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3013,7 +3013,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3025,7 +3025,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3037,7 +3037,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3049,7 +3049,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3061,7 +3061,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3073,7 +3073,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3085,7 +3085,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "lawn-mower",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3097,7 +3097,7 @@
       "environment": "urban",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3109,7 +3109,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3121,7 +3121,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3133,7 +3133,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "engine",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3145,7 +3145,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3157,7 +3157,7 @@
       "environment": "urban",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3169,7 +3169,7 @@
       "environment": "urban",
       "distanceM": null,
       "sourceLabel": "vacuum",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     },
     {
@@ -3181,7 +3181,7 @@
       "environment": "quiet",
       "distanceM": null,
       "sourceLabel": "fan",
-      "license": "Projektgenererad",
+      "license": "Project-generated",
       "failureKind": "false-positive"
     }
   ],
@@ -3200,7 +3200,7 @@
       "detectorId": "ml-onnx-v1",
       "detected": true,
       "correctBinary": true,
-      "confidence": 0.8466
+      "confidence": 0.8582
     },
     {
       "file": "batear-mavic-pro.wav",
@@ -3216,7 +3216,7 @@
       "detectorId": "ml-onnx-v1",
       "detected": true,
       "correctBinary": true,
-      "confidence": 0.974
+      "confidence": 0.9698
     },
     {
       "file": "batear-mini-4-pro.wav",
@@ -3232,7 +3232,7 @@
       "detectorId": "ml-onnx-v1",
       "detected": true,
       "correctBinary": true,
-      "confidence": 0.9761
+      "confidence": 0.9816
     },
     {
       "file": "batear-rural-8s.wav",
@@ -3256,7 +3256,7 @@
       "timingJitterMs": 0.02,
       "trials": 300,
       "medianErrorM": 0.21,
-      "p90ErrorM": 0.36,
+      "p90ErrorM": 0.35,
       "medianBearingErrorDeg": 0.05,
       "p90BearingErrorDeg": 0.11,
       "within5MRate": 1,
@@ -3278,7 +3278,7 @@
       "timingJitterMs": 0.5,
       "trials": 300,
       "medianErrorM": 0.28,
-      "p90ErrorM": 0.61,
+      "p90ErrorM": 0.6,
       "medianBearingErrorDeg": 0.05,
       "p90BearingErrorDeg": 0.21,
       "within5MRate": 1,
@@ -3289,7 +3289,7 @@
       "timingJitterMs": 2,
       "trials": 300,
       "medianErrorM": 0.88,
-      "p90ErrorM": 2.1,
+      "p90ErrorM": 2.03,
       "medianBearingErrorDeg": 0.18,
       "p90BearingErrorDeg": 0.62,
       "within5MRate": 1,
@@ -3308,12 +3308,12 @@
       "ambientRms": 0.02,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 15,
+      "correctTop1": 13,
       "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
+      "top1Accuracy": 0.8667,
+      "accuracyWhenDetected": 0.8667,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.98
+      "medianLatencyMs": 20.02
     },
     {
       "detectorId": "dsp-v1",
@@ -3325,10 +3325,10 @@
       "ambientRms": 0.05,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 15,
+      "correctTop1": 14,
       "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
+      "top1Accuracy": 0.9333,
+      "accuracyWhenDetected": 0.9333,
       "meanConfidence": 0.999,
       "medianLatencyMs": 20.05
     },
@@ -3342,12 +3342,12 @@
       "ambientRms": 0.1,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 15,
+      "correctTop1": 14,
       "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9184,
-      "medianLatencyMs": 20.18
+      "top1Accuracy": 0.9333,
+      "accuracyWhenDetected": 0.9333,
+      "meanConfidence": 0.9274,
+      "medianLatencyMs": 20.13
     },
     {
       "detectorId": "dsp-v1",
@@ -3359,12 +3359,12 @@
       "ambientRms": 0.02,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 15,
+      "correctTop1": 14,
       "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9995,
-      "medianLatencyMs": 20.06
+      "top1Accuracy": 0.9333,
+      "accuracyWhenDetected": 0.9333,
+      "meanConfidence": 0.9991,
+      "medianLatencyMs": 20.02
     },
     {
       "detectorId": "dsp-v1",
@@ -3380,24 +3380,7 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9227,
-      "medianLatencyMs": 20.06
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "camera",
-      "label": "Camera multirotor",
-      "distanceM": 50,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 15,
-      "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9697,
+      "meanConfidence": 0.9251,
       "medianLatencyMs": 20.07
     },
     {
@@ -3405,41 +3388,7 @@
       "detectorLabel": "FFT / harmonic DSP",
       "profile": "camera",
       "label": "Camera multirotor",
-      "distanceM": 100,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 15,
-      "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9785,
-      "medianLatencyMs": 20.17
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "camera",
-      "label": "Camera multirotor",
-      "distanceM": 100,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 15,
-      "detectionRate": 1,
-      "top1Accuracy": 1,
-      "accuracyWhenDetected": 1,
-      "meanConfidence": 0.8751,
-      "medianLatencyMs": 20.16
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "camera",
-      "label": "Camera multirotor",
-      "distanceM": 100,
+      "distanceM": 50,
       "environment": "loud-structured",
       "ambientRms": 0.1,
       "trials": 15,
@@ -3448,8 +3397,59 @@
       "detectionRate": 1,
       "top1Accuracy": 0.9333,
       "accuracyWhenDetected": 0.9333,
-      "meanConfidence": 0.9713,
-      "medianLatencyMs": 20.04
+      "meanConfidence": 0.9648,
+      "medianLatencyMs": 20.17
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "camera",
+      "label": "Camera multirotor",
+      "distanceM": 100,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 15,
+      "detectionRate": 1,
+      "top1Accuracy": 1,
+      "accuracyWhenDetected": 1,
+      "meanConfidence": 0.9884,
+      "medianLatencyMs": 20.11
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "camera",
+      "label": "Camera multirotor",
+      "distanceM": 100,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 15,
+      "detectionRate": 1,
+      "top1Accuracy": 1,
+      "accuracyWhenDetected": 1,
+      "meanConfidence": 0.8828,
+      "medianLatencyMs": 20.14
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "camera",
+      "label": "Camera multirotor",
+      "distanceM": 100,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 15,
+      "detectionRate": 1,
+      "top1Accuracy": 1,
+      "accuracyWhenDetected": 1,
+      "meanConfidence": 0.9695,
+      "medianLatencyMs": 20.14
     },
     {
       "detectorId": "dsp-v1",
@@ -3461,12 +3461,12 @@
       "ambientRms": 0.02,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 11,
+      "correctTop1": 12,
       "detectionRate": 1,
-      "top1Accuracy": 0.7333,
-      "accuracyWhenDetected": 0.7333,
-      "meanConfidence": 0.8632,
-      "medianLatencyMs": 20.65
+      "top1Accuracy": 0.8,
+      "accuracyWhenDetected": 0.8,
+      "meanConfidence": 0.8658,
+      "medianLatencyMs": 20.15
     },
     {
       "detectorId": "dsp-v1",
@@ -3478,12 +3478,12 @@
       "ambientRms": 0.05,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 13,
+      "correctTop1": 14,
       "detectionRate": 1,
-      "top1Accuracy": 0.8667,
-      "accuracyWhenDetected": 0.8667,
-      "meanConfidence": 0.8696,
-      "medianLatencyMs": 21.09
+      "top1Accuracy": 0.9333,
+      "accuracyWhenDetected": 0.9333,
+      "meanConfidence": 0.8724,
+      "medianLatencyMs": 20.11
     },
     {
       "detectorId": "dsp-v1",
@@ -3499,8 +3499,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9723,
-      "medianLatencyMs": 20.94
+      "meanConfidence": 0.9683,
+      "medianLatencyMs": 20.28
     },
     {
       "detectorId": "dsp-v1",
@@ -3511,13 +3511,13 @@
       "environment": "quiet",
       "ambientRms": 0.02,
       "trials": 15,
-      "detected": 6,
+      "detected": 8,
       "correctTop1": 0,
-      "detectionRate": 0.4,
+      "detectionRate": 0.5333,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.4815,
-      "medianLatencyMs": 21.31
+      "meanConfidence": 0.4854,
+      "medianLatencyMs": 20.29
     },
     {
       "detectorId": "dsp-v1",
@@ -3529,12 +3529,12 @@
       "ambientRms": 0.05,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 13,
+      "correctTop1": 15,
       "detectionRate": 1,
-      "top1Accuracy": 0.8667,
-      "accuracyWhenDetected": 0.8667,
-      "meanConfidence": 0.8793,
-      "medianLatencyMs": 21.99
+      "top1Accuracy": 1,
+      "accuracyWhenDetected": 1,
+      "meanConfidence": 0.886,
+      "medianLatencyMs": 20.25
     },
     {
       "detectorId": "dsp-v1",
@@ -3550,8 +3550,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9735,
-      "medianLatencyMs": 20.2
+      "meanConfidence": 0.9759,
+      "medianLatencyMs": 20.22
     },
     {
       "detectorId": "dsp-v1",
@@ -3568,7 +3568,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9981,
-      "medianLatencyMs": 20.03
+      "medianLatencyMs": 19.92
     },
     {
       "detectorId": "dsp-v1",
@@ -3584,8 +3584,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.9939,
-      "medianLatencyMs": 19.96
+      "meanConfidence": 0.991,
+      "medianLatencyMs": 19.99
     },
     {
       "detectorId": "dsp-v1",
@@ -3597,12 +3597,12 @@
       "ambientRms": 0.1,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 11,
+      "correctTop1": 10,
       "detectionRate": 1,
-      "top1Accuracy": 0.7333,
-      "accuracyWhenDetected": 0.7333,
-      "meanConfidence": 0.7923,
-      "medianLatencyMs": 20.05
+      "top1Accuracy": 0.6667,
+      "accuracyWhenDetected": 0.6667,
+      "meanConfidence": 0.8055,
+      "medianLatencyMs": 20.14
     },
     {
       "detectorId": "dsp-v1",
@@ -3619,7 +3619,7 @@
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
       "meanConfidence": 0.9953,
-      "medianLatencyMs": 19.97
+      "medianLatencyMs": 20
     },
     {
       "detectorId": "dsp-v1",
@@ -3635,8 +3635,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.8972,
-      "medianLatencyMs": 20.07
+      "meanConfidence": 0.8783,
+      "medianLatencyMs": 20.06
     },
     {
       "detectorId": "dsp-v1",
@@ -3652,8 +3652,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9313,
-      "medianLatencyMs": 20.12
+      "meanConfidence": 0.9453,
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
@@ -3669,8 +3669,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.971,
-      "medianLatencyMs": 20.08
+      "meanConfidence": 0.972,
+      "medianLatencyMs": 20.05
     },
     {
       "detectorId": "dsp-v1",
@@ -3682,12 +3682,12 @@
       "ambientRms": 0.05,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 4,
+      "correctTop1": 5,
       "detectionRate": 1,
-      "top1Accuracy": 0.2667,
-      "accuracyWhenDetected": 0.2667,
-      "meanConfidence": 0.7954,
-      "medianLatencyMs": 20.08
+      "top1Accuracy": 0.3333,
+      "accuracyWhenDetected": 0.3333,
+      "meanConfidence": 0.7995,
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
@@ -3703,8 +3703,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9764,
-      "medianLatencyMs": 20.06
+      "meanConfidence": 0.9752,
+      "medianLatencyMs": 20.13
     },
     {
       "detectorId": "dsp-v1",
@@ -3720,8 +3720,8 @@
       "detectionRate": 1,
       "top1Accuracy": 1,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.839,
-      "medianLatencyMs": 20.1
+      "meanConfidence": 0.8214,
+      "medianLatencyMs": 20.18
     },
     {
       "detectorId": "dsp-v1",
@@ -3737,8 +3737,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0.0667,
       "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.8856,
-      "medianLatencyMs": 20.16
+      "meanConfidence": 0.8853,
+      "medianLatencyMs": 20.11
     },
     {
       "detectorId": "dsp-v1",
@@ -3754,7 +3754,7 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9692,
+      "meanConfidence": 0.9713,
       "medianLatencyMs": 20.17
     },
     {
@@ -3771,8 +3771,8 @@
       "detectionRate": 0.4,
       "top1Accuracy": 0.4,
       "accuracyWhenDetected": 1,
-      "meanConfidence": 0.4677,
-      "medianLatencyMs": 20.15
+      "meanConfidence": 0.4726,
+      "medianLatencyMs": 20.21
     },
     {
       "detectorId": "dsp-v1",
@@ -3784,12 +3784,12 @@
       "ambientRms": 0.05,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 2,
+      "correctTop1": 0,
       "detectionRate": 1,
-      "top1Accuracy": 0.1333,
-      "accuracyWhenDetected": 0.1333,
-      "meanConfidence": 0.8605,
-      "medianLatencyMs": 20.17
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.8702,
+      "medianLatencyMs": 20.15
     },
     {
       "detectorId": "dsp-v1",
@@ -3805,8 +3805,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9696,
-      "medianLatencyMs": 20.22
+      "meanConfidence": 0.97,
+      "medianLatencyMs": 20.1
     },
     {
       "detectorId": "dsp-v1",
@@ -3818,232 +3818,11 @@
       "ambientRms": 0.02,
       "trials": 15,
       "detected": 15,
-      "correctTop1": 4,
+      "correctTop1": 5,
       "detectionRate": 1,
-      "top1Accuracy": 0.2667,
-      "accuracyWhenDetected": 0.2667,
+      "top1Accuracy": 0.3333,
+      "accuracyWhenDetected": 0.3333,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.99
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 25,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.989,
-      "medianLatencyMs": 20.09
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 25,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.9152,
-      "medianLatencyMs": 20.06
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 50,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.9976,
-      "medianLatencyMs": 19.98
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 50,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.9364,
-      "medianLatencyMs": 20.04
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 50,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.9699,
-      "medianLatencyMs": 20.13
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 100,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 2,
-      "detectionRate": 1,
-      "top1Accuracy": 0.1333,
-      "accuracyWhenDetected": 0.1333,
-      "meanConfidence": 0.9626,
-      "medianLatencyMs": 21.89
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 100,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8886,
-      "medianLatencyMs": 20.05
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 100,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9695,
-      "medianLatencyMs": 20.17
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 200,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.7511,
-      "medianLatencyMs": 20.1
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 200,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8805,
-      "medianLatencyMs": 20.1
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 200,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 1,
-      "detectionRate": 1,
-      "top1Accuracy": 0.0667,
-      "accuracyWhenDetected": 0.0667,
-      "meanConfidence": 0.9754,
-      "medianLatencyMs": 20.15
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 400,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 6,
-      "correctTop1": 0,
-      "detectionRate": 0.4,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.4795,
-      "medianLatencyMs": 20.04
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "fixedWing",
-      "label": "Electric fixed-wing",
-      "distanceM": 400,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8682,
       "medianLatencyMs": 20.03
     },
     {
@@ -4051,7 +3830,177 @@
       "detectorLabel": "FFT / harmonic DSP",
       "profile": "fixedWing",
       "label": "Electric fixed-wing",
-      "distanceM": 400,
+      "distanceM": 25,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 2,
+      "detectionRate": 1,
+      "top1Accuracy": 0.1333,
+      "accuracyWhenDetected": 0.1333,
+      "meanConfidence": 0.9848,
+      "medianLatencyMs": 20.07
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 25,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 1,
+      "detectionRate": 1,
+      "top1Accuracy": 0.0667,
+      "accuracyWhenDetected": 0.0667,
+      "meanConfidence": 0.9139,
+      "medianLatencyMs": 20.17
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 50,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 2,
+      "detectionRate": 1,
+      "top1Accuracy": 0.1333,
+      "accuracyWhenDetected": 0.1333,
+      "meanConfidence": 0.9967,
+      "medianLatencyMs": 20.05
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 50,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 1,
+      "detectionRate": 1,
+      "top1Accuracy": 0.0667,
+      "accuracyWhenDetected": 0.0667,
+      "meanConfidence": 0.9456,
+      "medianLatencyMs": 20.12
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 50,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.9662,
+      "medianLatencyMs": 20.15
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 100,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.9563,
+      "medianLatencyMs": 20.12
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 100,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.8735,
+      "medianLatencyMs": 20.04
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 100,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.9724,
+      "medianLatencyMs": 20.12
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 200,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.7493,
+      "medianLatencyMs": 20.1
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 200,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.8777,
+      "medianLatencyMs": 20.06
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 200,
       "environment": "loud-structured",
       "ambientRms": 0.1,
       "trials": 15,
@@ -4060,8 +4009,59 @@
       "detectionRate": 1,
       "top1Accuracy": 0.1333,
       "accuracyWhenDetected": 0.1333,
-      "meanConfidence": 0.9762,
-      "medianLatencyMs": 20.02
+      "meanConfidence": 0.9757,
+      "medianLatencyMs": 20.16
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 400,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 7,
+      "correctTop1": 0,
+      "detectionRate": 0.4667,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.4814,
+      "medianLatencyMs": 20.14
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 400,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.868,
+      "medianLatencyMs": 20.12
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "fixedWing",
+      "label": "Electric fixed-wing",
+      "distanceM": 400,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 1,
+      "detectionRate": 1,
+      "top1Accuracy": 0.0667,
+      "accuracyWhenDetected": 0.0667,
+      "meanConfidence": 0.9748,
+      "medianLatencyMs": 20.16
     },
     {
       "detectorId": "dsp-v1",
@@ -4078,7 +4078,7 @@
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
       "meanConfidence": 1,
-      "medianLatencyMs": 19.87
+      "medianLatencyMs": 19.85
     },
     {
       "detectorId": "dsp-v1",
@@ -4094,8 +4094,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9981,
-      "medianLatencyMs": 19.95
+      "meanConfidence": 0.9991,
+      "medianLatencyMs": 19.92
     },
     {
       "detectorId": "dsp-v1",
@@ -4111,8 +4111,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9372,
-      "medianLatencyMs": 19.9
+      "meanConfidence": 0.9505,
+      "medianLatencyMs": 19.95
     },
     {
       "detectorId": "dsp-v1",
@@ -4128,7 +4128,7 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9995,
+      "meanConfidence": 1,
       "medianLatencyMs": 19.91
     },
     {
@@ -4145,8 +4145,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9653,
-      "medianLatencyMs": 19.99
+      "meanConfidence": 0.9676,
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
@@ -4162,8 +4162,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8489,
-      "medianLatencyMs": 20.85
+      "meanConfidence": 0.8643,
+      "medianLatencyMs": 20.17
     },
     {
       "detectorId": "dsp-v1",
@@ -4179,92 +4179,7 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9957,
-      "medianLatencyMs": 20.9
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "combustion",
-      "label": "Combustion engine",
-      "distanceM": 100,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.7767,
-      "medianLatencyMs": 20.11
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "combustion",
-      "label": "Combustion engine",
-      "distanceM": 100,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9703,
-      "medianLatencyMs": 20.08
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "combustion",
-      "label": "Combustion engine",
-      "distanceM": 200,
-      "environment": "quiet",
-      "ambientRms": 0.02,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9347,
-      "medianLatencyMs": 20.1
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "combustion",
-      "label": "Combustion engine",
-      "distanceM": 200,
-      "environment": "urban",
-      "ambientRms": 0.05,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8698,
-      "medianLatencyMs": 20.1
-    },
-    {
-      "detectorId": "dsp-v1",
-      "detectorLabel": "FFT / harmonic DSP",
-      "profile": "combustion",
-      "label": "Combustion engine",
-      "distanceM": 200,
-      "environment": "loud-structured",
-      "ambientRms": 0.1,
-      "trials": 15,
-      "detected": 15,
-      "correctTop1": 0,
-      "detectionRate": 1,
-      "top1Accuracy": 0,
-      "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9741,
+      "meanConfidence": 0.9953,
       "medianLatencyMs": 19.99
     },
     {
@@ -4272,7 +4187,41 @@
       "detectorLabel": "FFT / harmonic DSP",
       "profile": "combustion",
       "label": "Combustion engine",
-      "distanceM": 400,
+      "distanceM": 100,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.7786,
+      "medianLatencyMs": 20.17
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "combustion",
+      "label": "Combustion engine",
+      "distanceM": 100,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.9724,
+      "medianLatencyMs": 20.18
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "combustion",
+      "label": "Combustion engine",
+      "distanceM": 200,
       "environment": "quiet",
       "ambientRms": 0.02,
       "trials": 15,
@@ -4281,8 +4230,59 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.6413,
-      "medianLatencyMs": 20.07
+      "meanConfidence": 0.9275,
+      "medianLatencyMs": 20.1
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "combustion",
+      "label": "Combustion engine",
+      "distanceM": 200,
+      "environment": "urban",
+      "ambientRms": 0.05,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.8647,
+      "medianLatencyMs": 20.11
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "combustion",
+      "label": "Combustion engine",
+      "distanceM": 200,
+      "environment": "loud-structured",
+      "ambientRms": 0.1,
+      "trials": 15,
+      "detected": 15,
+      "correctTop1": 0,
+      "detectionRate": 1,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.9747,
+      "medianLatencyMs": 20.15
+    },
+    {
+      "detectorId": "dsp-v1",
+      "detectorLabel": "FFT / harmonic DSP",
+      "profile": "combustion",
+      "label": "Combustion engine",
+      "distanceM": 400,
+      "environment": "quiet",
+      "ambientRms": 0.02,
+      "trials": 15,
+      "detected": 14,
+      "correctTop1": 0,
+      "detectionRate": 0.9333,
+      "top1Accuracy": 0,
+      "accuracyWhenDetected": 0,
+      "meanConfidence": 0.6416,
+      "medianLatencyMs": 20.11
     },
     {
       "detectorId": "dsp-v1",
@@ -4298,8 +4298,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.8719,
-      "medianLatencyMs": 20.09
+      "meanConfidence": 0.8796,
+      "medianLatencyMs": 20.11
     },
     {
       "detectorId": "dsp-v1",
@@ -4315,8 +4315,8 @@
       "detectionRate": 1,
       "top1Accuracy": 0,
       "accuracyWhenDetected": 0,
-      "meanConfidence": 0.9731,
-      "medianLatencyMs": 20.05
+      "meanConfidence": 0.9729,
+      "medianLatencyMs": 20.15
     }
   ],
   "falseAlarms": [
@@ -4329,7 +4329,7 @@
       "falseDetections": 60,
       "falsePositiveRate": 1,
       "meanConfidence": 0.8656,
-      "medianLatencyMs": 20.02
+      "medianLatencyMs": 20.07
     },
     {
       "detectorId": "dsp-v1",
@@ -4340,7 +4340,7 @@
       "falseDetections": 54,
       "falsePositiveRate": 0.9,
       "meanConfidence": 0.8402,
-      "medianLatencyMs": 21.77
+      "medianLatencyMs": 20.05
     },
     {
       "detectorId": "dsp-v1",
@@ -4351,7 +4351,7 @@
       "falseDetections": 50,
       "falsePositiveRate": 0.8333,
       "meanConfidence": 0.8258,
-      "medianLatencyMs": 20.18
+      "medianLatencyMs": 20.09
     }
   ]
 }

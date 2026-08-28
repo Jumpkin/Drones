@@ -137,18 +137,25 @@ export function generateDronePcm(
   rpmShiftPercent = 0,
   noiseLevel = 0.035,
 ): Float32Array {
+  if (!Number.isFinite(durationS) || durationS <= 0 ||
+    !Number.isFinite(sampleRate) || sampleRate <= 0) {
+    throw new Error("Audio duration and sample rate must be positive finite numbers");
+  }
   const signature = createSignature(profileId, rpmShiftPercent).slice(0, 8);
   const length = Math.round(durationS * sampleRate);
   const output = new Float32Array(length);
   const noise = createNoiseGenerator(0xd04e + profileId.length * 97);
   const wobble = timbre[profileId].wobbleHz;
+  const frequencyDriftFraction = 0.018;
   for (let index = 0; index < length; index += 1) {
     const time = index / sampleRate;
     const envelope = 0.82 + Math.sin(2 * Math.PI * wobble * time) * 0.12;
     let sample = 0;
     for (const peak of signature) {
-      const driftedFrequency = peak.frequencyHz * (1 + 0.018 * time / durationS);
-      sample += Math.sin(2 * Math.PI * driftedFrequency * time) *
+      // Integrate the linear frequency ramp into phase. Multiplying the
+      // instantaneous frequency by time would accidentally double the drift.
+      const phaseTime = time + frequencyDriftFraction * time * time / (2 * durationS);
+      sample += Math.sin(2 * Math.PI * peak.frequencyHz * phaseTime) *
         Math.min(0.24, peak.amplitude * 0.08);
     }
     output[index] = Math.max(-1, Math.min(1, sample * envelope + noise() * noiseLevel));
@@ -160,6 +167,10 @@ export function generateAmbientPcm(
   durationS = 3.2,
   sampleRate = 16000,
 ): Float32Array {
+  if (!Number.isFinite(durationS) || durationS <= 0 ||
+    !Number.isFinite(sampleRate) || sampleRate <= 0) {
+    throw new Error("Audio duration and sample rate must be positive finite numbers");
+  }
   const length = Math.round(durationS * sampleRate);
   const output = new Float32Array(length);
   const noise = createNoiseGenerator(0xa11ce);

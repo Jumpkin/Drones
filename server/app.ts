@@ -315,7 +315,6 @@ export async function buildApp(
 
   if (config.staticDir) {
     await app.register(fastifyStatic, { root: resolve(config.staticDir), wildcard: false });
-    app.get("/", async (_request, reply) => reply.sendFile("index.html"));
     app.get("/*", async (request, reply) => {
       if (request.url.startsWith("/api/") || request.url.startsWith("/health/")) {
         return reply.code(404).send({ error: "not_found" });

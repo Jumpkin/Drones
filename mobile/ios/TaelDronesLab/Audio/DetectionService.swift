@@ -29,7 +29,12 @@ final class DetectionService: ObservableObject {
         do {
             try worker.prepare()
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.record, mode: .measurement, options: [.allowBluetoothHFP])
+            #if compiler(>=6.2)
+            let bluetoothInput: AVAudioSession.CategoryOptions = .allowBluetoothHFP
+            #else
+            let bluetoothInput: AVAudioSession.CategoryOptions = .allowBluetooth
+            #endif
+            try session.setCategory(.record, mode: .measurement, options: [bluetoothInput])
             try session.setPreferredSampleRate(48_000)
             try session.setActive(true)
             let input = engine.inputNode

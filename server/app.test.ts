@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DataType, newDb } from "pg-mem";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -31,6 +33,7 @@ function detector(detectorId: "dsp-v1" | "ml-onnx-v1" | "crnn-pretrained-v1", de
 
 describe("Drones API", () => {
   let app: Awaited<ReturnType<typeof buildApp>> | undefined;
+  let database: Database;
 
   beforeEach(async () => {
     const memory = newDb({ autoCreateForeignKeyIndices: true });
@@ -50,7 +53,8 @@ describe("Drones API", () => {
     memory.public.none(await readFile(fileURLToPath(migrationUrl), "utf8"));
     const adapter = memory.adapters.createPg();
     const pool = new adapter.Pool();
-    app = await buildApp(pool as unknown as Database, config);
+    database = pool as unknown as Database;
+    app = await buildApp(database, config);
   });
 
   afterEach(async () => app?.close());
@@ -72,6 +76,20 @@ describe("Drones API", () => {
     expect(enrolled.response.statusCode).toBe(201);
     expect(enrolled.body.capability).toMatch(/^[A-Za-z0-9_-]+$/);
     expect(enrolled.body.device.id).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it("serves the built web shell and SPA fallback without duplicate routes", async () => {
+    const staticDir = await mkdtemp(join(tmpdir(), "drones-static-"));
+    try {
+      await writeFile(join(staticDir, "index.html"), "<!doctype html><title>Drones shell</title>");
+      await app?.close();
+      app = await buildApp(database, { ...config, staticDir });
+      expect((await app.inject({ method: "GET", url: "/" })).body).toContain("Drones shell");
+      expect((await app.inject({ method: "GET", url: "/statistics" })).body).toContain("Drones shell");
+      expect((await app.inject({ method: "GET", url: "/api/unknown" })).statusCode).toBe(404);
+    } finally {
+      await rm(staticDir, { recursive: true, force: true });
+    }
   });
 
   it("coordinates source/listener roles and derives metrics from integer observations", async () => {

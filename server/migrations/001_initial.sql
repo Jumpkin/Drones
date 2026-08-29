@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS drones_devices (
   label varchar(80) NOT NULL CHECK (char_length(label) BETWEEN 1 AND 80),
   token_hash char(64) NOT NULL UNIQUE,
   app_version varchar(40) NOT NULL,
-  platform varchar(24) NOT NULL CHECK (platform = 'ios'),
+  platform varchar(24) NOT NULL CHECK (platform IN ('ios', 'web')),
   created_at timestamptz NOT NULL DEFAULT now(),
   last_seen_at timestamptz NOT NULL DEFAULT now()
 );

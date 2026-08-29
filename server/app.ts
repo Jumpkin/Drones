@@ -5,7 +5,16 @@ import { resolve } from "node:path";
 import type { Database } from "./database.js";
 import { DronesRepository, type DeviceIdentity } from "./repository.js";
 import { containsRawAudio } from "./security.js";
-import type { AppConfig, DetectorId, ExpectedLabel, ObservationEvent, SessionRole } from "./types.js";
+import type {
+  AppConfig,
+  DetectorId,
+  DevicePlatform,
+  ExpectedLabel,
+  ObservationEvent,
+  PlaybackEnvironment,
+  PlaybackSourceKind,
+  SessionRole,
+} from "./types.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -38,6 +47,15 @@ function roleField(value: unknown): SessionRole | undefined {
 
 function expectedLabel(value: unknown): ExpectedLabel | undefined {
   return value === "drone" || value === "background" ? value : undefined;
+}
+
+function sourceKind(value: unknown): PlaybackSourceKind | undefined {
+  return value === "phone" || value === "computer" ? value : undefined;
+}
+
+function playbackEnvironment(value: unknown): PlaybackEnvironment | undefined {
+  return value === "unspecified" || value === "quiet-room" || value === "traffic" ||
+    value === "wind" || value === "other" ? value : undefined;
 }
 
 function finiteRange(value: unknown, minimum: number, maximum: number): value is number {
@@ -179,11 +197,12 @@ export async function buildApp(
     }
     const label = stringField(request.body, "label");
     const appVersion = stringField(request.body, "appVersion", 40);
-    if (!label || !appVersion || request.body.platform !== "ios") {
+    const platform = request.body.platform as DevicePlatform;
+    if (!label || !appVersion || (platform !== "ios" && platform !== "web")) {
       return reply.code(400).send({ error: "invalid_device" });
     }
     const device = await repository.createDevice({
-      label, appVersion,
+      label, appVersion, platform,
     });
     return reply.code(201).send({
       device: { id: device.id, label: device.label, platform: device.platform },
@@ -218,23 +237,35 @@ export async function buildApp(
     { preHandler: identifyDevice },
     async (request, reply) => {
       if (!request.dronesDevice || !UUID_PATTERN.test(request.params.id) || !object(request.body) ||
-          !hasOnlyKeys(request.body, ["soundId", "expectedLabel", "scheduledAt", "durationMs"])) {
+          !hasOnlyKeys(request.body, ["soundId", "expectedLabel", "scheduledAt", "durationMs",
+            "sourceKind", "distanceM", "volumePercent", "environment"])) {
         return reply.code(400).send({ error: "invalid_playback" });
       }
       const soundId = stringField(request.body, "soundId");
       const label = expectedLabel(request.body.expectedLabel);
       const scheduledAt = stringField(request.body, "scheduledAt", 40);
       const durationMs = request.body.durationMs;
+      const playbackSource = request.body.sourceKind === undefined ? "phone" : sourceKind(request.body.sourceKind);
+      const environment = request.body.environment === undefined
+        ? "unspecified" : playbackEnvironment(request.body.environment);
+      const distanceM = request.body.distanceM;
+      const volumePercent = request.body.volumePercent;
       const timestamp = scheduledAt ? Date.parse(scheduledAt) : Number.NaN;
       if (!soundId || !label || !scheduledAt || !Number.isFinite(timestamp) ||
           timestamp < Date.now() - 5_000 || timestamp > Date.now() + 10 * 60_000 ||
-          !Number.isInteger(durationMs) || !finiteRange(durationMs, 250, 120_000)) {
+          !Number.isInteger(durationMs) || !finiteRange(durationMs, 250, 120_000) ||
+          !playbackSource || !environment ||
+          (distanceM !== undefined && !finiteRange(distanceM, 0.1, 100)) ||
+          (volumePercent !== undefined && (!Number.isInteger(volumePercent) ||
+            !finiteRange(volumePercent, 1, 100)))) {
         return reply.code(400).send({ error: "invalid_playback" });
       }
       try {
         const playback = await repository.createPlayback({
           sessionId: request.params.id, deviceId: request.dronesDevice.id,
           soundId, expectedLabel: label, scheduledAt, durationMs,
+          sourceKind: playbackSource, distanceM: distanceM as number | undefined,
+          volumePercent: volumePercent as number | undefined, environment,
         });
         return reply.code(201).send({ playback });
       } catch (error) {

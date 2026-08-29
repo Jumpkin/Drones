@@ -122,6 +122,11 @@ export function classifySpectrum(peaks: SpectralPeak[]): ListenerClassification[
 
 let audioContext: AudioContext | undefined;
 
+export async function prepareAudioPlayback(): Promise<void> {
+  audioContext ??= new AudioContext();
+  await audioContext.resume();
+}
+
 function createNoiseGenerator(seed: number): () => number {
   let state = seed >>> 0;
   return () => {
@@ -166,6 +171,7 @@ export function generateDronePcm(
 export function generateAmbientPcm(
   durationS = 3.2,
   sampleRate = 16000,
+  profile: "background" | "traffic" | "wind" | "motor" = "background",
 ): Float32Array {
   if (!Number.isFinite(durationS) || durationS <= 0 ||
     !Number.isFinite(sampleRate) || sampleRate <= 0) {
@@ -174,10 +180,27 @@ export function generateAmbientPcm(
   const length = Math.round(durationS * sampleRate);
   const output = new Float32Array(length);
   const noise = createNoiseGenerator(0xa11ce);
+  let filteredNoise = 0;
   for (let index = 0; index < length; index += 1) {
-    const broadband = noise() * 0.11;
-    const trafficRumble = Math.sin(2 * Math.PI * 57 * index / sampleRate) * 0.018;
-    output[index] = broadband + trafficRumble;
+    const random = noise();
+    filteredNoise = filteredNoise * 0.96 + random * 0.04;
+    const time = index / sampleRate;
+    if (profile === "traffic") {
+      const rumble = Math.sin(2 * Math.PI * 57 * time) * 0.055 +
+        Math.sin(2 * Math.PI * 113 * time) * 0.025;
+      const passingVehicle = Math.sin(2 * Math.PI * (180 + 18 * Math.sin(2 * Math.PI * 0.18 * time)) * time) * 0.035;
+      output[index] = random * 0.08 + rumble + passingVehicle;
+    } else if (profile === "wind") {
+      output[index] = filteredNoise * (0.7 + 0.3 * Math.sin(2 * Math.PI * 0.35 * time)) * 0.95 + random * 0.015;
+    } else if (profile === "motor") {
+      output[index] = random * 0.035 +
+        Math.sin(2 * Math.PI * 100 * time) * 0.11 +
+        Math.sin(2 * Math.PI * 200 * time) * 0.055 +
+        Math.sin(2 * Math.PI * 300 * time) * 0.025;
+    } else {
+      const trafficRumble = Math.sin(2 * Math.PI * 57 * time) * 0.018;
+      output[index] = random * 0.11 + trafficRumble;
+    }
   }
   return output;
 }
@@ -200,12 +223,16 @@ export async function loadMonoPcm(
   return { samples: mono, sampleRate: buffer.sampleRate, buffer };
 }
 
-export async function playAudioBuffer(buffer: AudioBuffer, maxDurationS = 8): Promise<void> {
+export async function playAudioBuffer(
+  buffer: AudioBuffer,
+  maxDurationS = 8,
+  gainValue = 0.42,
+): Promise<void> {
   audioContext ??= new AudioContext();
   await audioContext.resume();
   const source = audioContext.createBufferSource();
   const gain = audioContext.createGain();
-  gain.gain.value = 0.42;
+  gain.gain.value = Math.max(0, Math.min(1, gainValue));
   source.buffer = buffer;
   source.connect(gain);
   gain.connect(audioContext.destination);
@@ -224,12 +251,14 @@ export async function playAudioBuffer(buffer: AudioBuffer, maxDurationS = 8): Pr
 export async function playPcm(
   samples: Float32Array,
   sampleRate: number,
+  maxDurationS = 8,
+  gainValue = 0.42,
 ): Promise<void> {
   audioContext ??= new AudioContext();
   await audioContext.resume();
   const buffer = audioContext.createBuffer(1, samples.length, sampleRate);
   buffer.getChannelData(0).set(samples);
-  await playAudioBuffer(buffer);
+  await playAudioBuffer(buffer, maxDurationS, gainValue);
 }
 
 export async function playDroneMixture(

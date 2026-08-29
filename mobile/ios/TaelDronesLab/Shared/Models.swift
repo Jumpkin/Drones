@@ -101,6 +101,10 @@ struct SessionPlayback: Codable, Identifiable {
     let expectedLabel: ExpectedLabel
     let scheduledAt: String
     let durationMs: Int
+    let sourceKind: String
+    let distanceM: Double?
+    let volumePercent: Int?
+    let environment: String
     let createdAt: String
 }
 
@@ -111,6 +115,10 @@ struct SessionMetric: Codable, Identifiable {
     let playbackId: UUID?
     let soundId: String?
     let expectedLabel: ExpectedLabel?
+    let sourceKind: String?
+    let distanceM: Double?
+    let volumePercent: Int?
+    let environment: String?
     let tests: Int
     let tp: Int
     let fp: Int
@@ -120,6 +128,8 @@ struct SessionMetric: Codable, Identifiable {
     let recall: Double
     let falsePositiveRate: Double
     let f1: Double
+    let averageProbability: Double
+    let averageLatencyMs: Double
 }
 
 struct SessionSnapshot: Codable, Identifiable {

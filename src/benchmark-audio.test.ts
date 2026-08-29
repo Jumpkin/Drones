@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateDronePcm } from "./audio";
+import { generateAmbientPcm, generateDronePcm } from "./audio";
 import {
   PHONE_AUDIO_PROFILES,
   PLAYBACK_ROOM_PROFILES,
@@ -38,5 +38,16 @@ describe("headless phone playback channel", () => {
       PLAYBACK_ROOM_PROFILES[0],
       mulberry32(1),
     )).toThrow(/sample rate/i);
+  });
+
+  it("generates distinct deterministic negative controls", () => {
+    const profiles = ["background", "traffic", "wind", "motor"] as const;
+    const clips = profiles.map((profile) => generateAmbientPcm(1, 16_000, profile));
+    for (const [index, clip] of clips.entries()) {
+      expect(clip).toHaveLength(16_000);
+      expect([...clip].every(Number.isFinite)).toBe(true);
+      expect(clip).toEqual(generateAmbientPcm(1, 16_000, profiles[index]));
+    }
+    expect(new Set(clips.map((clip) => Array.from(clip.slice(0, 32)).join(","))).size).toBe(4);
   });
 });

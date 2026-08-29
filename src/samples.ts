@@ -12,6 +12,7 @@ export interface AudioSampleDefinition {
   sourceLabel: string;
   license: string;
   note: string;
+  ambientProfile?: "background" | "traffic" | "wind" | "motor";
 }
 
 export const AUDIO_SAMPLES: AudioSampleDefinition[] = [
@@ -85,6 +86,37 @@ export const AUDIO_SAMPLES: AudioSampleDefinition[] = [
     sourceLabel: "Drones signal generator",
     license: "Project-generated",
     note: "Filtered deterministic noise without a harmonic rotor ladder.",
+    ambientProfile: "background",
+  },
+  {
+    id: "synth-traffic",
+    label: "Urban traffic · negative test",
+    kind: "ambient",
+    expectedProfile: "ambient",
+    sourceLabel: "Drones signal generator",
+    license: "Project-generated",
+    note: "Deterministic traffic rumble and a passing motor tone without a labelled drone.",
+    ambientProfile: "traffic",
+  },
+  {
+    id: "synth-wind",
+    label: "Wind noise · negative test",
+    kind: "ambient",
+    expectedProfile: "ambient",
+    sourceLabel: "Drones signal generator",
+    license: "Project-generated",
+    note: "Low-frequency deterministic wind-like noise used as a negative control.",
+    ambientProfile: "wind",
+  },
+  {
+    id: "synth-motor",
+    label: "Electric motor hum · negative test",
+    kind: "ambient",
+    expectedProfile: "ambient",
+    sourceLabel: "Drones signal generator",
+    license: "Project-generated",
+    note: "Stationary motor harmonics challenge the detector without a drone label.",
+    ambientProfile: "motor",
   },
 ];
 

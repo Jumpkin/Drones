@@ -11,8 +11,15 @@ import {
   playAudioBuffer,
   playDroneMixture,
   playPcm,
+  prepareAudioPlayback,
 } from "./audio";
 import { analyzePcm, type DetectorResult } from "./detector";
+import {
+  detectorLabel,
+  HardwareSessionClient,
+  type CalibrationEnvironment,
+  type HardwareSessionSnapshot,
+} from "./hardware-session";
 import { DspDetectorAdapter } from "./detectors/dsp-adapter";
 import type { DetectorAdapter, DetectorOutput } from "./detectors/types";
 import { createAcousticEvent, fuseSingleNodeEvent } from "./events";
@@ -416,6 +423,46 @@ app.innerHTML = `
         </div>
       </div>
     </section>
+
+    <section class="lab-card hardware-test-card">
+      <div class="subpanel-heading">
+        <div><p class="eyebrow">Guided phone calibration</p><h3>Computer source → native iPhone listener</h3></div>
+        <span id="hardwareSessionBadge" class="data-badge">NOT CONNECTED</span>
+      </div>
+      <div class="hardware-test-grid">
+        <div class="live-test-controls">
+          <p class="sensor-note">Create a session on this computer, join its code in the iPhone app as Listener, measure the physical speaker-to-phone distance, then run the selected Sound lab sample.</p>
+          <div class="hardware-code-card"><span>iPhone session code</span><strong id="hardwareSessionCode">—</strong><small id="hardwarePhoneCount">0 listeners connected</small></div>
+          <div class="button-stack">
+            <button id="hardwareCreateButton" class="primary-button wide-button" type="button">Create computer test session</button>
+            <button id="hardwareCloseButton" class="secondary-button" type="button" disabled>Close session</button>
+          </div>
+        </div>
+        <div class="hardware-controls">
+          <label class="field"><span>Measured distance</span><select id="hardwareDistance">
+            <option value="1">1 metre</option><option value="3" selected>3 metres</option>
+            <option value="5">5 metres</option><option value="10">10 metres</option>
+          </select></label>
+          <label class="field"><span>Environment</span><select id="hardwareEnvironment">
+            <option value="quiet-room">Quiet room</option><option value="traffic">Traffic playback / noise</option>
+            <option value="wind">Wind playback / noise</option><option value="other">Other</option>
+          </select></label>
+          <label class="range-field"><span><span>Web player gain · not SPL</span><output id="hardwareVolumeOutput">50%</output></span>
+            <input id="hardwareVolume" type="range" min="10" max="100" step="10" value="50" />
+          </label>
+          <button id="hardwareRunButton" class="primary-button wide-button" type="button" disabled>Schedule and play selected sample</button>
+          <p id="hardwareStatus" class="microphone-status">Create a session and connect at least one Listener phone.</p>
+        </div>
+        <div class="live-test-results">
+          <p class="section-kicker">Automatic model comparison</p>
+          <div class="table-scroll microphone-table-scroll"><table class="statistics-table">
+            <thead><tr><th>Run</th><th>Model</th><th>Truth</th><th>Distance</th><th>Gain</th><th>Tests</th><th>Recall</th><th>False alarms</th><th>F1</th><th>Latency</th></tr></thead>
+            <tbody id="hardwareResultsBody"><tr><td colspan="10">No measured phone runs yet</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+      <small class="privacy-note">Distance is entered by the tester and player gain is not calibrated sound pressure. The server stores metadata and detector decisions only—never microphone PCM.</small>
+    </section>
   </section>
 
   <section id="experimentView" class="app-view lab-view" hidden>
@@ -575,6 +622,12 @@ app.innerHTML = `
         <p id="statisticsBenchmarkRule" class="benchmark-rule"></p>
       </section>
 
+      <section class="lab-card statistics-comparison-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Physical hardware evidence</p><h3>Current computer-to-iPhone calibration session</h3></div><span id="statisticsHardwareStatus" class="data-badge">NO SESSION</span></div>
+        <p class="benchmark-recommendation">These rows come from native iPhone inference windows during labelled computer playback. Distance is manually measured; gain is a web-player setting, not calibrated SPL.</p>
+        <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Run</th><th>Model</th><th>Truth</th><th>Distance</th><th>Gain</th><th>Tests</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th><th>Recall</th><th>False alarms</th><th>F1</th><th>Latency</th></tr></thead><tbody id="statisticsHardwareBody"><tr><td colspan="14">Create a guided phone calibration session in Sound lab.</td></tr></tbody></table></div>
+      </section>
+
       <div class="statistics-caveat lab-card">
         <strong>How to read the statistics</strong>
         <ul id="statisticsCaveats"></ul>
@@ -652,6 +705,7 @@ app.innerHTML = `
             <p id="aboutMethodSummary">The deterministic report is loading…</p>
             <p>Synthetic rotor and harmonic signals are varied by drone profile and RPM, attenuated with a simplified free-field <code>1/r</code> model, and mixed with quiet, urban, or loud structured backgrounds. The reference gain is an engineering assumption, not calibrated sound-pressure data.</p>
             <p>The playback-to-phone proxy adds speaker and microphone bandwidth, nonlinear drive, room echo, playback distance, background sound, and microphone self-noise across three assumed phone chains and four rooms. It is a digital stress test, not a measurement from physical phones.</p>
+            <p>The guided hardware calibration uses this web page as a labelled computer Source and the native iPhone app as a Listener. It persists detector decisions and manually entered distance, web-player gain, and environment so every model is compared from the same physical playback. Web gain is not calibrated sound pressure.</p>
             <p>Localization trials add residual timing jitter after idealized clock correction, then compare calibrated time differences against predicted travel times using 343 m/s as the speed of sound. Reverberation and multipath are not modeled.</p>
           </div>
         </details>
@@ -670,6 +724,7 @@ app.innerHTML = `
           <summary>Limitations and privacy</summary>
           <ul class="about-list">
             <li>Synthetic distance results do not establish real microphone range.</li>
+            <li>Hardware-session distance is manually measured and web-player gain is not SPL; neither establishes outdoor detection range.</li>
             <li>Source-domain compatibility runs overlap imported model training distributions and are not independent validation.</li>
             <li>The Batear fixture comparison contains only three drone files and one background file.</li>
             <li>Three coplanar phones provide a 2D estimate; they cannot determine altitude.</li>
@@ -1689,7 +1744,7 @@ async function getLabPcm(): Promise<{
     };
   }
   if (sample.kind === "ambient") {
-    return { samples: generateAmbientPcm(4), sampleRate: 16000 };
+    return { samples: generateAmbientPcm(4, 16000, sample.ambientProfile), sampleRate: 16000 };
   }
   if (!sample.localUrl) throw new Error("The audio sample has no local file");
   let loaded = realAudioCache.get(sample.id);
@@ -2004,6 +2059,165 @@ microphoneDownloadButton.addEventListener("click", () => {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
+});
+
+const hardwareClient = new HardwareSessionClient(window.localStorage);
+const hardwareCreateButton = requiredElement<HTMLButtonElement>("#hardwareCreateButton");
+const hardwareCloseButton = requiredElement<HTMLButtonElement>("#hardwareCloseButton");
+const hardwareRunButton = requiredElement<HTMLButtonElement>("#hardwareRunButton");
+const hardwareDistance = requiredElement<HTMLSelectElement>("#hardwareDistance");
+const hardwareEnvironment = requiredElement<HTMLSelectElement>("#hardwareEnvironment");
+const hardwareVolume = requiredElement<HTMLInputElement>("#hardwareVolume");
+let hardwareSnapshot: HardwareSessionSnapshot | undefined;
+let hardwareBusy = false;
+let hardwarePollTimer: number | undefined;
+
+function hardwareRate(value: number, denominator: number): string {
+  return denominator > 0 ? `${(value * 100).toFixed(1)}%` : "—";
+}
+
+function hardwareMetricRows(detailed: boolean): string {
+  const metrics = hardwareSnapshot?.playbackMetrics ?? [];
+  if (metrics.length === 0) {
+    return `<tr><td colspan="${detailed ? 14 : 10}">No measured phone runs yet</td></tr>`;
+  }
+  const chronologicalPlaybacks = [...(hardwareSnapshot?.playbacks ?? [])].reverse();
+  const playbackOrder = new Map(chronologicalPlaybacks.map((item, index) => [item.id, index + 1]));
+  return [...metrics]
+    .sort((left, right) => {
+      const runDifference = (playbackOrder.get(right.playbackId ?? "") ?? 0) -
+        (playbackOrder.get(left.playbackId ?? "") ?? 0);
+      return runDifference !== 0 ? runDifference : left.detectorId.localeCompare(right.detectorId);
+    })
+    .map((metric) => {
+      const run = playbackOrder.get(metric.playbackId ?? "") ?? "—";
+      const truth = metric.expectedLabel === "drone" ? "Drone" : "Background";
+      const common = `<td>${run}</td><td>${escapeHtml(detectorLabel(metric.detectorId))}</td><td>${truth}</td>
+        <td>${metric.distanceM === undefined ? "—" : `${metric.distanceM} m`}</td>
+        <td>${metric.volumePercent === undefined ? "—" : `${metric.volumePercent}%`}</td><td>${metric.tests}</td>`;
+      if (detailed) {
+        return `<tr>${common}<td>${metric.tp}</td><td>${metric.fp}</td><td>${metric.tn}</td><td>${metric.fn}</td>
+          <td>${hardwareRate(metric.recall, metric.tp + metric.fn)}</td>
+          <td>${hardwareRate(metric.falsePositiveRate, metric.fp + metric.tn)}</td><td>${metric.f1.toFixed(3)}</td>
+          <td>${metric.averageLatencyMs.toFixed(1)} ms</td></tr>`;
+      }
+      return `<tr>${common}<td>${hardwareRate(metric.recall, metric.tp + metric.fn)}</td>
+        <td>${hardwareRate(metric.falsePositiveRate, metric.fp + metric.tn)}</td><td>${metric.f1.toFixed(3)}</td>
+        <td>${metric.averageLatencyMs.toFixed(1)} ms</td></tr>`;
+    }).join("");
+}
+
+function renderHardwareSession(): void {
+  const listeners = hardwareSnapshot?.members.filter((member) => member.role === "listener").length ?? 0;
+  setText("#hardwareSessionCode", hardwareSnapshot?.code ?? "—");
+  setText("#hardwarePhoneCount", `${listeners} listener${listeners === 1 ? "" : "s"} connected`);
+  setText("#hardwareSessionBadge", hardwareSnapshot ? `${hardwareSnapshot.status.toUpperCase()} · ${listeners} LISTENER${listeners === 1 ? "" : "S"}` : "NOT CONNECTED");
+  setText("#statisticsHardwareStatus", hardwareSnapshot ? `${hardwareSnapshot.playbacks.length} RUNS` : "NO SESSION");
+  hardwareCreateButton.disabled = hardwareBusy || hardwareSnapshot?.status === "open";
+  hardwareCloseButton.disabled = hardwareBusy || hardwareSnapshot?.status !== "open";
+  hardwareRunButton.disabled = hardwareBusy || hardwareSnapshot?.status !== "open" || listeners === 0;
+  requiredElement<HTMLTableSectionElement>("#hardwareResultsBody").innerHTML = hardwareMetricRows(false);
+  requiredElement<HTMLTableSectionElement>("#statisticsHardwareBody").innerHTML = hardwareMetricRows(true);
+}
+
+async function refreshHardwareSession(showErrors = false): Promise<void> {
+  if (!hardwareClient.activeSessionId) {
+    hardwareSnapshot = undefined;
+    renderHardwareSession();
+    return;
+  }
+  try {
+    hardwareSnapshot = await hardwareClient.fetchSession();
+    renderHardwareSession();
+  } catch (error) {
+    if (error instanceof Error && (error.message === "device_not_found" || error.message === "session_not_found")) {
+      hardwareClient.resetLocalState();
+      hardwareSnapshot = undefined;
+      renderHardwareSession();
+    }
+    if (showErrors) setText("#hardwareStatus", error instanceof Error ? error.message : "Session refresh failed.");
+  }
+}
+
+function startHardwarePolling(): void {
+  if (hardwarePollTimer !== undefined) window.clearInterval(hardwarePollTimer);
+  hardwarePollTimer = window.setInterval(() => { void refreshHardwareSession(); }, 2_000);
+}
+
+hardwareVolume.addEventListener("input", () => {
+  setText("#hardwareVolumeOutput", `${hardwareVolume.value}%`);
+});
+
+hardwareCreateButton.addEventListener("click", async () => {
+  hardwareBusy = true;
+  renderHardwareSession();
+  setText("#hardwareStatus", "Creating a labelled computer playback session…");
+  try {
+    hardwareSnapshot = await hardwareClient.createSession();
+    setText("#hardwareStatus", `Enter code ${hardwareSnapshot.code} in the iPhone app and join as Listener.`);
+    startHardwarePolling();
+  } catch (error) {
+    setText("#hardwareStatus", error instanceof Error ? error.message : "Could not create the session.");
+  } finally {
+    hardwareBusy = false;
+    renderHardwareSession();
+  }
+});
+
+hardwareCloseButton.addEventListener("click", async () => {
+  hardwareBusy = true;
+  renderHardwareSession();
+  try {
+    await hardwareClient.close();
+    if (hardwarePollTimer !== undefined) window.clearInterval(hardwarePollTimer);
+    hardwarePollTimer = undefined;
+    hardwareSnapshot = undefined;
+    setText("#hardwareStatus", "Session closed. Its measured rows remain in the disposable database.");
+  } catch (error) {
+    setText("#hardwareStatus", error instanceof Error ? error.message : "Could not close the session.");
+  } finally {
+    hardwareBusy = false;
+    renderHardwareSession();
+  }
+});
+
+hardwareRunButton.addEventListener("click", async () => {
+  hardwareBusy = true;
+  renderHardwareSession();
+  try {
+    await prepareAudioPlayback();
+    const sample = getAudioSample(labSampleSelect.value);
+    const pcm = await getLabPcm();
+    const durationMs = Math.min(8_000, Math.round(pcm.samples.length / pcm.sampleRate * 1_000));
+    const start = (await hardwareClient.serverNow()).getTime() + 3_000;
+    const volumePercent = Number(hardwareVolume.value);
+    await hardwareClient.schedule({
+      soundId: sample.id,
+      expectedLabel: sample.expectedProfile === "ambient" ? "background" : "drone",
+      scheduledAt: new Date(start).toISOString(),
+      durationMs,
+      distanceM: Number(hardwareDistance.value),
+      volumePercent,
+      environment: hardwareEnvironment.value as CalibrationEnvironment,
+    });
+    setText("#hardwareSessionBadge", "STARTS IN 3 S");
+    setText("#hardwareStatus", `Scheduled ${sample.label}. Keep the iPhone Listener running and do not move either device.`);
+    await new Promise<void>((resolve) => window.setTimeout(resolve, 3_000));
+    setText("#hardwareSessionBadge", "PLAYING");
+    await playPcm(pcm.samples, pcm.sampleRate, durationMs / 1_000, volumePercent / 100);
+    setText("#hardwareStatus", "Playback finished. Waiting for the Listener metadata queue and model comparison…");
+    await new Promise<void>((resolve) => window.setTimeout(resolve, 2_000));
+    await refreshHardwareSession(true);
+  } catch (error) {
+    setText("#hardwareStatus", error instanceof Error ? error.message : "The hardware run failed.");
+  } finally {
+    hardwareBusy = false;
+    renderHardwareSession();
+  }
+});
+
+void refreshHardwareSession().then(() => {
+  if (hardwareClient.activeSessionId) startHardwarePolling();
 });
 
 const experimentCanvas = requiredElement<HTMLCanvasElement>("#experimentCanvas");

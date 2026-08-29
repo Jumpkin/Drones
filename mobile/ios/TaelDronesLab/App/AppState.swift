@@ -74,6 +74,7 @@ final class AppState: ObservableObject {
             role = selectedRole
             beginPolling()
             await refreshSession()
+            if selectedRole == .listener { startListening() }
             message = "Joined as \(selectedRole.title)."
         } catch { message = error.localizedDescription }
     }

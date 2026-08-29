@@ -1,6 +1,14 @@
 import { randomInt, randomUUID } from "node:crypto";
 import type { Database } from "./database.js";
-import type { DetectorObservation, ExpectedLabel, ObservationEvent, SessionRole } from "./types.js";
+import type {
+  DetectorObservation,
+  DevicePlatform,
+  ExpectedLabel,
+  ObservationEvent,
+  PlaybackEnvironment,
+  PlaybackSourceKind,
+  SessionRole,
+} from "./types.js";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -15,17 +23,29 @@ interface MetricCounter {
   playbackId?: string;
   soundId?: string;
   expectedLabel?: ExpectedLabel;
+  sourceKind?: PlaybackSourceKind;
+  distanceM?: number;
+  volumePercent?: number;
+  environment?: PlaybackEnvironment;
+  probabilityTotal: number;
+  latencyTotalMs: number;
 }
 
 function recordMetric(
   map: Map<string, MetricCounter>,
   key: string,
-  seed: Omit<MetricCounter, "tests" | "tp" | "fp" | "tn" | "fn">,
+  seed: Omit<MetricCounter, "tests" | "tp" | "fp" | "tn" | "fn" | "probabilityTotal" | "latencyTotalMs">,
   expected: ExpectedLabel,
   detected: boolean,
+  probability: number,
+  latencyMs: number,
 ): void {
-  const metric = map.get(key) ?? { ...seed, tests: 0, tp: 0, fp: 0, tn: 0, fn: 0 };
+  const metric = map.get(key) ?? {
+    ...seed, tests: 0, tp: 0, fp: 0, tn: 0, fn: 0, probabilityTotal: 0, latencyTotalMs: 0,
+  };
   metric.tests += 1;
+  metric.probabilityTotal += probability;
+  metric.latencyTotalMs += latencyMs;
   if (expected === "drone" && detected) metric.tp += 1;
   else if (expected === "drone") metric.fn += 1;
   else if (detected) metric.fp += 1;
@@ -33,15 +53,19 @@ function recordMetric(
   map.set(key, metric);
 }
 
-function finalizeMetrics(map: Map<string, MetricCounter>): Array<MetricCounter & {
+function finalizeMetrics(map: Map<string, MetricCounter>): Array<Omit<MetricCounter, "probabilityTotal" | "latencyTotalMs"> & {
   precision: number; recall: number; falsePositiveRate: number; f1: number;
+  averageProbability: number; averageLatencyMs: number;
 }> {
   return [...map.values()].map((metric) => {
     const precision = metric.tp / Math.max(1, metric.tp + metric.fp);
     const recall = metric.tp / Math.max(1, metric.tp + metric.fn);
-    return { ...metric, precision, recall,
+    const { probabilityTotal, latencyTotalMs, ...publicMetric } = metric;
+    return { ...publicMetric, precision, recall,
       falsePositiveRate: metric.fp / Math.max(1, metric.fp + metric.tn),
-      f1: (2 * precision * recall) / Math.max(1e-9, precision + recall) };
+      f1: (2 * precision * recall) / Math.max(1e-9, precision + recall),
+      averageProbability: probabilityTotal / Math.max(1, metric.tests),
+      averageLatencyMs: latencyTotalMs / Math.max(1, metric.tests) };
   });
 }
 
@@ -69,12 +93,13 @@ export class DronesRepository {
   async createDevice(input: {
     label: string;
     appVersion: string;
+    platform: DevicePlatform;
   }): Promise<DeviceRow> {
     const result = await this.database.query<DeviceRow>(
       `INSERT INTO drones_devices (id, label, app_version, platform)
-       VALUES ($1, $2, $3, 'ios')
+       VALUES ($1, $2, $3, $4)
        RETURNING id, label, app_version, platform, created_at, last_seen_at`,
-      [randomUUID(), input.label, input.appVersion],
+      [randomUUID(), input.label, input.appVersion, input.platform],
     );
     return result.rows[0];
   }
@@ -148,18 +173,26 @@ export class DronesRepository {
     expectedLabel: ExpectedLabel;
     scheduledAt: string;
     durationMs: number;
+    sourceKind: PlaybackSourceKind;
+    distanceM?: number;
+    volumePercent?: number;
+    environment: PlaybackEnvironment;
   }): Promise<Record<string, unknown>> {
     const result = await this.database.query<Record<string, unknown>>(
       `INSERT INTO drones_playbacks
-         (id, session_id, source_device_id, sound_id, expected_label, scheduled_at, duration_ms)
-       SELECT $1, s.id, $3, $4, $5, $6::timestamptz, $7::integer
+         (id, session_id, source_device_id, sound_id, expected_label, scheduled_at, duration_ms,
+          source_kind, distance_m, volume_percent, environment)
+       SELECT $1, s.id, $3, $4, $5, $6::timestamptz, $7::integer, $8,
+              $9::double precision, $10::integer, $11
        FROM drones_sessions s
        JOIN drones_session_memberships m ON m.session_id = s.id
        WHERE s.id = $2 AND s.status = 'open' AND s.expires_at > now()
          AND m.device_id = $3 AND m.role = 'source'
-       RETURNING id, session_id, sound_id, expected_label, scheduled_at, duration_ms, created_at`,
+       RETURNING id, session_id, sound_id, expected_label, scheduled_at, duration_ms,
+                 source_kind, distance_m, volume_percent, environment, created_at`,
       [randomUUID(), input.sessionId, input.deviceId, input.soundId, input.expectedLabel,
-        input.scheduledAt, input.durationMs],
+        input.scheduledAt, input.durationMs, input.sourceKind, input.distanceM ?? null,
+        input.volumePercent ?? null, input.environment],
     );
     if (!result.rows[0]) throw new Error("SESSION_SOURCE_REQUIRED");
     return result.rows[0];
@@ -224,7 +257,8 @@ export class DronesRepository {
       [sessionId],
     );
     const playbacks = await this.database.query<Record<string, unknown>>(
-      `SELECT id, source_device_id, sound_id, expected_label, scheduled_at, duration_ms, created_at
+      `SELECT id, source_device_id, sound_id, expected_label, scheduled_at, duration_ms,
+              source_kind, distance_m, volume_percent, environment, created_at
        FROM drones_playbacks WHERE session_id = $1
        ORDER BY scheduled_at DESC`,
       [sessionId],
@@ -252,20 +286,31 @@ export class DronesRepository {
       const playback = observation.playback_id ? playbackById.get(observation.playback_id) : undefined;
       const expected = playback?.expected_label;
       if (expected !== "drone" && expected !== "background") continue;
-      const decisions: Array<{ detectorId: string; detected: boolean }> = [
+      const decisions: Array<{ detectorId: string; detected: boolean; probability: number; latencyMs: number }> = [
         ...observation.detectors.map((detector) => ({
           detectorId: detector.detectorId,
           detected: detector.detected,
+          probability: detector.probability,
+          latencyMs: detector.latencyMs,
         })),
-        { detectorId: "consensus-2-of-3", detected: observation.consensus_detected },
+        { detectorId: "consensus-2-of-3", detected: observation.consensus_detected,
+          probability: observation.detectors.filter((detector) => detector.detected).length / 3,
+          latencyMs: Math.max(...observation.detectors.map((detector) => detector.latencyMs)) },
       ];
       for (const decision of decisions) {
-        recordMetric(metricMap, decision.detectorId, { detectorId: decision.detectorId }, expected, decision.detected);
+        recordMetric(metricMap, decision.detectorId, { detectorId: decision.detectorId }, expected,
+          decision.detected, decision.probability, decision.latencyMs);
         recordMetric(listenerMetricMap, `${observation.device_id}:${decision.detectorId}`,
-          { detectorId: decision.detectorId, deviceId: observation.device_id }, expected, decision.detected);
+          { detectorId: decision.detectorId, deviceId: observation.device_id }, expected,
+          decision.detected, decision.probability, decision.latencyMs);
         recordMetric(playbackMetricMap, `${observation.playback_id}:${decision.detectorId}`,
           { detectorId: decision.detectorId, playbackId: observation.playback_id ?? undefined,
-            soundId: String(playback?.sound_id ?? "unknown"), expectedLabel: expected }, expected, decision.detected);
+            soundId: String(playback?.sound_id ?? "unknown"), expectedLabel: expected,
+            sourceKind: playback?.source_kind as PlaybackSourceKind | undefined,
+            distanceM: playback?.distance_m === null ? undefined : Number(playback?.distance_m),
+            volumePercent: playback?.volume_percent === null ? undefined : Number(playback?.volume_percent),
+            environment: playback?.environment as PlaybackEnvironment | undefined }, expected,
+          decision.detected, decision.probability, decision.latencyMs);
       }
     }
     const metrics = finalizeMetrics(metricMap);

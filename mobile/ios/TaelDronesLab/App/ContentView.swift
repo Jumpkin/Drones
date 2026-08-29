@@ -172,6 +172,16 @@ struct SessionView: View {
                         Button("Close session", role: .destructive) { Task { await state.closeSession() } }
                     }
                 }
+                if state.role == .listener {
+                    Section("Guided calibration") {
+                        LabeledContent("Microphone", value: state.detection.listening ? "Listening" : "Stopped")
+                        Text("Keep this screen or Listen open. The computer schedules labelled playback; every detector window is uploaded automatically without raw audio.")
+                            .font(.footnote).foregroundStyle(.secondary)
+                        if !state.detection.listening {
+                            Button("Start listener") { state.startListening() }
+                        }
+                    }
+                }
                 Section("Phones") {
                     ForEach(state.session?.members ?? []) { member in
                         LabeledContent(member.label, value: member.role.title)
@@ -183,6 +193,12 @@ struct SessionView: View {
                         VStack(alignment: .leading) {
                             Text(SoundFixture.all.first { $0.id == playback.soundId }?.title ?? playback.soundId)
                             Text("\(playback.expectedLabel.rawValue) · \(playback.scheduledAt)").font(.caption).foregroundStyle(.secondary)
+                            if playback.sourceKind == "computer" {
+                                let distance = playback.distanceM.map { String(format: "%.1f m", $0) } ?? "distance unknown"
+                                let gain = playback.volumePercent.map { "\($0)% gain" } ?? "gain unknown"
+                                Text("Computer · \(distance) · \(gain) · \(playback.environment)")
+                                    .font(.caption2).foregroundStyle(.secondary)
+                            }
                         }
                     }
                 }
@@ -193,6 +209,7 @@ struct SessionView: View {
                             Text(metric.detectorId).font(.headline)
                             Text("Tests \(metric.tests) · TP \(metric.tp) · FP \(metric.fp) · TN \(metric.tn) · FN \(metric.fn)").font(.caption.monospaced())
                             Text(String(format: "Recall %.1f%% · false alarms %.1f%% · F1 %.3f", metric.recall * 100, metric.falsePositiveRate * 100, metric.f1)).font(.caption)
+                            Text(String(format: "Average probability %.1f%% · latency %.1f ms", metric.averageProbability * 100, metric.averageLatencyMs)).font(.caption2).foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -213,6 +230,12 @@ struct SessionView: View {
                         VStack(alignment: .leading) {
                             Text(SoundFixture.all.first { $0.id == metric.soundId }?.title ?? metric.soundId ?? "Playback").font(.headline)
                             Text("\(metric.tests) windows · TP \(metric.tp) · FP \(metric.fp) · TN \(metric.tn) · FN \(metric.fn)").font(.caption.monospaced())
+                            if metric.sourceKind == "computer" {
+                                let distance = metric.distanceM.map { String(format: "%.1f m", $0) } ?? "distance unknown"
+                                let gain = metric.volumePercent.map { "\($0)% gain" } ?? "gain unknown"
+                                Text("\(distance) · \(gain) · \(metric.environment ?? "unspecified") · \(String(format: "%.1f ms", metric.averageLatencyMs))")
+                                    .font(.caption2).foregroundStyle(.secondary)
+                            }
                         }
                     }
                 }

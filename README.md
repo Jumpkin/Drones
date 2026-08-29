@@ -46,6 +46,12 @@ from the same committed JSON reports as Statistics, so seeds and test counts do
 not drift into duplicated prose. Static methodology and provenance remain
 visible if a report cannot be loaded.
 
+Version 0.7 adds the native iOS hardware-in-the-loop client, metadata-only
+Fastify API, six-character Source/Listener sessions, all-three-detector local
+inference, offline retry, per-device capabilities, optional test GPS, and a
+private PostgreSQL schema. See [`mobile/ios/README.md`](mobile/ios/README.md)
+for Xcode installation.
+
 ## Run locally
 
 ```sh
@@ -71,9 +77,11 @@ Microphone access requires HTTPS or `localhost`. A phone cannot use the
 computer's `localhost`, so testing across devices requires an HTTPS deployment
 or a trusted HTTPS development endpoint.
 
-The reviewed public target is `https://drones.tael.se`. It is a static,
-unauthenticated experiment: the server delivers assets but receives no
-microphone PCM. The Tael gateway permits same-origin microphone access and
+The reviewed public target is `https://drones.tael.se`. The browser remains an
+unauthenticated experiment and sends no microphone PCM. The native test app
+uses a setup code once and then a device-scoped capability to send detector and
+session metadata. The API rejects raw-audio payloads and limits request bodies
+to 64 KB. The Tael gateway permits same-origin browser microphone access and
 applies a restrictive content security policy.
 
 Recommended first session:

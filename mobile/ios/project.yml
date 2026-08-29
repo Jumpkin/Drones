@@ -1,0 +1,58 @@
+name: TaelDronesLab
+options:
+  bundleIdPrefix: se.tael
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: K6GVLS864D
+targets:
+  TaelDronesLab:
+    type: application
+    platform: iOS
+    sources:
+      - path: TaelDronesLab
+        excludes:
+          - Resources
+      - path: ../../public/audio/batear-fpv-5inch.wav
+        buildPhase: resources
+      - path: ../../public/audio/batear-mavic-pro.wav
+        buildPhase: resources
+      - path: ../../public/audio/batear-mini-4-pro.wav
+        buildPhase: resources
+      - path: ../../public/audio/batear-rural-8s.wav
+        buildPhase: resources
+      - path: ../../public/models/drone-binary-v1.onnx
+        buildPhase: resources
+      - path: ../../public/models/drone-binary-v1.json
+        buildPhase: resources
+      - path: ../../public/models/drone-classifier-crnn-v1.onnx
+        buildPhase: resources
+      - path: ../../public/models/drone-classifier-crnn-v1.json
+        buildPhase: resources
+      - path: ../../public/models/drone-classifier-crnn-v1.LICENSE.txt
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: se.tael.drones.mobile
+        PRODUCT_NAME: $(TARGET_NAME)
+        INFOPLIST_FILE: TaelDronesLab/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: NO
+    scheme:
+      testTargets:
+        - TaelDronesLabTests
+  TaelDronesLabTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - TaelDronesLabTests
+    dependencies:
+      - target: TaelDronesLab
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: se.tael.drones.mobile.tests
+        GENERATE_INFOPLIST_FILE: YES

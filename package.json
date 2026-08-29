@@ -1,13 +1,17 @@
 {
   "name": "drones-acoustic-simulator",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
-    "lint": "tsc --noEmit",
+    "dev:server": "tsx watch server/index.ts",
+    "build": "tsc --noEmit && tsc -p tsconfig.server.json && vite build",
+    "lint": "tsc --noEmit && tsc -p tsconfig.server.json --noEmit",
     "test": "vitest run",
+    "migrate": "tsx server/migrate.ts",
+    "db:reset": "tsx server/reset.ts --confirm-disposable-drones-data",
+    "start": "node dist/server/index.js",
     "train:model": "tsx scripts/train-model.ts",
     "data:fsd50k": "tsx scripts/ingest-fsd50k.ts",
     "data:validate": "tsx scripts/validate-data.ts",
@@ -17,11 +21,17 @@
     "stats:update": "tsx scripts/update-benchmark-stats.ts"
   },
   "dependencies": {
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/static": "^10.1.3",
+    "fastify": "^5.12.1",
     "fft.js": "^4.0.4",
-    "onnxruntime-web": "^1.29.0"
+    "onnxruntime-web": "^1.29.0",
+    "pg": "^8.23.0"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "@types/pg": "^8.23.1",
+    "pg-mem": "^3.0.14",
     "protobufjs": "^7.6.6",
     "tsx": "^4.23.12",
     "typescript": "^5.9.2",

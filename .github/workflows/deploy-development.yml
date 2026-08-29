@@ -49,8 +49,36 @@ jobs:
           ./scripts/validate-deployment-contract.sh
           docker compose config --quiet
 
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install iOS project tools
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          sudo gem install cocoapods --version 1.17.0 --no-document
+
+      - name: Generate, resolve and test the iOS app
+        working-directory: mobile/ios
+        run: |
+          set -euo pipefail
+          xcodegen generate
+          pod install
+          destination_id="$(xcrun simctl list devices available --json | jq -r '.devices[][] | select(.isAvailable == true) | .udid' | head -1)"
+          test -n "$destination_id"
+          xcodebuild \
+            -workspace TaelDronesLab.xcworkspace \
+            -scheme TaelDronesLab \
+            -destination "id=$destination_id" \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
   publish:
-    needs: validate
+    needs: [validate, ios]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -113,7 +141,9 @@ jobs:
         run: |
           set -euo pipefail
           docker network create tael-platform-dev_edge
-          docker compose pull drones
+          docker compose pull drones postgres
+          docker compose up --detach --wait postgres
+          docker compose run --rm migrate
           docker compose up --detach --wait drones
           container_id="$(docker compose ps --quiet drones)"
           docker compose exec -T drones wget --quiet -O - http://127.0.0.1:8080/ | grep --quiet 'Drones · Acoustic Sensor Lab'
@@ -124,6 +154,8 @@ jobs:
           docker inspect --format '{{json .HostConfig.SecurityOpt}}' "$container_id" | grep --quiet 'no-new-privileges'
           bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$container_id")"
           test "$bindings" = 'null' || test "$bindings" = '{}'
+          postgres_bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$(docker compose ps --quiet postgres)")"
+          test "$postgres_bindings" = 'null' || test "$postgres_bindings" = '{}'
 
       - name: Scan published image for fixable critical vulnerabilities
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0

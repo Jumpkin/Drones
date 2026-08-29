@@ -1,0 +1,660 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		020C19EE86E5D6EBF4D4C946 /* CRNNPreprocessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE2290B88F640D9C2C6C9C /* CRNNPreprocessor.swift */; };
+		14CEB3A4B1DC7712F61EA1F0 /* batear-mini-4-pro.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CF0D0335DC3AEC0652AAA94 /* batear-mini-4-pro.wav */; };
+		201F6E0ED1FCCC9F853AF796 /* DSPDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6636417D65F15418EC2B0C0E /* DSPDetector.swift */; };
+		23388327BA8FAE6655AE2F81 /* DetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B5D74BDCAFE11864A1B923 /* DetectionService.swift */; };
+		2AEF32D68BA5974D5F5DA2C3 /* drone-classifier-crnn-v1.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE3BE9461E9AE9E9B3D1F3FE /* drone-classifier-crnn-v1.LICENSE.txt */; };
+		4057532FF6CE76DB4040F862 /* DronesAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752B3F2193723DB63FBBE8D /* DronesAPIClient.swift */; };
+		56EA4CC17E176A346395F3D6 /* batear-mavic-pro.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7602E6A69355225F8173BD0F /* batear-mavic-pro.wav */; };
+		605FBCC68AEF50D110080CFD /* drone-binary-v1.onnx in Resources */ = {isa = PBXBuildFile; fileRef = 2987379538EC22A5FFBECFBD /* drone-binary-v1.onnx */; };
+		6AA02D289EF7F1EBC3B466DE /* TaelDronesLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D0A12349EDE09CC558FC78 /* TaelDronesLabApp.swift */; };
+		76E5B592FC3A728725DAC887 /* ONNXModelRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092DF9B9B6B990546FC8B2B /* ONNXModelRunner.swift */; };
+		76E79C1B7E2E5412E47236D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130609B582C839C8E944F334 /* ContentView.swift */; };
+		80E3596E5F97FF872137BFA3 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1D7B1DCACC0549CF511673 /* SoundPlayer.swift */; };
+		85752E156A5C1FE775C40D99 /* DetectionPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199A755E6A0FB14C04ED760 /* DetectionPipeline.swift */; };
+		859BB0ECEA492F1CDAC48FCA /* DetectionParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21465B719BD0F482AC3B0327 /* DetectionParityTests.swift */; };
+		8E62424818D0B5FA0A835AC0 /* batear-rural-8s.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6FB76B7F0FE145E19C1BAEAA /* batear-rural-8s.wav */; };
+		8F8C9944D38151CB258079AB /* drone-classifier-crnn-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 0AA05B4F157EEF360BB9F660 /* drone-classifier-crnn-v1.json */; };
+		96A75B02494C8E2C29BDDFE6 /* Pods_TaelDronesLabTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8516EF19F4C0C5454A4B2E84 /* Pods_TaelDronesLabTests.framework */; };
+		9A29A54F5A79265C720075B4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F47E317157593625C37372 /* AppState.swift */; };
+		9A6119E9C152DF221E284532 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B739C9B6E51D6E1A6764F4D /* LocationProvider.swift */; };
+		BBF945357B597F80646807E4 /* FeatureExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB5625C02709E773096625E /* FeatureExtractor.swift */; };
+		C6DCCD5B546DAE9DB79CDB7F /* batear-fpv-5inch.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6005C319AD6A52490248C560 /* batear-fpv-5inch.wav */; };
+		D312EC86B463B72101DE2979 /* Pods_TaelDronesLab.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDC643AAB4933C90EDED4D6 /* Pods_TaelDronesLab.framework */; };
+		DAC1829F007F660DAF25E246 /* AudioMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742419EA27E6246A0A131835 /* AudioMath.swift */; };
+		DB36D41181C95EF1477D0124 /* drone-binary-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = BDE2D791BE9176B95EC4D357 /* drone-binary-v1.json */; };
+		E11B9E7654F8EB5E703B476D /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D054E16785E20E6B5C1A06 /* KeychainStore.swift */; };
+		EA92A56D7CD733FCB62965CB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77330FC4C2BCDA427A76E42F /* Models.swift */; };
+		F64DBA0C89E8AA307D9F57C9 /* drone-classifier-crnn-v1.onnx in Resources */ = {isa = PBXBuildFile; fileRef = 40AD94D7C076E8551777142A /* drone-classifier-crnn-v1.onnx */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F0CB0E627CD4096A0D2D6B9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 94F20E6A1E0855BE227D9AE2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3E1995FF50E86133D097AC6;
+			remoteInfo = TaelDronesLab;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0AA05B4F157EEF360BB9F660 /* drone-classifier-crnn-v1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "drone-classifier-crnn-v1.json"; sourceTree = "<group>"; };
+		130609B582C839C8E944F334 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1C1D7B1DCACC0549CF511673 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		21465B719BD0F482AC3B0327 /* DetectionParityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionParityTests.swift; sourceTree = "<group>"; };
+		277921253B851D5E5097DA9B /* TaelDronesLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TaelDronesLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28D054E16785E20E6B5C1A06 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		2987379538EC22A5FFBECFBD /* drone-binary-v1.onnx */ = {isa = PBXFileReference; path = "drone-binary-v1.onnx"; sourceTree = "<group>"; };
+		3F91B152D778D34DA37FEA46 /* Pods-TaelDronesLab.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaelDronesLab.debug.xcconfig"; path = "Target Support Files/Pods-TaelDronesLab/Pods-TaelDronesLab.debug.xcconfig"; sourceTree = "<group>"; };
+		40AD94D7C076E8551777142A /* drone-classifier-crnn-v1.onnx */ = {isa = PBXFileReference; path = "drone-classifier-crnn-v1.onnx"; sourceTree = "<group>"; };
+		4199A755E6A0FB14C04ED760 /* DetectionPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionPipeline.swift; sourceTree = "<group>"; };
+		6005C319AD6A52490248C560 /* batear-fpv-5inch.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "batear-fpv-5inch.wav"; sourceTree = "<group>"; };
+		65EE2290B88F640D9C2C6C9C /* CRNNPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRNNPreprocessor.swift; sourceTree = "<group>"; };
+		6636417D65F15418EC2B0C0E /* DSPDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPDetector.swift; sourceTree = "<group>"; };
+		68F47E317157593625C37372 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		6CF0D0335DC3AEC0652AAA94 /* batear-mini-4-pro.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "batear-mini-4-pro.wav"; sourceTree = "<group>"; };
+		6FB76B7F0FE145E19C1BAEAA /* batear-rural-8s.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "batear-rural-8s.wav"; sourceTree = "<group>"; };
+		742419EA27E6246A0A131835 /* AudioMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMath.swift; sourceTree = "<group>"; };
+		7602E6A69355225F8173BD0F /* batear-mavic-pro.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "batear-mavic-pro.wav"; sourceTree = "<group>"; };
+		77330FC4C2BCDA427A76E42F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		8516EF19F4C0C5454A4B2E84 /* Pods_TaelDronesLabTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaelDronesLabTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		88B5D74BDCAFE11864A1B923 /* DetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionService.swift; sourceTree = "<group>"; };
+		8A35BB0293FB2CD4D69218E9 /* Pods-TaelDronesLab.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaelDronesLab.release.xcconfig"; path = "Target Support Files/Pods-TaelDronesLab/Pods-TaelDronesLab.release.xcconfig"; sourceTree = "<group>"; };
+		8B739C9B6E51D6E1A6764F4D /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
+		9752B3F2193723DB63FBBE8D /* DronesAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DronesAPIClient.swift; sourceTree = "<group>"; };
+		B092DF9B9B6B990546FC8B2B /* ONNXModelRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ONNXModelRunner.swift; sourceTree = "<group>"; };
+		BDE2D791BE9176B95EC4D357 /* drone-binary-v1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "drone-binary-v1.json"; sourceTree = "<group>"; };
+		CCDC643AAB4933C90EDED4D6 /* Pods_TaelDronesLab.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaelDronesLab.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFDA8C4C0DD0308CC3083622 /* TaelDronesLabTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TaelDronesLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE3BE9461E9AE9E9B3D1F3FE /* drone-classifier-crnn-v1.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "drone-classifier-crnn-v1.LICENSE.txt"; sourceTree = "<group>"; };
+		E52BD6642D27E1D6901D60B0 /* Pods-TaelDronesLabTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaelDronesLabTests.debug.xcconfig"; path = "Target Support Files/Pods-TaelDronesLabTests/Pods-TaelDronesLabTests.debug.xcconfig"; sourceTree = "<group>"; };
+		EA667ABAB93E3D34B8F72E00 /* Pods-TaelDronesLabTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaelDronesLabTests.release.xcconfig"; path = "Target Support Files/Pods-TaelDronesLabTests/Pods-TaelDronesLabTests.release.xcconfig"; sourceTree = "<group>"; };
+		EAB5625C02709E773096625E /* FeatureExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureExtractor.swift; sourceTree = "<group>"; };
+		F1D0A12349EDE09CC558FC78 /* TaelDronesLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaelDronesLabApp.swift; sourceTree = "<group>"; };
+		F53E61435C6A0276C9B07A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F14DED3B4882D308C86C2EF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D312EC86B463B72101DE2979 /* Pods_TaelDronesLab.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBCF76ED281A1A200838E21F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A75B02494C8E2C29BDDFE6 /* Pods_TaelDronesLabTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		122D2669E9A7E7232B47FFDF /* models */ = {
+			isa = PBXGroup;
+			children = (
+				BDE2D791BE9176B95EC4D357 /* drone-binary-v1.json */,
+				2987379538EC22A5FFBECFBD /* drone-binary-v1.onnx */,
+				0AA05B4F157EEF360BB9F660 /* drone-classifier-crnn-v1.json */,
+				DE3BE9461E9AE9E9B3D1F3FE /* drone-classifier-crnn-v1.LICENSE.txt */,
+				40AD94D7C076E8551777142A /* drone-classifier-crnn-v1.onnx */,
+			);
+			name = models;
+			path = ../../public/models;
+			sourceTree = "<group>";
+		};
+		181E48C22679DF1019C76A80 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CCDC643AAB4933C90EDED4D6 /* Pods_TaelDronesLab.framework */,
+				8516EF19F4C0C5454A4B2E84 /* Pods_TaelDronesLabTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2A183CBF2E3C0E7B51575CD3 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				88B5D74BDCAFE11864A1B923 /* DetectionService.swift */,
+				8B739C9B6E51D6E1A6764F4D /* LocationProvider.swift */,
+				1C1D7B1DCACC0549CF511673 /* SoundPlayer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		43ADC94215DC8027E93BFBF4 /* TaelDronesLabTests */ = {
+			isa = PBXGroup;
+			children = (
+				21465B719BD0F482AC3B0327 /* DetectionParityTests.swift */,
+			);
+			path = TaelDronesLabTests;
+			sourceTree = "<group>";
+		};
+		47F7213B592492ED4DEE67B2 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				6005C319AD6A52490248C560 /* batear-fpv-5inch.wav */,
+				7602E6A69355225F8173BD0F /* batear-mavic-pro.wav */,
+				6CF0D0335DC3AEC0652AAA94 /* batear-mini-4-pro.wav */,
+				6FB76B7F0FE145E19C1BAEAA /* batear-rural-8s.wav */,
+			);
+			name = audio;
+			path = ../../public/audio;
+			sourceTree = "<group>";
+		};
+		6E4D6A35ED5116BD82265161 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				68F47E317157593625C37372 /* AppState.swift */,
+				130609B582C839C8E944F334 /* ContentView.swift */,
+				F1D0A12349EDE09CC558FC78 /* TaelDronesLabApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		6E8B5CC82BF61C5660851CFE /* TaelDronesLab */ = {
+			isa = PBXGroup;
+			children = (
+				F53E61435C6A0276C9B07A7C /* Info.plist */,
+				6E4D6A35ED5116BD82265161 /* App */,
+				2A183CBF2E3C0E7B51575CD3 /* Audio */,
+				8A5C1E6FB9CF436A520F299D /* Detection */,
+				7D53C34BE08579C38A6E47AD /* Networking */,
+				E806A56FFAB9F3236CC149F2 /* Shared */,
+			);
+			path = TaelDronesLab;
+			sourceTree = "<group>";
+		};
+		7D53C34BE08579C38A6E47AD /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				9752B3F2193723DB63FBBE8D /* DronesAPIClient.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		8A5C1E6FB9CF436A520F299D /* Detection */ = {
+			isa = PBXGroup;
+			children = (
+				742419EA27E6246A0A131835 /* AudioMath.swift */,
+				65EE2290B88F640D9C2C6C9C /* CRNNPreprocessor.swift */,
+				4199A755E6A0FB14C04ED760 /* DetectionPipeline.swift */,
+				6636417D65F15418EC2B0C0E /* DSPDetector.swift */,
+				EAB5625C02709E773096625E /* FeatureExtractor.swift */,
+				B092DF9B9B6B990546FC8B2B /* ONNXModelRunner.swift */,
+			);
+			path = Detection;
+			sourceTree = "<group>";
+		};
+		9FA11686C1ABF24712173FC8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3F91B152D778D34DA37FEA46 /* Pods-TaelDronesLab.debug.xcconfig */,
+				8A35BB0293FB2CD4D69218E9 /* Pods-TaelDronesLab.release.xcconfig */,
+				E52BD6642D27E1D6901D60B0 /* Pods-TaelDronesLabTests.debug.xcconfig */,
+				EA667ABAB93E3D34B8F72E00 /* Pods-TaelDronesLabTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A9831A498950A95400D514A1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				277921253B851D5E5097DA9B /* TaelDronesLab.app */,
+				CFDA8C4C0DD0308CC3083622 /* TaelDronesLabTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E806A56FFAB9F3236CC149F2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				28D054E16785E20E6B5C1A06 /* KeychainStore.swift */,
+				77330FC4C2BCDA427A76E42F /* Models.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		F89A658611A8AC8CA1C78723 = {
+			isa = PBXGroup;
+			children = (
+				47F7213B592492ED4DEE67B2 /* audio */,
+				122D2669E9A7E7232B47FFDF /* models */,
+				6E8B5CC82BF61C5660851CFE /* TaelDronesLab */,
+				43ADC94215DC8027E93BFBF4 /* TaelDronesLabTests */,
+				A9831A498950A95400D514A1 /* Products */,
+				9FA11686C1ABF24712173FC8 /* Pods */,
+				181E48C22679DF1019C76A80 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9C8208A371E074BAF591E660 /* TaelDronesLabTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C4745D42050DC3BFAF6CB30 /* Build configuration list for PBXNativeTarget "TaelDronesLabTests" */;
+			buildPhases = (
+				8577F60F3159FD8640A3C14E /* [CP] Check Pods Manifest.lock */,
+				2C731FF1D73DCB85FA98D181 /* Sources */,
+				FBCF76ED281A1A200838E21F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19CF7F08978E69CBA441D3F6 /* PBXTargetDependency */,
+			);
+			name = TaelDronesLabTests;
+			productName = TaelDronesLabTests;
+			productReference = CFDA8C4C0DD0308CC3083622 /* TaelDronesLabTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A3E1995FF50E86133D097AC6 /* TaelDronesLab */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 738ED95D3AD3BE2A87428D44 /* Build configuration list for PBXNativeTarget "TaelDronesLab" */;
+			buildPhases = (
+				F30E9C461D874ECD603BD0CE /* [CP] Check Pods Manifest.lock */,
+				C0B3F3867B95125DD58EF8C5 /* Sources */,
+				37A25B535B1D4B4DA12AB635 /* Resources */,
+				F14DED3B4882D308C86C2EF9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TaelDronesLab;
+			productName = TaelDronesLab;
+			productReference = 277921253B851D5E5097DA9B /* TaelDronesLab.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		94F20E6A1E0855BE227D9AE2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					9C8208A371E074BAF591E660 = {
+						DevelopmentTeam = K6GVLS864D;
+					};
+					A3E1995FF50E86133D097AC6 = {
+						DevelopmentTeam = K6GVLS864D;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0775C7F466CCB8FECEB54B55 /* Build configuration list for PBXProject "TaelDronesLab" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F89A658611A8AC8CA1C78723;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A9831A498950A95400D514A1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A3E1995FF50E86133D097AC6 /* TaelDronesLab */,
+				9C8208A371E074BAF591E660 /* TaelDronesLabTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		37A25B535B1D4B4DA12AB635 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6DCCD5B546DAE9DB79CDB7F /* batear-fpv-5inch.wav in Resources */,
+				56EA4CC17E176A346395F3D6 /* batear-mavic-pro.wav in Resources */,
+				14CEB3A4B1DC7712F61EA1F0 /* batear-mini-4-pro.wav in Resources */,
+				8E62424818D0B5FA0A835AC0 /* batear-rural-8s.wav in Resources */,
+				DB36D41181C95EF1477D0124 /* drone-binary-v1.json in Resources */,
+				605FBCC68AEF50D110080CFD /* drone-binary-v1.onnx in Resources */,
+				2AEF32D68BA5974D5F5DA2C3 /* drone-classifier-crnn-v1.LICENSE.txt in Resources */,
+				8F8C9944D38151CB258079AB /* drone-classifier-crnn-v1.json in Resources */,
+				F64DBA0C89E8AA307D9F57C9 /* drone-classifier-crnn-v1.onnx in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8577F60F3159FD8640A3C14E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TaelDronesLabTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F30E9C461D874ECD603BD0CE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TaelDronesLab-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C731FF1D73DCB85FA98D181 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				859BB0ECEA492F1CDAC48FCA /* DetectionParityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0B3F3867B95125DD58EF8C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A29A54F5A79265C720075B4 /* AppState.swift in Sources */,
+				DAC1829F007F660DAF25E246 /* AudioMath.swift in Sources */,
+				020C19EE86E5D6EBF4D4C946 /* CRNNPreprocessor.swift in Sources */,
+				76E79C1B7E2E5412E47236D1 /* ContentView.swift in Sources */,
+				201F6E0ED1FCCC9F853AF796 /* DSPDetector.swift in Sources */,
+				85752E156A5C1FE775C40D99 /* DetectionPipeline.swift in Sources */,
+				23388327BA8FAE6655AE2F81 /* DetectionService.swift in Sources */,
+				4057532FF6CE76DB4040F862 /* DronesAPIClient.swift in Sources */,
+				BBF945357B597F80646807E4 /* FeatureExtractor.swift in Sources */,
+				E11B9E7654F8EB5E703B476D /* KeychainStore.swift in Sources */,
+				9A6119E9C152DF221E284532 /* LocationProvider.swift in Sources */,
+				EA92A56D7CD733FCB62965CB /* Models.swift in Sources */,
+				76E5B592FC3A728725DAC887 /* ONNXModelRunner.swift in Sources */,
+				80E3596E5F97FF872137BFA3 /* SoundPlayer.swift in Sources */,
+				6AA02D289EF7F1EBC3B466DE /* TaelDronesLabApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		19CF7F08978E69CBA441D3F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3E1995FF50E86133D097AC6 /* TaelDronesLab */;
+			targetProxy = F0CB0E627CD4096A0D2D6B9F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1F38656CE03963CB27743A9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E52BD6642D27E1D6901D60B0 /* Pods-TaelDronesLabTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = se.tael.drones.mobile.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TaelDronesLab.app/TaelDronesLab";
+			};
+			name = Debug;
+		};
+		7361CBA6AB50BDB307961AB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = K6GVLS864D;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		BED33D49F22F46528A0775A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = K6GVLS864D;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CEF9562CFF00F6E9F6A4E4D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA667ABAB93E3D34B8F72E00 /* Pods-TaelDronesLabTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = se.tael.drones.mobile.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TaelDronesLab.app/TaelDronesLab";
+			};
+			name = Release;
+		};
+		CF5E83703AF2401595F36C26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A35BB0293FB2CD4D69218E9 /* Pods-TaelDronesLab.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TaelDronesLab/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = se.tael.drones.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		E9AC8B6AD67BE66B61CEED97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3F91B152D778D34DA37FEA46 /* Pods-TaelDronesLab.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TaelDronesLab/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = se.tael.drones.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0775C7F466CCB8FECEB54B55 /* Build configuration list for PBXProject "TaelDronesLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BED33D49F22F46528A0775A4 /* Debug */,
+				7361CBA6AB50BDB307961AB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		738ED95D3AD3BE2A87428D44 /* Build configuration list for PBXNativeTarget "TaelDronesLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9AC8B6AD67BE66B61CEED97 /* Debug */,
+				CF5E83703AF2401595F36C26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7C4745D42050DC3BFAF6CB30 /* Build configuration list for PBXNativeTarget "TaelDronesLabTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F38656CE03963CB27743A9A /* Debug */,
+				CEF9562CFF00F6E9F6A4E4D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 94F20E6A1E0855BE227D9AE2 /* Project object */;
+}

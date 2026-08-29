@@ -1,39 +1,74 @@
 name: tael-drones-dev
 
 services:
+  postgres:
+    image: docker.io/library/postgres:17-bookworm@sha256:84560e3b9c6874893fc4e2854f5dc3e7c1a37bc9d1dfd7a8c641310ae22ba5ad
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-drones}
+      POSTGRES_USER: ${POSTGRES_USER:-drones}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-drones-local-password}
+      POSTGRES_INITDB_ARGS: --data-checksums --auth-host=scram-sha-256
+    command: ["postgres", "-c", "password_encryption=scram-sha-256", "-c", "max_connections=30"]
+    volumes: ["drones-postgres-data:/var/lib/postgresql/data"]
+    networks: [drones]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    logging:
+      options: { max-size: 10m, max-file: "3" }
+
+  migrate:
+    profiles: [operations]
+    image: ${DRONES_RUNTIME_IMAGE:-tael-drones-dev:latest}
+    build: { context: . }
+    command: ["node", "dist/server/migrate.js"]
+    environment: &drones-environment
+      DATABASE_URL: ${DATABASE_URL:-postgresql://drones:drones-local-password@postgres:5432/drones}
+      DRONES_SETUP_CODE: ${DRONES_SETUP_CODE:-drones-local-setup}
+      DRONES_TOKEN_PEPPER: ${DRONES_TOKEN_PEPPER:-drones-local-token-pepper-at-least-32-characters}
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [drones]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
   drones:
     image: ${DRONES_RUNTIME_IMAGE:-tael-drones-dev:latest}
-    build:
-      context: .
+    build: { context: . }
     restart: unless-stopped
-    networks:
-      - drones
-      - platform
+    environment: *drones-environment
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [drones, platform]
     read_only: true
-    tmpfs:
-      - /tmp:uid=65532,gid=65532,mode=0700
-    mem_limit: 96m
-    mem_reservation: 24m
-    cpus: "0.25"
-    pids_limit: 50
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
+    tmpfs: ["/tmp:uid=65532,gid=65532,mode=0700"]
+    mem_limit: 192m
+    mem_reservation: 48m
+    cpus: "0.50"
+    pids_limit: 80
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8080/health/ready"]
       interval: 1s
       timeout: 1s
-      retries: 15
-      start_period: 1s
+      retries: 30
+      start_period: 2s
     logging:
-      options:
-        max-size: 10m
-        max-file: "3"
+      options: { max-size: 10m, max-file: "3" }
 
 networks:
-  drones:
-    internal: true
+  drones: { internal: true }
   platform:
     external: true
     name: tael-platform-dev_edge
+
+volumes:
+  drones-postgres-data:

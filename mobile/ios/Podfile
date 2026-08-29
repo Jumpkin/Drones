@@ -1,0 +1,11 @@
+platform :ios, '16.0'
+
+use_frameworks! :linkage => :static
+
+target 'TaelDronesLab' do
+  pod 'onnxruntime-objc', '1.29.0'
+
+  target 'TaelDronesLabTests' do
+    inherit! :search_paths
+  end
+end

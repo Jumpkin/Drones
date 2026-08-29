@@ -53,4 +53,29 @@ final class DetectionParityTests: XCTestCase {
         XCTAssertEqual(Set(output.results.map(\.detectorId)), Set(DetectorID.allCases))
         XCTAssertTrue(output.results.allSatisfy { $0.probability.isFinite && (0...1).contains($0.probability) })
     }
+
+    func testCalibrationPlaybackMetadataDecodesFromAPI() throws {
+        let json = """
+        {
+          "id":"11111111-1111-4111-8111-111111111111",
+          "source_device_id":"22222222-2222-4222-8222-222222222222",
+          "sound_id":"synth-traffic",
+          "expected_label":"background",
+          "scheduled_at":"2026-08-29T12:00:00.000Z",
+          "duration_ms":4000,
+          "source_kind":"computer",
+          "distance_m":3,
+          "volume_percent":50,
+          "environment":"traffic",
+          "created_at":"2026-08-29T11:59:57.000Z"
+        }
+        """
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let playback = try decoder.decode(SessionPlayback.self, from: Data(json.utf8))
+        XCTAssertEqual(playback.sourceKind, "computer")
+        XCTAssertEqual(playback.distanceM, 3)
+        XCTAssertEqual(playback.volumePercent, 50)
+        XCTAssertEqual(playback.environment, "traffic")
+    }
 }

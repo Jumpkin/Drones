@@ -48,9 +48,17 @@ visible if a report cannot be loaded.
 
 Version 0.7 adds the native iOS hardware-in-the-loop client, metadata-only
 Fastify API, six-character Source/Listener sessions, all-three-detector local
-inference, offline retry, per-device capabilities, optional test GPS, and a
+inference, offline retry, anonymous device identifiers, optional test GPS, and a
 private PostgreSQL schema. See [`mobile/ios/README.md`](mobile/ios/README.md)
 for Xcode installation.
+
+The guided calibration flow uses the Sound lab on a computer as a labelled
+Source and the native iPhone app as a Listener. Create a session on the
+computer, join its code on the phone, enter the measured speaker-to-phone
+distance, web-player gain, and environment, then schedule the selected sample.
+The Sound lab, Statistics view, and iPhone Session tab compare all three models
+and their 2-of-3 consensus from the same server-side counts. Web gain is not
+calibrated sound pressure, and the result is not an outdoor detection range.
 
 ## Run locally
 

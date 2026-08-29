@@ -1,5 +1,8 @@
 export type SessionRole = "source" | "listener";
 export type ExpectedLabel = "drone" | "background";
+export type DevicePlatform = "ios" | "web";
+export type PlaybackSourceKind = "phone" | "computer";
+export type PlaybackEnvironment = "unspecified" | "quiet-room" | "traffic" | "wind" | "other";
 export type DetectorId = "dsp-v1" | "ml-onnx-v1" | "crnn-pretrained-v1";
 
 export interface DetectorObservation {

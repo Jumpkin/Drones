@@ -112,6 +112,15 @@ computer, capture them on a phone over HTTPS, and measure recall, false-alarm
 rate, and inference latency. Laptop playback validates the capture and
 classification path, not real drone range or sound pressure.
 
+The guided hardware calibration flow makes the web Sound lab the labelled
+computer Source and the native iOS app a Listener. The computer creates a
+six-character session, schedules the selected real or generated positive or
+negative fixture, and records manually measured speaker-to-phone distance,
+web-player gain, and environment. Player gain is not calibrated SPL. The live
+results and Statistics view compare all three detectors and the 2-of-3
+consensus using integer inference-window counts, TP/FP/TN/FN, recall,
+false-positive rate, F1, average probability, and inference latency.
+
 Multiple simultaneous drones are deliberately outside the current simulator
 contract. They require source-separation and track-association metrics rather
 than reusing a single-drone confidence value for several aircraft.
@@ -139,6 +148,12 @@ scheduled test so the app can derive TP, FP, TN, FN, recall, false-positive
 rate, precision, and F1 overall, by listener, and by playback. Outside a test
 session only positive consensus events are retained.
 
+When an iPhone joins a computer-created session as Listener, listening starts
+automatically. The Session tab shows the physical calibration metadata and
+live per-model comparison. The web source also includes deterministic traffic,
+wind, motor-hum, and general-background negative controls so false alarms can
+be measured alongside the Batear rural recording.
+
 The app requests precise foreground location for test metadata. Denying the
 permission does not stop acoustic detection; the event then has no location.
 It persists an idempotent metadata queue across network failures and batches at
@@ -156,8 +171,9 @@ session create/join/close, scheduled playback, idempotent observation batches,
 and session results. It limits JSON requests to 64 KB, validates every field,
 rate-limits requests, and explicitly rejects audio-shaped payload keys.
 
-PostgreSQL 17 stores devices, memberships, sessions, playbacks and observation
-metadata on a private network with no host port. Schema migration is an
+PostgreSQL 17 stores iOS/web test devices, memberships, sessions, calibrated
+playback metadata and observation metadata on a private network with no host
+port. Schema migration is an
 explicit `workflow_dispatch` operation separate from ordinary image deployment;
 selecting `migrate` runs the restricted migration command without switching the
 application image. This owner-device

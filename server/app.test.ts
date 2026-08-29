@@ -46,10 +46,13 @@ describe("Drones API", () => {
       returns: DataType.text,
       implementation: (value: unknown) => Array.isArray(value) ? "array" : typeof value,
     });
-    for (const migration of ["001_initial.sql", "002_remove_device_capabilities.sql"]) {
+    const migrations = ["001_initial.sql", "002_remove_device_capabilities.sql", "003_hardware_calibration.sql"];
+    for (const migration of migrations) {
       const migrationUrl = new URL(`./migrations/${migration}`, import.meta.url);
       memory.public.none(await readFile(fileURLToPath(migrationUrl), "utf8"));
     }
+    const latestMigration = new URL("./migrations/003_hardware_calibration.sql", import.meta.url);
+    memory.public.none(await readFile(fileURLToPath(latestMigration), "utf8"));
     const adapter = memory.adapters.createPg();
     const pool = new adapter.Pool();
     database = pool as unknown as Database;
@@ -85,6 +88,52 @@ describe("Drones API", () => {
     });
     expect(unknownId.statusCode).toBe(404);
     expect(unknownId.json()).toEqual({ error: "device_not_found" });
+  });
+
+  it("registers a browser coordinator and retains calibration metadata", async () => {
+    const coordinatorResponse = await app!.inject({
+      method: "POST",
+      url: "/api/drones/v1/devices/enroll",
+      payload: { label: "Laptop coordinator", appVersion: "web", platform: "web" },
+    });
+    expect(coordinatorResponse.statusCode).toBe(201);
+    const coordinator = coordinatorResponse.json() as { device: { id: string; platform: string } };
+    expect(coordinator.device.platform).toBe("web");
+
+    const listener = await enroll("Listener");
+    const created = await app!.inject({
+      method: "POST", url: "/api/drones/v1/sessions",
+      headers: { "x-drones-device-id": coordinator.device.id }, payload: { role: "source" },
+    });
+    const session = (created.json() as { session: { id: string; code: string } }).session;
+    await app!.inject({
+      method: "POST", url: "/api/drones/v1/sessions/join",
+      headers: { "x-drones-device-id": listener.body.device.id },
+      payload: { code: session.code, role: "listener" },
+    });
+    const scheduledAt = new Date(Date.now() + 3_000).toISOString();
+    const playbackResponse = await app!.inject({
+      method: "POST", url: `/api/drones/v1/sessions/${session.id}/playbacks`,
+      headers: { "x-drones-device-id": coordinator.device.id },
+      payload: {
+        soundId: "synth-traffic", expectedLabel: "background", scheduledAt, durationMs: 4_000,
+        sourceKind: "computer", distanceM: 3, volumePercent: 50, environment: "traffic",
+      },
+    });
+    expect(playbackResponse.statusCode, playbackResponse.body).toBe(201);
+    const playback = playbackResponse.json() as { playback: Record<string, unknown> };
+    expect(playback.playback).toMatchObject({
+      source_kind: "computer", distance_m: 3, volume_percent: 50, environment: "traffic",
+    });
+
+    const snapshotResponse = await app!.inject({
+      method: "GET", url: `/api/drones/v1/sessions/${session.id}`,
+      headers: { "x-drones-device-id": coordinator.device.id },
+    });
+    const snapshot = (snapshotResponse.json() as { session: { playbacks: Array<Record<string, unknown>> } }).session;
+    expect(snapshot.playbacks[0]).toMatchObject({
+      source_kind: "computer", distance_m: 3, volume_percent: 50, environment: "traffic",
+    });
   });
 
   it("serves the built web shell and SPA fallback without duplicate routes", async () => {
@@ -189,7 +238,9 @@ describe("Drones API", () => {
       playbackMetrics: Array<Record<string, number | string>>;
     } }).session;
     const metrics = snapshot.metrics;
-    expect(metrics.find((metric) => metric.detectorId === "dsp-v1")).toMatchObject({ tests: 1, tp: 1 });
+    expect(metrics.find((metric) => metric.detectorId === "dsp-v1")).toMatchObject({
+      tests: 1, tp: 1, averageProbability: 0.9, averageLatencyMs: 12,
+    });
     expect(metrics.find((metric) => metric.detectorId === "crnn-pretrained-v1")).toMatchObject({ tests: 1, fn: 1 });
     expect(metrics.find((metric) => metric.detectorId === "consensus-2-of-3")).toMatchObject({ tests: 1, tp: 1 });
     expect(snapshot.listenerMetrics.find((metric) => metric.detectorId === "consensus-2-of-3"))

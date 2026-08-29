@@ -21,6 +21,9 @@ and must not be interpreted as field-validated range.
   clock jitter. It also includes a synthetic playback-to-phone robustness proxy
   covering speaker coloration, distance, room echo, background sound, and three
   representative phone audio chains.
+- **About** documents the browser architecture, detector and localization
+  pipelines, reproducible simulation method, limitations, licenses, and direct
+  links to the repositories, models, and datasets used by the project.
 
 Version 0.2 added a shared detector interface and compares the transparent FFT
 baseline with a tiny ONNX feature-convolution classifier. The ML detector is
@@ -37,6 +40,11 @@ Version 0.5 adds [Antoine Naccache's external pretrained CRNN](https://huggingfa
 non-default detector. Its pinned MIT-licensed PyTorch checkpoint is converted
 to ONNX and compared against the DSP and project-trained feature model on the
 same inputs. Upstream metrics are not treated as Drones validation results.
+
+Version 0.6 adds the technical About view. Its benchmark snapshot is derived
+from the same committed JSON reports as Statistics, so seeds and test counts do
+not drift into duplicated prose. Static methodology and provenance remain
+visible if a report cannot be loaded.
 
 ## Run locally
 

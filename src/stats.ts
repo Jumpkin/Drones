@@ -65,6 +65,8 @@ export interface HeadlessReport {
   generatedAt: string;
   seed: number;
   configuration: {
+    sampleRate: number;
+    clipDurationS: number;
     trialsPerDroneCondition: number;
     localizationTrialsPerJitterLevel: number;
     phoneTrialsPerProfile?: number;

@@ -9,6 +9,7 @@ const userFacingSources = [
   "src/microphone.ts",
   "src/audio.ts",
   "src/detector.ts",
+  "src/about.ts",
   "src/detectors/dsp-adapter.ts",
   "src/detectors/ml-adapter.ts",
   "src/events.ts",

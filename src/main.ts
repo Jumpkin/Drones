@@ -1,5 +1,10 @@
 import "./styles.css";
 import {
+  ABOUT_SOURCES,
+  createAboutSnapshot,
+  type AboutSourceGroup,
+} from "./about";
+import {
   generateAmbientPcm,
   generateDronePcm,
   loadMonoPcm,
@@ -71,6 +76,7 @@ app.innerHTML = `
       <button class="view-tab" data-view="soundLab" type="button" aria-pressed="false">Sound lab</button>
       <button class="view-tab" data-view="experiment" type="button" aria-pressed="false">Multi-phone test</button>
       <button class="view-tab" data-view="statistics" type="button" aria-pressed="false">Statistics</button>
+      <button class="view-tab" data-view="about" type="button" aria-pressed="false">About</button>
     </nav>
     <div class="model-notice">
       <span class="notice-dot"></span>
@@ -573,6 +579,111 @@ app.innerHTML = `
         <strong>How to read the statistics</strong>
         <ul id="statisticsCaveats"></ul>
       </div>
+    </div>
+  </section>
+
+  <section id="aboutView" class="app-view lab-view about-view" hidden>
+    <div class="lab-page-heading about-heading">
+      <div><p class="eyebrow">Technical project record</p><h2>How the Acoustic Sensor Lab works</h2></div>
+      <p>A browser research environment for passive acoustic drone detection and 2D localization. It is an educational prototype, not an operational detection or countermeasure system.</p>
+    </div>
+
+    <div class="about-layout">
+      <section class="lab-card about-intro">
+        <div>
+          <p class="section-kicker">What has been built</p>
+          <h3>Detection, controlled playback, and reproducible comparison</h3>
+          <p>The lab separates binary drone detection from coarse type attribution. Audio is decoded or captured locally, converted to mono PCM, analyzed in the browser, and discarded after the result is produced. No microphone audio is uploaded or retained.</p>
+        </div>
+        <div class="about-status"><span class="notice-dot"></span><strong>Research prototype</strong><small>Simulated range · no field certification</small></div>
+      </section>
+
+      <section class="about-flow-grid" aria-label="Technical data flows">
+        <article class="lab-card about-flow-card">
+          <p class="section-kicker">Detection flow</p>
+          <ol class="about-flow">
+            <li><strong>Audio source</strong><span>Recording, generated signature, or phone microphone</span></li>
+            <li><strong>16 kHz mono PCM</strong><span>Decoded and resampled locally</span></li>
+            <li><strong>Detector</strong><span>FFT/DSP, Feature Conv ONNX, or pretrained CRNN</span></li>
+            <li><strong>Temporal decision</strong><span>Overlapping windows and positive-window voting</span></li>
+            <li><strong>Event and metrics</strong><span>Confidence, binary outcome, and optional DSP type estimate</span></li>
+          </ol>
+        </article>
+        <article class="lab-card about-flow-card">
+          <p class="section-kicker">Localization flow</p>
+          <ol class="about-flow">
+            <li><strong>Three recordings</strong><span>Known listener positions and simulated clock errors</span></li>
+            <li><strong>Clock correction</strong><span>Offset and drift removed before comparison</span></li>
+            <li><strong>Delay estimation</strong><span>Normalized cross-correlation estimates relative arrival delay</span></li>
+            <li><strong>2D TDOA search</strong><span>Coarse-to-fine grid minimizes timing residual</span></li>
+            <li><strong>Position and bearing</strong><span>Altitude remains unknown with coplanar listeners</span></li>
+          </ol>
+        </article>
+      </section>
+
+      <section class="lab-card about-snapshot-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Current report</p><h3>Reproducible benchmark snapshot</h3></div><span id="aboutReportStatus" class="data-badge">LOADING</span></div>
+        <div class="about-snapshot-grid">
+          <article><span>Generated</span><strong id="aboutGenerated">—</strong></article>
+          <article><span>Random seed</span><strong id="aboutSeed">—</strong></article>
+          <article><span>Synthetic tests</span><strong id="aboutSyntheticTests">—</strong></article>
+          <article><span>Phone proxy tests</span><strong id="aboutPhoneTests">—</strong></article>
+          <article><span>Benchmark runs</span><strong id="aboutBenchmarkRuns">—</strong></article>
+          <article><span>Localization trials</span><strong id="aboutLocalizationTrials">—</strong></article>
+        </div>
+        <p id="aboutRecommendation" class="benchmark-recommendation">Loading the committed report…</p>
+        <p class="about-report-links"><a href="/reports/headless/summary.json">Open simulation report</a><a href="/reports/headless/benchmark-runs.json">Open benchmark registry</a></p>
+      </section>
+
+      <div class="about-details-grid">
+        <details class="lab-card about-detail" open>
+          <summary>Detectors and classification</summary>
+          <div>
+            <p><strong>FFT / harmonic DSP</strong> uses Hann-windowed FFT frames, a robust spectral noise floor, harmonic prominence, frequency stability, and consecutive positive frames. Its coarse drone type is estimated from rotor blade-pass frequency, harmonic balance, and spectral centroid.</p>
+            <p><strong>Feature Conv ML</strong> is a small project-trained binary ONNX classifier using 16 spectral and temporal features. Its training and main benchmark share the same synthetic generator family, so the result measures in-domain regression rather than field generalization.</p>
+            <p><strong>Pretrained CRNN</strong> uses overlapping one-second log-mel windows and a three-of-five temporal decision. The pinned upstream PyTorch checkpoint was checksum-verified, converted to ONNX, and checked for numerical parity. YAMNet and Samid AST are local comparison paths only and are not bundled into the website.</p>
+            <p>Learned detectors make a binary decision. Drone type shown for those detections is currently attributed by the DSP classifier and is not a separate learned type model.</p>
+          </div>
+        </details>
+
+        <details class="lab-card about-detail" open>
+          <summary>How the simulation works</summary>
+          <div>
+            <p id="aboutMethodSummary">The deterministic report is loading…</p>
+            <p>Synthetic rotor and harmonic signals are varied by drone profile and RPM, attenuated with a simplified free-field <code>1/r</code> model, and mixed with quiet, urban, or loud structured backgrounds. The reference gain is an engineering assumption, not calibrated sound-pressure data.</p>
+            <p>The playback-to-phone proxy adds speaker and microphone bandwidth, nonlinear drive, room echo, playback distance, background sound, and microphone self-noise across three assumed phone chains and four rooms. It is a digital stress test, not a measurement from physical phones.</p>
+            <p>Localization trials add residual timing jitter after idealized clock correction, then compare calibrated time differences against predicted travel times using 343 m/s as the speed of sound. Reverberation and multipath are not modeled.</p>
+          </div>
+        </details>
+
+        <details class="lab-card about-detail">
+          <summary>How to read the metrics</summary>
+          <div class="about-definition-grid">
+            <p><strong>Recall</strong><span>Share of drone cases detected: TP / (TP + FN).</span></p>
+            <p><strong>False-alarm rate</strong><span>Share of background cases incorrectly flagged: FP / (FP + TN).</span></p>
+            <p><strong>Precision</strong><span>Share of drone alerts that were correct: TP / (TP + FP).</span></p>
+            <p><strong>F1</strong><span>Harmonic mean of precision and recall; useful only within the same test corpus.</span></p>
+          </div>
+        </details>
+
+        <details class="lab-card about-detail">
+          <summary>Limitations and privacy</summary>
+          <ul class="about-list">
+            <li>Synthetic distance results do not establish real microphone range.</li>
+            <li>Source-domain compatibility runs overlap imported model training distributions and are not independent validation.</li>
+            <li>The Batear fixture comparison contains only three drone files and one background file.</li>
+            <li>Three coplanar phones provide a 2D estimate; they cannot determine altitude.</li>
+            <li>Multiple simultaneous drones, source separation, track association, reverberation, and multipath are not implemented.</li>
+            <li>Microphone PCM stays in the active browser tab and is discarded after analysis.</li>
+          </ul>
+        </details>
+      </div>
+
+      <section class="lab-card about-sources-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Provenance</p><h3>Research, repositories, models, and datasets</h3></div><span class="data-badge">DIRECT LINKS</span></div>
+        <p class="about-source-note">Entries are grouped by how this project uses them. Public visibility does not by itself grant reuse rights. The Batear audio dataset is used; Batear firmware code is not imported.</p>
+        <div id="aboutSources" class="about-source-groups"></div>
+      </section>
     </div>
   </section>
 `;
@@ -1095,13 +1206,14 @@ function animate(timestamp: number): void {
   requestAnimationFrame(animate);
 }
 
-type AppViewId = "simulator" | "soundLab" | "experiment" | "statistics";
+type AppViewId = "simulator" | "soundLab" | "experiment" | "statistics" | "about";
 
 const viewElements: Record<AppViewId, HTMLElement> = {
   simulator: requiredElement("#simulatorView"),
   soundLab: requiredElement("#soundLabView"),
   experiment: requiredElement("#experimentView"),
   statistics: requiredElement("#statisticsView"),
+  about: requiredElement("#aboutView"),
 };
 
 function selectView(view: AppViewId): void {
@@ -1116,7 +1228,7 @@ function selectView(view: AppViewId): void {
   if (view === "simulator") renderAll();
   if (view === "soundLab") drawLabSpectrum();
   if (view === "experiment") drawExperiment();
-  if (view === "statistics") void loadStatistics();
+  if (view === "statistics" || view === "about") void loadReports();
 }
 
 document.querySelectorAll<HTMLButtonElement>(".view-tab").forEach((button) => {
@@ -1131,7 +1243,7 @@ const statisticsColors: Record<DroneProfileId, string> = {
 };
 let statisticsReport: HeadlessReport | undefined;
 let benchmarkRunReport: BenchmarkRunReport | undefined;
-let statisticsPromise: Promise<void> | undefined;
+let reportsPromise: Promise<void> | undefined;
 
 function percent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
@@ -1362,12 +1474,57 @@ function renderStatistics(): void {
   drawDetectorCurve();
 }
 
-async function loadStatistics(): Promise<void> {
-  if (statisticsReport) {
-    renderStatistics();
+const aboutGroupLabels: Record<AboutSourceGroup, string> = {
+  shipped: "Shipped or directly used",
+  local: "Optional local comparisons",
+  data: "Evaluation and training-source data",
+};
+
+function renderAboutSources(): void {
+  const groups = Object.entries(aboutGroupLabels) as Array<[AboutSourceGroup, string]>;
+  requiredElement("#aboutSources").innerHTML = groups.map(([group, label]) => {
+    const rows = ABOUT_SOURCES.filter((source) => source.group === group).map((source) => `
+      <article class="about-source-row">
+        <div><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.name)} <span aria-hidden="true">↗</span></a><p>${escapeHtml(source.relationship)}</p></div>
+        <small>${escapeHtml(source.license)}</small>
+      </article>
+    `).join("");
+    return `<section><h4>${escapeHtml(label)}</h4>${rows}</section>`;
+  }).join("");
+}
+
+function renderAbout(): void {
+  if (!statisticsReport || !benchmarkRunReport) return;
+  const snapshot = createAboutSnapshot(statisticsReport, benchmarkRunReport);
+  setText("#aboutGenerated", new Date(snapshot.generatedAt).toLocaleString("en-GB"));
+  setText("#aboutSeed", String(snapshot.seed));
+  setText("#aboutSyntheticTests", snapshot.syntheticTests.toLocaleString("en-GB"));
+  setText("#aboutPhoneTests", snapshot.phoneProxyTests.toLocaleString("en-GB"));
+  setText("#aboutBenchmarkRuns", String(snapshot.benchmarkRuns));
+  setText(
+    "#aboutLocalizationTrials",
+    `${snapshot.localizationTrials.toLocaleString("en-GB")} across ${snapshot.localizationJitterLevels} jitter levels`,
+  );
+  setText("#aboutRecommendation", snapshot.recommendation);
+  setText(
+    "#aboutMethodSummary",
+    `The current deterministic run uses seed ${snapshot.seed}, ${snapshot.sampleRate.toLocaleString("en-GB")} Hz mono audio, and ${snapshot.clipDurationS}-second clips. It evaluates four generated drone profiles at five assumed distances in three noise environments, alongside structured background cases.`,
+  );
+  setText("#aboutReportStatus", "REPORT LOADED");
+  requiredElement("#aboutReportStatus").dataset.status = "loaded";
+}
+
+function renderReportConsumers(): void {
+  renderAbout();
+  if (!viewElements.statistics.hidden) renderStatistics();
+}
+
+async function loadReports(): Promise<void> {
+  if (statisticsReport && benchmarkRunReport) {
+    renderReportConsumers();
     return;
   }
-  statisticsPromise ??= (async () => {
+  reportsPromise ??= (async () => {
     const loading = requiredElement("#statisticsLoading");
     try {
       const [response, benchmarkResponse] = await Promise.all([
@@ -1382,13 +1539,17 @@ async function loadStatistics(): Promise<void> {
       if (defaultModel) requiredElement<HTMLSelectElement>("#statisticsDetector").value = defaultModel.id;
       loading.hidden = true;
       requiredElement("#statisticsContent").hidden = false;
-      renderStatistics();
+      renderReportConsumers();
     } catch (error) {
       loading.textContent = `The report could not be loaded (${String(error)}). Run npm run simulate.`;
-      statisticsPromise = undefined;
+      setText("#aboutReportStatus", "REPORT UNAVAILABLE");
+      requiredElement("#aboutReportStatus").dataset.status = "error";
+      setText("#aboutRecommendation", "The committed benchmark report could not be loaded. Static methodology and source documentation remain available.");
+      setText("#aboutMethodSummary", "Report-specific parameters are unavailable. Run npm run simulate to rebuild the deterministic report.");
+      reportsPromise = undefined;
     }
   })();
-  await statisticsPromise;
+  await reportsPromise;
 }
 
 requiredElement<HTMLSelectElement>("#statisticsDetector").addEventListener("change", renderStatistics);
@@ -1400,6 +1561,8 @@ window.addEventListener("resize", () => {
   if (!viewElements.experiment.hidden) drawExperiment();
   if (!viewElements.statistics.hidden && statisticsReport) renderStatistics();
 });
+
+renderAboutSources();
 
 const labSampleSelect = requiredElement<HTMLSelectElement>("#labSampleSelect");
 for (const sample of AUDIO_SAMPLES) {

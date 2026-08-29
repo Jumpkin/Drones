@@ -62,6 +62,7 @@ jobs:
           container_id="$(docker compose ps --quiet drones)"
           docker compose exec -T drones wget --quiet -O - http://127.0.0.1:8080/ | grep --quiet 'Drones · Acoustic Sensor Lab'
           docker compose exec -T drones wget --quiet --spider http://127.0.0.1:8080/health/ready
+          docker compose exec -T drones sh -c 'test ! -e /usr/local/bin/npm'
           test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = '65532:65532'
           test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' "$container_id")" = 'true'
           docker inspect --format '{{json .HostConfig.CapDrop}}' "$container_id" | grep --quiet 'ALL'

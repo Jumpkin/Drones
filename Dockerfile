@@ -12,6 +12,8 @@ ENV NODE_ENV=production \
     HOST=0.0.0.0 \
     PORT=8080 \
     STATIC_DIR=/app/web
+RUN rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx
 WORKDIR /app
 COPY --from=build /src/package.json /src/package-lock.json ./
 COPY --from=build /src/node_modules ./node_modules

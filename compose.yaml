@@ -30,8 +30,6 @@ services:
     command: ["node", "dist/server/migrate.js"]
     environment: &drones-environment
       DATABASE_URL: ${DATABASE_URL:-postgresql://drones:drones-local-password@postgres:5432/drones}
-      DRONES_SETUP_CODE: ${DRONES_SETUP_CODE:-drones-local-setup}
-      DRONES_TOKEN_PEPPER: ${DRONES_TOKEN_PEPPER:-drones-local-token-pepper-at-least-32-characters}
     depends_on:
       postgres: { condition: service_healthy }
     networks: [drones]

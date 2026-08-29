@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import * as ort from "onnxruntime-web";
 import {
   BENCHMARK_ENVIRONMENTS,
   HARD_NEGATIVE_KINDS,
@@ -13,6 +14,16 @@ import {
 } from "../src/benchmark-audio";
 import { generateDronePcm } from "../src/audio";
 import { analyzePcm } from "../src/detector";
+import {
+  CRNN_MEL_BINS,
+  CRNN_TIME_FRAMES,
+  aggregateCrnnProbabilities,
+  combineCrnnFeatures,
+  crnnWindows,
+  parsePretrainedCrnnArtifact,
+  type PretrainedCrnnArtifact,
+} from "../src/crnn/model";
+import type { DetectorId } from "../src/detectors/types";
 import {
   analyzeWithArtifact,
   averagePrecision,
@@ -32,7 +43,7 @@ import {
 import { DRONE_PROFILES, type DroneProfileId } from "../src/sim";
 
 interface DetectionRow {
-  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorId: DetectorId;
   detectorLabel: string;
   profile: DroneProfileId;
   label: string;
@@ -50,7 +61,7 @@ interface DetectionRow {
 }
 
 interface FalseAlarmRow {
-  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorId: DetectorId;
   detectorLabel: string;
   environment: string;
   ambientRms: number;
@@ -61,12 +72,16 @@ interface FalseAlarmRow {
 }
 
 interface PhonePlaybackRow {
-  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorId: DetectorId;
   phoneId: string;
   phoneLabel: string;
   roomId: string;
   roomLabel: string;
   trialsPerClass: number;
+  truePositive: number;
+  falsePositive: number;
+  trueNegative: number;
+  falseNegative: number;
   precision: number;
   recall: number;
   falsePositiveRate: number;
@@ -77,7 +92,7 @@ interface PhonePlaybackRow {
 
 interface Observation {
   id: string;
-  detectorId: "dsp-v1" | "ml-onnx-v1";
+  detectorId: DetectorId;
   truth: boolean;
   detected: boolean;
   probability: number;
@@ -104,6 +119,28 @@ const SAMPLE_RATE = 16_000;
 const DURATION_S = 3;
 const DISTANCES_M = [25, 50, 100, 200, 400];
 const PROFILES = Object.keys(DRONE_PROFILES) as DroneProfileId[];
+
+interface CrnnRuntime {
+  artifact: PretrainedCrnnArtifact;
+  session: ort.InferenceSession;
+}
+
+async function analyzeCrnn(
+  samples: Float32Array,
+  sampleRate: number,
+  runtime: CrnnRuntime,
+): Promise<{ detected: boolean; confidence: number }> {
+  const windows = crnnWindows(samples, sampleRate);
+  const tensor = new ort.Tensor(
+    "float32",
+    combineCrnnFeatures(windows),
+    [windows.length, 1, CRNN_MEL_BINS, CRNN_TIME_FRAMES],
+  );
+  const output = await runtime.session.run({ [runtime.artifact.inputName]: tensor });
+  const probabilities = Array.from(output[runtime.artifact.outputName].data, Number);
+  const result = aggregateCrnnProbabilities(probabilities, runtime.artifact);
+  return { detected: result.detected, confidence: result.confidence };
+}
 
 function argumentNumber(name: string, fallback: number): number {
   const index = process.argv.indexOf(name);
@@ -145,17 +182,18 @@ function angularDifference(a: number, b: number): number {
   return Math.abs(((a - b + 540) % 360) - 180);
 }
 
-function runDetectionBenchmark(
+async function runDetectionBenchmark(
   trials: number,
   random: () => number,
   artifact: MlModelArtifact,
-): { detection: DetectionRow[]; falseAlarms: FalseAlarmRow[]; observations: Observation[] } {
+  crnnRuntime: CrnnRuntime,
+): Promise<{ detection: DetectionRow[]; falseAlarms: FalseAlarmRow[]; observations: Observation[] }> {
   const detection: DetectionRow[] = [];
   const observations: Observation[] = [];
   for (const profile of PROFILES) {
     for (const distanceM of DISTANCES_M) {
       for (const environment of BENCHMARK_ENVIRONMENTS) {
-        const accumulators = new Map<"dsp-v1" | "ml-onnx-v1", {
+        const accumulators = new Map<DetectorId, {
           label: string;
           detected: number;
           correct: number;
@@ -163,14 +201,17 @@ function runDetectionBenchmark(
         }>([
           ["dsp-v1", { label: "FFT / harmonic DSP", detected: 0, correct: 0, confidences: [] as number[] }],
           ["ml-onnx-v1", { label: "Feature Conv ML", detected: 0, correct: 0, confidences: [] as number[] }],
+          ["crnn-pretrained-v1", { label: "Pretrained CRNN", detected: 0, correct: 0, confidences: [] as number[] }],
         ]);
         for (let trial = 0; trial < trials; trial += 1) {
           const samples = makeDroneObservation(profile, DURATION_S, SAMPLE_RATE, distanceM, environment, random);
           const dsp = analyzePcm(samples, SAMPLE_RATE);
           const ml = analyzeWithArtifact(samples, SAMPLE_RATE, artifact);
+          const crnn = await analyzeCrnn(samples, SAMPLE_RATE, crnnRuntime);
           const outcomes = [
             { id: "dsp-v1" as const, detected: dsp.detected, probability: dsp.confidence },
             { id: "ml-onnx-v1" as const, detected: ml.detected, probability: ml.confidence },
+            { id: "crnn-pretrained-v1" as const, detected: crnn.detected, probability: crnn.confidence },
           ];
           for (const outcome of outcomes) {
             const accumulator = accumulators.get(outcome.id)!;
@@ -218,22 +259,25 @@ function runDetectionBenchmark(
   const falseAlarms: FalseAlarmRow[] = [];
   for (const environment of BENCHMARK_ENVIRONMENTS) {
     const ambientTrials = trials * PROFILES.length;
-    const accumulators = new Map<"dsp-v1" | "ml-onnx-v1", {
+    const accumulators = new Map<DetectorId, {
       label: string;
       falseDetections: number;
       confidences: number[];
     }>([
       ["dsp-v1", { label: "FFT / harmonic DSP", falseDetections: 0, confidences: [] as number[] }],
       ["ml-onnx-v1", { label: "Feature Conv ML", falseDetections: 0, confidences: [] as number[] }],
+      ["crnn-pretrained-v1", { label: "Pretrained CRNN", falseDetections: 0, confidences: [] as number[] }],
     ]);
     for (let trial = 0; trial < ambientTrials; trial += 1) {
       const kind = HARD_NEGATIVE_KINDS[trial % HARD_NEGATIVE_KINDS.length];
       const samples = makeHardNegative(kind, DURATION_S, SAMPLE_RATE, environment, random);
       const dsp = analyzePcm(samples, SAMPLE_RATE);
       const ml = analyzeWithArtifact(samples, SAMPLE_RATE, artifact);
+      const crnn = await analyzeCrnn(samples, SAMPLE_RATE, crnnRuntime);
       for (const outcome of [
         { id: "dsp-v1" as const, detected: dsp.detected, probability: dsp.confidence },
         { id: "ml-onnx-v1" as const, detected: ml.detected, probability: ml.confidence },
+        { id: "crnn-pretrained-v1" as const, detected: crnn.detected, probability: crnn.confidence },
       ]) {
         const accumulator = accumulators.get(outcome.id)!;
         if (outcome.detected) accumulator.falseDetections += 1;
@@ -267,11 +311,12 @@ function runDetectionBenchmark(
   return { detection, falseAlarms, observations };
 }
 
-function runPhonePlaybackBenchmark(
+async function runPhonePlaybackBenchmark(
   trialsPerProfile: number,
   random: () => number,
   artifact: MlModelArtifact,
-): PhonePlaybackRow[] {
+  crnnRuntime: CrnnRuntime,
+): Promise<PhonePlaybackRow[]> {
   const rows: PhonePlaybackRow[] = [];
   const sourceEnvironment = { id: "quiet" as const, ambientRms: 0, machineryAmplitude: 0 };
   for (const phone of PHONE_AUDIO_PROFILES) {
@@ -279,8 +324,10 @@ function runPhonePlaybackBenchmark(
       const truth: boolean[] = [];
       const dspDetected: boolean[] = [];
       const mlDetected: boolean[] = [];
+      const crnnDetected: boolean[] = [];
       const dspConfidence: number[] = [];
       const mlConfidence: number[] = [];
+      const crnnConfidence: number[] = [];
       for (let trial = 0; trial < trialsPerProfile; trial += 1) {
         for (let profileIndex = 0; profileIndex < PROFILES.length; profileIndex += 1) {
           const profile = PROFILES[profileIndex];
@@ -294,11 +341,14 @@ function runPhonePlaybackBenchmark(
           const droneCapture = simulatePhonePlayback(droneSource, SAMPLE_RATE, phone, room, random);
           const dspPositive = analyzePcm(droneCapture, SAMPLE_RATE);
           const mlPositive = analyzeWithArtifact(droneCapture, SAMPLE_RATE, artifact);
+          const crnnPositive = await analyzeCrnn(droneCapture, SAMPLE_RATE, crnnRuntime);
           truth.push(true);
           dspDetected.push(dspPositive.detected);
           mlDetected.push(mlPositive.detected);
+          crnnDetected.push(crnnPositive.detected);
           dspConfidence.push(dspPositive.confidence);
           mlConfidence.push(mlPositive.confidence);
+          crnnConfidence.push(crnnPositive.confidence);
 
           const kind = HARD_NEGATIVE_KINDS[(trial * PROFILES.length + profileIndex) % HARD_NEGATIVE_KINDS.length];
           const negativeSource = makeHardNegative(
@@ -311,16 +361,20 @@ function runPhonePlaybackBenchmark(
           const negativeCapture = simulatePhonePlayback(negativeSource, SAMPLE_RATE, phone, room, random);
           const dspNegative = analyzePcm(negativeCapture, SAMPLE_RATE);
           const mlNegative = analyzeWithArtifact(negativeCapture, SAMPLE_RATE, artifact);
+          const crnnNegative = await analyzeCrnn(negativeCapture, SAMPLE_RATE, crnnRuntime);
           truth.push(false);
           dspDetected.push(dspNegative.detected);
           mlDetected.push(mlNegative.detected);
+          crnnDetected.push(crnnNegative.detected);
           dspConfidence.push(dspNegative.confidence);
           mlConfidence.push(mlNegative.confidence);
+          crnnConfidence.push(crnnNegative.confidence);
         }
       }
       for (const outcome of [
         { id: "dsp-v1" as const, detected: dspDetected, confidence: dspConfidence },
         { id: "ml-onnx-v1" as const, detected: mlDetected, confidence: mlConfidence },
+        { id: "crnn-pretrained-v1" as const, detected: crnnDetected, confidence: crnnConfidence },
       ]) {
         const metrics = binaryMetrics(truth, outcome.detected);
         rows.push({
@@ -330,6 +384,10 @@ function runPhonePlaybackBenchmark(
           roomId: room.id,
           roomLabel: room.label,
           trialsPerClass: trialsPerProfile * PROFILES.length,
+          truePositive: metrics.truePositive,
+          falsePositive: metrics.falsePositive,
+          trueNegative: metrics.trueNegative,
+          falseNegative: metrics.falseNegative,
           precision: round(metrics.precision),
           recall: round(metrics.recall),
           falsePositiveRate: round(metrics.falsePositiveRate),
@@ -365,20 +423,27 @@ function curveFor(observations: Observation[]): Array<{ threshold: number; preci
 }
 
 function modelReport(
-  detectorId: "dsp-v1" | "ml-onnx-v1",
+  detectorId: DetectorId,
   observations: Observation[],
   detection: DetectionRow[],
   falseAlarms: FalseAlarmRow[],
   artifact: MlModelArtifact,
+  crnnArtifact: PretrainedCrnnArtifact,
 ): Record<string, unknown> {
   const selected = observations.filter((item) => item.detectorId === detectorId);
   const curve = curveFor(selected);
   return {
     id: detectorId,
-    label: detectorId === "dsp-v1" ? "FFT / harmonic DSP" : "Feature Conv ML",
+    label: detectorId === "dsp-v1"
+      ? "FFT / harmonic DSP"
+      : detectorId === "ml-onnx-v1" ? "Feature Conv ML" : "Pretrained CRNN",
     version: "1.0.0",
-    threshold: detectorId === "dsp-v1" ? 0.42 : artifact.threshold,
-    isDefault: detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : !artifact.qualityGate.passed,
+    threshold: detectorId === "dsp-v1"
+      ? 0.42
+      : detectorId === "ml-onnx-v1" ? artifact.threshold : crnnArtifact.threshold,
+    isDefault: detectorId === "dsp-v1"
+      ? !artifact.qualityGate.passed
+      : detectorId === "ml-onnx-v1" ? artifact.qualityGate.passed : false,
     qualityGate: detectorId === "ml-onnx-v1" ? artifact.qualityGate : null,
     overall: metricsFor(selected),
     prAuc: round(averagePrecision(
@@ -470,7 +535,10 @@ function decodePcm16Wav(buffer: Buffer): { samples: Float32Array; sampleRate: nu
   return { samples, sampleRate: format.sampleRate };
 }
 
-async function runRealSamples(artifact: MlModelArtifact): Promise<Array<Record<string, unknown>>> {
+async function runRealSamples(
+  artifact: MlModelArtifact,
+  crnnRuntime: CrnnRuntime,
+): Promise<Array<Record<string, unknown>>> {
   const fixtures: Array<{ file: string; expected: DroneProfileId | "ambient" }> = [
     { file: "batear-fpv-5inch.wav", expected: "fpv" },
     { file: "batear-mavic-pro.wav", expected: "camera" },
@@ -483,9 +551,11 @@ async function runRealSamples(artifact: MlModelArtifact): Promise<Array<Record<s
     const samples = wav.samples.slice(0, wav.sampleRate * 8);
     const dsp = analyzePcm(samples, wav.sampleRate);
     const ml = analyzeWithArtifact(samples, wav.sampleRate, artifact);
+    const crnn = await analyzeCrnn(samples, wav.sampleRate, crnnRuntime);
     for (const outcome of [
       { detectorId: "dsp-v1", detected: dsp.detected, confidence: dsp.confidence },
       { detectorId: "ml-onnx-v1", detected: ml.detected, confidence: ml.confidence },
+      { detectorId: "crnn-pretrained-v1", detected: crnn.detected, confidence: crnn.confidence },
     ]) {
       const expectedDrone = fixture.expected !== "ambient";
       rows.push({
@@ -520,28 +590,46 @@ async function main(): Promise<void> {
   const artifact = JSON.parse(
     await readFile(path.join(PROJECT_ROOT, "public/models/drone-binary-v1.json"), "utf8"),
   ) as MlModelArtifact;
+  const crnnArtifact = parsePretrainedCrnnArtifact(JSON.parse(
+    await readFile(path.join(PROJECT_ROOT, "public/models/drone-classifier-crnn-v1.json"), "utf8"),
+  ));
+  ort.env.wasm.numThreads = 1;
+  const crnnRuntime: CrnnRuntime = {
+    artifact: crnnArtifact,
+    session: await ort.InferenceSession.create(
+      new Uint8Array(await readFile(path.join(PROJECT_ROOT, "public/models/drone-classifier-crnn-v1.onnx"))),
+      { executionProviders: ["wasm"], graphOptimizationLevel: "all" },
+    ),
+  };
   const componentSeeds = {
     detection: seed,
     phonePlayback: (seed ^ 0x50484f4e) >>> 0,
     localization: (seed ^ 0x4c4f4341) >>> 0,
   };
-  const detector = runDetectionBenchmark(trials, mulberry32(componentSeeds.detection), artifact);
-  const phonePlayback = runPhonePlaybackBenchmark(
+  const detector = await runDetectionBenchmark(
+    trials,
+    mulberry32(componentSeeds.detection),
+    artifact,
+    crnnRuntime,
+  );
+  const phonePlayback = await runPhonePlaybackBenchmark(
     phoneTrials,
     mulberry32(componentSeeds.phonePlayback),
     artifact,
+    crnnRuntime,
   );
   const localization = runLocalizationBenchmark(
     localizationTrials,
     mulberry32(componentSeeds.localization),
   );
-  const realSamples = await runRealSamples(artifact);
-  const models = (["dsp-v1", "ml-onnx-v1"] as const).map((id) => modelReport(
+  const realSamples = await runRealSamples(artifact, crnnRuntime);
+  const models = (["dsp-v1", "ml-onnx-v1", "crnn-pretrained-v1"] as const).map((id) => modelReport(
     id,
     detector.observations,
     detector.detection,
     detector.falseAlarms,
     artifact,
+    crnnArtifact,
   ));
   const failures = detector.observations.filter((item) => item.truth !== item.detected)
     .sort((a, b) => Math.abs(b.probability - 0.5) - Math.abs(a.probability - 0.5))
@@ -563,16 +651,24 @@ async function main(): Promise<void> {
       environments: BENCHMARK_ENVIRONMENTS,
       attenuationModel: "free-field 1/r, reference gain 0.72 at 25 m",
       splitPolicy: "grouped by source recording/session; 70/15/15",
-      trainingDomain: "synthetic-only",
+      trainingDomain: "Feature Conv ML: synthetic-only; Pretrained CRNN: upstream geronimobasso dataset",
       benchmarkDomain: "synthetic signals from the same generator family",
       reportTimestampPolicy: "model artifact timestamp for reproducible output",
       componentSeeds,
       phoneAudioProfiles: PHONE_AUDIO_PROFILES,
       playbackRoomProfiles: PLAYBACK_ROOM_PROFILES,
+      externalModels: [{
+        id: crnnArtifact.id,
+        source: crnnArtifact.source.repository,
+        revision: crnnArtifact.source.revision,
+        license: crnnArtifact.source.license,
+        modelSha256: crnnArtifact.modelSha256,
+      }],
     },
     caveats: [
       "Synthetic results are regression benchmarks, not validated field range.",
       "The ML quality gate currently uses synthetic grouped sessions and is not field certification.",
+      "The Pretrained CRNN is an external MIT-licensed model. Its upstream metrics are self-reported and primarily in-distribution.",
       "Training and Monte Carlo benchmarking use the same synthetic generator family; results measure regression behavior, not independent generalization.",
       "Phone playback rows simulate speaker coloration, room echo, distance loss, background sound, microphone bandwidth, compression, and self-noise; they are not measurements from physical phones.",
       "The ML detector is binary. Every ML 'detection + type' row uses ML for detection and the DSP classifier for type attribution.",
@@ -601,7 +697,7 @@ async function main(): Promise<void> {
   console.log(JSON.stringify({
     seed,
     models: models.map((model) => ({ id: model.id, isDefault: model.isDefault, overall: model.overall })),
-    phonePlayback: (["dsp-v1", "ml-onnx-v1"] as const).map((detectorId) => {
+    phonePlayback: (["dsp-v1", "ml-onnx-v1", "crnn-pretrained-v1"] as const).map((detectorId) => {
       const rows = phonePlayback.filter((row) => row.detectorId === detectorId);
       return {
         detectorId,

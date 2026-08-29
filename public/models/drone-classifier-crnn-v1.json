@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "crnn-pretrained-v1",
+  "label": "Pretrained CRNN",
+  "version": "1.0.0",
+  "inputName": "log_mel",
+  "outputName": "probability",
+  "modelUrl": "/models/drone-classifier-crnn-v1.onnx",
+  "modelBytes": 5953290,
+  "modelSha256": "d9099bd7fb203b16fc776cb4fdc597c48c4c771dcfa50a494b87637ee1675c7d",
+  "threshold": 0.5,
+  "temporal": {
+    "requiredPositiveWindows": 3,
+    "windowCount": 5
+  },
+  "preprocessing": {
+    "sampleRate": 16000,
+    "windowSamples": 16000,
+    "hopSamples": 8000,
+    "fftSize": 512,
+    "fftHopSamples": 160,
+    "melBins": 64,
+    "minimumHz": 50,
+    "maximumHz": 5500,
+    "melScale": "htk",
+    "topDb": 80,
+    "normalization": "(powerDb + 40) / 40"
+  },
+  "source": {
+    "repository": "https://huggingface.co/AntoineNaccache/drone-audio-detector",
+    "revision": "9d4f9c7afc2b893ee8b9356f8361e14069577dce",
+    "weightsFile": "drone_classifier_aug_mixed.pt",
+    "weightsSha256": "3ca418d3fa97ed59568a7a3abf807e4a54fbd6fb6d5f513aaa4e257672fde382",
+    "license": "MIT",
+    "copyright": "Copyright (c) 2025 Antoine Naccache"
+  },
+  "trainingDomain": "geronimobasso/drone-audio-detection-samples",
+  "limitations": [
+    "Upstream metrics are self-reported and primarily in-distribution.",
+    "The upstream model card does not validate helicopters, fixed-wing aircraft, or other rotary-wing craft.",
+    "This imported model has not been field-validated on phone microphones by the Drones project."
+  ],
+  "conversion": {
+    "torchVersion": "2.13.0",
+    "onnxVersion": "1.22.0",
+    "onnxRuntimeVersion": "1.29.0",
+    "maximumParityError": 3.3480318961665034e-08
+  }
+}

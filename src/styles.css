@@ -279,6 +279,16 @@ input[type="range"] { width: 100%; height: 3px; margin: 5px 0; cursor: pointer; 
 .confusion-bad b { color: var(--red); }
 .failure-scroll { max-height: 235px; overflow-y: auto; }
 .statistics-comparison-card { max-width: 1420px; margin: 0 auto 14px; }
+.benchmark-recommendation { margin: 12px 0 0; padding: 11px 13px; border-left: 2px solid var(--green); background: rgba(83,226,191,.045); color: #cce5e1; font-size: 10px; line-height: 1.55; }
+.benchmark-rule { margin: 10px 0 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
+.benchmark-table { min-width: 1260px; }
+.benchmark-table tr + tr td { border-top: 1px solid rgba(153,190,187,.035); }
+.benchmark-table tr.benchmark-winner td { background: rgba(83,226,191,.035); }
+.benchmark-table tr.benchmark-winner td:last-child { color: var(--green); }
+.benchmark-run-label { min-width: 220px; display: grid; gap: 3px; }
+.benchmark-run-label > strong { color: var(--text); font-size: 10px; }
+.benchmark-run-label > span { color: #cce5e1; }
+.benchmark-run-label > small { max-width: 310px; color: var(--muted); font: 400 8px/1.35 "DM Sans", system-ui, sans-serif; }
 
 @media (max-height: 820px) {
   .map-shell { min-height: 335px; height: 45vh; }

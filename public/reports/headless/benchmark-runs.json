@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T07:25:51.670Z",
+  "winnerRule": "Best means highest F1 computed from integer TP/FP/TN/FN counts within that run. Exact ties share the win. A dash means the rate is undefined because that class was not tested.",
+  "recommendation": "Feature Conv ML is the strongest current simulator baseline: it has the best F1 in both the 1,080-case synthetic run and the 480-case phone-channel proxy. No tested model is yet the best overall field detector; source-domain and four-file results are not independent field validation.",
+  "caveats": [
+    "Benchmark percentages in the run registry are calculated in the browser from the saved integer confusion counts.",
+    "The source-audio runs overlap one or both imported models' training distributions and must not be read as independent validation.",
+    "Runs without background clips cannot measure false alarms; those cells intentionally show a dash instead of 0%.",
+    "The Samid aggregation uses 1.0 s windows, 0.5 s hop, a 3-window median filter, and an explicit N=3 consecutive-window assumption because its model card does not publish N."
+  ],
+  "runs": [
+    {
+      "id": "synthetic-headless-seed-20260828",
+      "label": "Synthetic distance + hard-negative run",
+      "domain": "4 drone profiles × 5 distances × 3 environments, plus structured backgrounds",
+      "evidenceClass": "synthetic",
+      "models": [
+        {
+          "id": "dsp-v1",
+          "label": "FFT / harmonic DSP",
+          "threshold": 0.42,
+          "relationship": "In-domain: benchmark uses the project's synthetic generator family",
+          "truePositive": 875,
+          "falsePositive": 164,
+          "trueNegative": 16,
+          "falseNegative": 25
+        },
+        {
+          "id": "ml-onnx-v1",
+          "label": "Feature Conv ML",
+          "threshold": 0.43,
+          "relationship": "In-domain: benchmark uses the project's synthetic generator family",
+          "truePositive": 881,
+          "falsePositive": 20,
+          "trueNegative": 160,
+          "falseNegative": 19
+        },
+        {
+          "id": "crnn-pretrained-v1",
+          "label": "Pretrained CRNN",
+          "threshold": 0.5,
+          "relationship": "Imported model evaluated out of its source domain",
+          "truePositive": 347,
+          "falsePositive": 26,
+          "trueNegative": 154,
+          "falseNegative": 553
+        },
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "Imported model evaluated out of its source domain",
+          "truePositive": 891,
+          "falsePositive": 177,
+          "trueNegative": 3,
+          "falseNegative": 9
+        }
+      ],
+      "caveat": "In-domain regression benchmark; range is not field validated.",
+      "positiveTests": 900,
+      "negativeTests": 180,
+      "totalTests": 1080
+    },
+    {
+      "id": "phone-playback-proxy",
+      "label": "Playback-to-phone proxy run",
+      "domain": "3 simulated phone responses × 4 simulated rooms",
+      "evidenceClass": "phone-proxy",
+      "models": [
+        {
+          "id": "dsp-v1",
+          "label": "FFT / harmonic DSP",
+          "threshold": 0.42,
+          "relationship": "Synthetic playback, room, and phone-channel proxy; no physical phone used",
+          "truePositive": 240,
+          "falsePositive": 237,
+          "trueNegative": 3,
+          "falseNegative": 0
+        },
+        {
+          "id": "ml-onnx-v1",
+          "label": "Feature Conv ML",
+          "threshold": 0.43,
+          "relationship": "Synthetic playback, room, and phone-channel proxy; no physical phone used",
+          "truePositive": 239,
+          "falsePositive": 137,
+          "trueNegative": 103,
+          "falseNegative": 1
+        },
+        {
+          "id": "crnn-pretrained-v1",
+          "label": "Pretrained CRNN",
+          "threshold": 0.5,
+          "relationship": "Synthetic playback, room, and phone-channel proxy; no physical phone used",
+          "truePositive": 64,
+          "falsePositive": 54,
+          "trueNegative": 186,
+          "falseNegative": 176
+        },
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "Synthetic playback, room, and phone-channel proxy; no physical phone used",
+          "truePositive": 219,
+          "falsePositive": 210,
+          "trueNegative": 30,
+          "falseNegative": 21
+        }
+      ],
+      "caveat": "Digital channel simulation, not measurements from physical phones.",
+      "positiveTests": 240,
+      "negativeTests": 240,
+      "totalTests": 480
+    },
+    {
+      "id": "geronimo-source",
+      "label": "Geronimo source-audio run",
+      "domain": "25 drone and 25 background clips",
+      "evidenceClass": "source-domain",
+      "models": [
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "External to this YAMNet head",
+          "truePositive": 25,
+          "falsePositive": 4,
+          "trueNegative": 21,
+          "falseNegative": 0
+        },
+        {
+          "id": "samid-ast-pretrained-local-v1",
+          "label": "Samid AST",
+          "threshold": 0.5,
+          "relationship": "Training-source distribution",
+          "truePositive": 24,
+          "falsePositive": 0,
+          "trueNegative": 25,
+          "falseNegative": 1
+        }
+      ],
+      "caveat": "Compatibility test on downloaded source clips; not a held-out field test.",
+      "positiveTests": 25,
+      "negativeTests": 25,
+      "totalTests": 50
+    },
+    {
+      "id": "sara-source",
+      "label": "Sara Al-Emadi source-audio run",
+      "domain": "25 drone and 25 background clips",
+      "evidenceClass": "source-domain",
+      "models": [
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "Training-source distribution",
+          "truePositive": 25,
+          "falsePositive": 4,
+          "trueNegative": 21,
+          "falseNegative": 0
+        },
+        {
+          "id": "samid-ast-pretrained-local-v1",
+          "label": "Samid AST",
+          "threshold": 0.5,
+          "relationship": "External to Samid",
+          "truePositive": 20,
+          "falsePositive": 0,
+          "trueNegative": 25,
+          "falseNegative": 5
+        }
+      ],
+      "caveat": "Compatibility test on downloaded source clips; not a held-out field test.",
+      "positiveTests": 25,
+      "negativeTests": 25,
+      "totalTests": 50
+    },
+    {
+      "id": "visualization-source",
+      "label": "Drone Visualization source-audio run",
+      "domain": "32 drone clips and no background clips",
+      "evidenceClass": "source-domain",
+      "models": [
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "Training-source distribution",
+          "truePositive": 31,
+          "falsePositive": 0,
+          "trueNegative": 0,
+          "falseNegative": 1
+        },
+        {
+          "id": "samid-ast-pretrained-local-v1",
+          "label": "Samid AST",
+          "threshold": 0.5,
+          "relationship": "External to Samid",
+          "truePositive": 13,
+          "falsePositive": 0,
+          "trueNegative": 0,
+          "falseNegative": 19
+        }
+      ],
+      "caveat": "Compatibility test on downloaded source clips; not a held-out field test.",
+      "positiveTests": 32,
+      "negativeTests": 0,
+      "totalTests": 32
+    },
+    {
+      "id": "ahlab-source",
+      "label": "AHLab DroneAudioSet source-audio run",
+      "domain": "20 one-second drone clips and no background clips",
+      "evidenceClass": "source-domain",
+      "models": [
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "External to this YAMNet head",
+          "truePositive": 20,
+          "falsePositive": 0,
+          "trueNegative": 0,
+          "falseNegative": 0
+        },
+        {
+          "id": "samid-ast-pretrained-local-v1",
+          "label": "Samid AST",
+          "threshold": 0.5,
+          "relationship": "Training-source distribution",
+          "truePositive": 18,
+          "falsePositive": 0,
+          "trueNegative": 0,
+          "falseNegative": 2
+        }
+      ],
+      "caveat": "Positive-only sample from one published shard; false-alarm rate cannot be calculated.",
+      "positiveTests": 20,
+      "negativeTests": 0,
+      "totalTests": 20
+    },
+    {
+      "id": "batear-fixtures",
+      "label": "Batear real-audio fixture run",
+      "domain": "3 drone clips and 1 rural background clip",
+      "evidenceClass": "external-fixture",
+      "models": [
+        {
+          "id": "dsp-v1",
+          "label": "FFT / harmonic DSP",
+          "threshold": 0.42,
+          "relationship": "External Batear fixture set; only four hand-selected clips",
+          "truePositive": 3,
+          "falsePositive": 1,
+          "trueNegative": 0,
+          "falseNegative": 0
+        },
+        {
+          "id": "ml-onnx-v1",
+          "label": "Feature Conv ML",
+          "threshold": 0.43,
+          "relationship": "External Batear fixture set; only four hand-selected clips",
+          "truePositive": 3,
+          "falsePositive": 1,
+          "trueNegative": 0,
+          "falseNegative": 0
+        },
+        {
+          "id": "crnn-pretrained-v1",
+          "label": "Pretrained CRNN",
+          "threshold": 0.5,
+          "relationship": "External Batear fixture set; only four hand-selected clips",
+          "truePositive": 1,
+          "falsePositive": 0,
+          "trueNegative": 1,
+          "falseNegative": 2
+        },
+        {
+          "id": "yamnet-pretrained-local-v1",
+          "label": "YAMNet + external head",
+          "threshold": 0.45,
+          "relationship": "External Batear fixture set; only four hand-selected clips",
+          "truePositive": 2,
+          "falsePositive": 0,
+          "trueNegative": 1,
+          "falseNegative": 1
+        },
+        {
+          "id": "samid-ast-pretrained-local-v1",
+          "label": "Samid AST",
+          "threshold": 0.5,
+          "relationship": "External Batear fixture set; only four hand-selected clips",
+          "truePositive": 2,
+          "falsePositive": 0,
+          "trueNegative": 1,
+          "falseNegative": 1
+        }
+      ],
+      "caveat": "Only four clips, including one negative; ranking is highly uncertain.",
+      "positiveTests": 3,
+      "negativeTests": 1,
+      "totalTests": 4
+    }
+  ]
+}

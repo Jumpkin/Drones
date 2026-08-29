@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "public/audio/batear-fpv-5inch.wav",
+      "source": "batear-fixtures",
+      "label": "drone",
+      "sha256": "2c76b7b9cb59fe05ac3c18f21882c3ea2cdd58878f565a33e16f7f7485815778"
+    },
+    {
+      "path": "public/audio/batear-mavic-pro.wav",
+      "source": "batear-fixtures",
+      "label": "drone",
+      "sha256": "68d74284dcd4ddd2e279d1cbbf529793e59625facf12fa6404b34077164fab8f"
+    },
+    {
+      "path": "public/audio/batear-mini-4-pro.wav",
+      "source": "batear-fixtures",
+      "label": "drone",
+      "sha256": "6cb5becd3ad0cbbe63c938e92f154aa0ae90ebac5c4d6165ff0433bd2afeefe2"
+    },
+    {
+      "path": "public/audio/batear-rural-8s.wav",
+      "source": "batear-fixtures",
+      "label": "background",
+      "sha256": "389adfab026ae99d1da468e4a09847ccda0a3bbf5b814be3e8a6dc2e74f1f86b"
+    }
+  ]
+}

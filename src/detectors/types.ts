@@ -1,6 +1,6 @@
 import type { ClassificationScore } from "../detector";
 
-export type DetectorId = "dsp-v1" | "ml-onnx-v1";
+export type DetectorId = "dsp-v1" | "ml-onnx-v1" | "crnn-pretrained-v1";
 
 export interface DetectorOutput {
   detectorId: DetectorId;

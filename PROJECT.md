@@ -27,14 +27,19 @@ views:
   localization from three fixed listener phones.
 - **Statistics** compares headless Monte Carlo results across drone profiles,
   assumed distance, noise environment, false alarms, clock jitter, and a
-  synthetic computer-speaker-to-phone playback channel.
+  synthetic computer-speaker-to-phone playback channel. Its benchmark-run
+  registry shows positive, negative, and total test counts plus TP/FP/TN/FN for
+  every compared model. Percentages and the highest-F1 winner are derived from
+  those integer counts rather than copied into the interface.
 
 The detection layer exposes the same asynchronous adapter contract for the
-FFT baseline and an experimental ONNX binary classifier. The ML model scores
-overlapping one-second windows and aggregates the latest five, requiring three
-positives before an event is emitted. It is not selected as the default unless
-the committed held-out report passes the recall, false-positive, and
-DSP-comparison gate.
+FFT baseline, the project-trained experimental ONNX binary classifier, and an
+external pretrained CRNN imported from Antoine Naccache's MIT-licensed model.
+Both learned models score overlapping one-second windows and aggregate the
+latest five, requiring three positives before an event is emitted. The
+project-trained model is not selected as the default unless its committed
+held-out report passes the recall, false-positive, and DSP-comparison gate. The
+external CRNN remains non-default until it passes independent local validation.
 
 It is an educational research environment rather than an operational
 detection or countermeasure system. All ranges and probabilities are treated
@@ -76,6 +81,16 @@ Run `npm run simulate` for the full deterministic headless benchmark, or
 `npm run simulate:quick` for a short development check. Aggregate JSON and CSV
 reports are written to `public/reports/headless/` and shown by the Statistics
 view. No raw audio is written to a report.
+
+After the optional local YAMNet and Samid compatibility runs, use
+`npm run stats:update` to validate their test counts against the deterministic
+headless reports and rebuild `public/reports/headless/benchmark-runs.json`.
+
+The pretrained CRNN source is pinned to Hugging Face revision
+`9d4f9c7afc2b893ee8b9356f8361e14069577dce`. Its original checkpoint is
+checksum-verified and loaded as tensor weights only by
+`scripts/import-pretrained-crnn.py`; the product contains the converted ONNX
+graph, metadata, and upstream MIT notice, not the source pickle.
 
 The synthetic distance model uses simplified free-field 1/r attenuation with
 an assumed reference gain. It is useful for regression comparisons but does

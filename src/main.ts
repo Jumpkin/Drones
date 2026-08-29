@@ -25,10 +25,14 @@ import {
   type TrialTruth,
 } from "./microphone";
 import {
+  benchmarkMetrics,
+  benchmarkWinners,
   compareProfiles,
   mean as statisticsMean,
   modelFor,
   rowsForEnvironment,
+  validateBenchmarkReport,
+  type BenchmarkRunReport,
   type DetectionMetric,
   type HeadlessReport,
 } from "./stats";
@@ -320,8 +324,9 @@ app.innerHTML = `
         <label class="field"><span>Detector</span><select id="labDetectorSelect">
           <option value="dsp-v1">FFT / harmonic DSP</option>
           <option value="ml-onnx-v1">Feature Conv ML</option>
+          <option value="crnn-pretrained-v1">Pretrained CRNN</option>
         </select></label>
-        <p id="labDetectorStatus" class="field-help">DSP is ready. The experimental ML runtime loads only when selected.</p>
+        <p id="labDetectorStatus" class="field-help">DSP is ready. Learned models load only when selected.</p>
         <p id="labSampleNote" class="field-help"></p>
         <label class="range-field" id="labRpmField">
           <span><span>RPM shift</span><output id="labRpmOutput">0%</output></span>
@@ -468,6 +473,7 @@ app.innerHTML = `
       <label class="field"><span>Detector</span><select id="statisticsDetector">
         <option value="dsp-v1">FFT / harmonic DSP</option>
         <option value="ml-onnx-v1">Feature Conv ML</option>
+        <option value="crnn-pretrained-v1">Pretrained CRNN</option>
       </select></label>
       <label class="field"><span>Noise environment</span><select id="statisticsEnvironment">
         <option value="quiet">Quiet</option>
@@ -489,6 +495,7 @@ app.innerHTML = `
         <a href="/reports/headless/phone-playback.csv" download>Phone CSV</a>
         <a href="/reports/headless/localization.csv" download>Position CSV</a>
         <a href="/reports/headless/failures.csv" download>Failures CSV</a>
+        <a href="/reports/headless/benchmark-runs.json" download>All runs</a>
       </div>
     </div>
 
@@ -546,13 +553,20 @@ app.innerHTML = `
       </div>
 
       <section class="lab-card statistics-comparison-card">
-        <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>DSP versus ML on the same synthetic benchmark</h3></div><span class="data-badge">SAME GENERATOR · SAME SEED</span></div>
+        <div class="subpanel-heading"><div><p class="eyebrow">Direct comparison</p><h3>All detectors on the same synthetic benchmark</h3></div><span class="data-badge">SAME INPUTS · SAME SEED</span></div>
         <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Detector</th><th>Default</th><th>Precision</th><th>Recall</th><th>False alarms</th><th>F1</th><th>PR-AUC</th><th>Gate</th></tr></thead><tbody id="statisticsDetectorComparisonBody"></tbody></table></div>
       </section>
 
       <section class="lab-card statistics-comparison-card">
         <div class="subpanel-heading"><div><p class="eyebrow">Headless playback-to-phone proxy</p><h3>Speaker, room, and phone-channel robustness</h3></div><span class="data-badge">SYNTHETIC · NOT HARDWARE</span></div>
         <div class="table-scroll"><table class="statistics-table"><thead><tr><th>Phone model</th><th>Playback condition</th><th>Trials/class</th><th>Recall</th><th>False alarms</th><th>Precision</th><th>F1</th></tr></thead><tbody id="statisticsPhonePlaybackBody"></tbody></table></div>
+      </section>
+
+      <section class="lab-card statistics-comparison-card benchmark-registry-card">
+        <div class="subpanel-heading"><div><p class="eyebrow">Benchmark run registry</p><h3>Test counts, confusion counts, and winner for every run</h3></div><span class="data-badge">RATES RECOMPUTED FROM COUNTS</span></div>
+        <p id="statisticsBenchmarkRecommendation" class="benchmark-recommendation">Loading model comparison…</p>
+        <div class="table-scroll"><table class="statistics-table benchmark-table"><thead><tr><th>Run / model</th><th>Evidence</th><th>Drone tests</th><th>Background tests</th><th>Total</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th><th>Precision</th><th>Recall</th><th>False alarms</th><th>F1</th><th>Best</th></tr></thead><tbody id="statisticsBenchmarkRunsBody"></tbody></table></div>
+        <p id="statisticsBenchmarkRule" class="benchmark-rule"></p>
       </section>
 
       <div class="statistics-caveat lab-card">
@@ -1116,10 +1130,39 @@ const statisticsColors: Record<DroneProfileId, string> = {
   combustion: "#bf8cff",
 };
 let statisticsReport: HeadlessReport | undefined;
+let benchmarkRunReport: BenchmarkRunReport | undefined;
 let statisticsPromise: Promise<void> | undefined;
 
 function percent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
+}
+
+function optionalPercent(value: number | null): string {
+  return value === null ? "—" : percent(value);
+}
+
+function renderBenchmarkRuns(): void {
+  if (!benchmarkRunReport) return;
+  setText("#statisticsBenchmarkRecommendation", benchmarkRunReport.recommendation);
+  setText("#statisticsBenchmarkRule", benchmarkRunReport.winnerRule);
+  requiredElement<HTMLTableSectionElement>("#statisticsBenchmarkRunsBody").innerHTML = benchmarkRunReport.runs.flatMap((run) => {
+    const winners = new Set(benchmarkWinners(run));
+    return run.models.map((model, modelIndex) => {
+      const metrics = benchmarkMetrics(model);
+      const runLabel = modelIndex === 0
+        ? `<strong>${escapeHtml(run.label)}</strong><small>${escapeHtml(run.domain)}</small>`
+        : "";
+      const winner = winners.has(model.id);
+      return `<tr${winner ? ' class="benchmark-winner"' : ""}>
+        <td><div class="benchmark-run-label">${runLabel}<span>${escapeHtml(model.label)}</span><small>${escapeHtml(model.relationship)}</small></div></td>
+        <td>${escapeHtml(run.evidenceClass)}</td>
+        <td>${run.positiveTests}</td><td>${run.negativeTests}</td><td>${run.totalTests}</td>
+        <td>${model.truePositive}</td><td>${model.falsePositive}</td><td>${model.trueNegative}</td><td>${model.falseNegative}</td>
+        <td>${optionalPercent(metrics.precision)}</td><td>${optionalPercent(metrics.recall)}</td><td>${optionalPercent(metrics.falsePositiveRate)}</td><td>${optionalPercent(metrics.f1)}</td>
+        <td>${winner ? "Best F1" : "—"}</td>
+      </tr>`;
+    });
+  }).join("");
 }
 
 function drawChartFrame(
@@ -1259,7 +1302,10 @@ function renderStatistics(): void {
   setText("#statisticsGenerated", new Date(statisticsReport.generatedAt).toLocaleString("en-GB"));
   setText("#statisticsSeed", `Seed ${statisticsReport.seed} · ${statisticsReport.configuration.trialsPerDroneCondition} trials per condition`);
   const gatePassed = model?.qualityGate?.passed;
-  setText("#statisticsQualityGate", model?.qualityGate ? (gatePassed ? "PASSED" : "FAILED") : "BASELINE");
+  const externalModel = model?.id === "crnn-pretrained-v1";
+  setText("#statisticsQualityGate", model?.qualityGate
+    ? (gatePassed ? "PASSED" : "FAILED")
+    : externalModel ? "EXTERNAL" : "BASELINE");
   requiredElement("#statisticsGateCard").dataset.status = gatePassed ? "passed" : model?.qualityGate ? "failed" : "baseline";
   setText("#statisticsRecall", model ? percent(model.overall.recall) : percent(statisticsMean(rows.map((row) => row.detectionRate))));
   setText("#statisticsFalseAlarm", percent(falseAlarm?.falsePositiveRate ?? 0));
@@ -1269,8 +1315,8 @@ function renderStatistics(): void {
     "#statisticsDetectionTitle",
     metric === "detectionRate"
       ? "Detection rate by drone type"
-      : detectorId === "ml-onnx-v1"
-        ? "Correct ML detection + DSP type"
+      : detectorId !== "dsp-v1"
+        ? "Correct binary detection + DSP type"
         : "Correct DSP detection + type",
   );
   requiredElement("#statisticsProfileLegend").innerHTML = profileComparison.map((item) =>
@@ -1298,7 +1344,7 @@ function renderStatistics(): void {
     ).join("")
     : `<tr><td colspan="4">No saved failures for the selected detector.</td></tr>`;
   requiredElement<HTMLTableSectionElement>("#statisticsDetectorComparisonBody").innerHTML = (statisticsReport.models ?? []).map((item) =>
-    `<tr><td>${escapeHtml(item.label)}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : "Baseline"}</td></tr>`
+    `<tr><td>${escapeHtml(item.label)}</td><td>${item.isDefault ? "Yes" : "No"}</td><td>${percent(item.overall.precision)}</td><td>${percent(item.overall.recall)}</td><td>${percent(item.overall.falsePositiveRate)}</td><td>${percent(item.overall.f1)}</td><td>${item.prAuc.toFixed(3)}</td><td>${item.qualityGate ? (item.qualityGate.passed ? "Passed" : "Failed") : item.id === "crnn-pretrained-v1" ? "External" : "Baseline"}</td></tr>`
   ).join("");
   const phonePlaybackRows = (statisticsReport.phonePlayback ?? [])
     .filter((row) => row.detectorId === detectorId);
@@ -1308,7 +1354,9 @@ function renderStatistics(): void {
     ).join("")
     : '<tr><td colspan="7">No phone playback proxy results in this report.</td></tr>';
   requiredElement("#statisticsCaveats").innerHTML = statisticsReport.caveats
+    .concat(benchmarkRunReport?.caveats ?? [])
     .map((caveat) => `<li>${escapeHtml(caveat)}</li>`).join("");
+  renderBenchmarkRuns();
   drawDetectionStatistics();
   drawLocalizationStatistics();
   drawDetectorCurve();
@@ -1322,9 +1370,14 @@ async function loadStatistics(): Promise<void> {
   statisticsPromise ??= (async () => {
     const loading = requiredElement("#statisticsLoading");
     try {
-      const response = await fetch("/reports/headless/summary.json", { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const [response, benchmarkResponse] = await Promise.all([
+        fetch("/reports/headless/summary.json", { cache: "no-store" }),
+        fetch("/reports/headless/benchmark-runs.json", { cache: "no-store" }),
+      ]);
+      if (!response.ok) throw new Error(`summary HTTP ${response.status}`);
+      if (!benchmarkResponse.ok) throw new Error(`benchmark runs HTTP ${benchmarkResponse.status}`);
       statisticsReport = await response.json() as HeadlessReport;
+      benchmarkRunReport = validateBenchmarkReport(await benchmarkResponse.json() as BenchmarkRunReport);
       const defaultModel = statisticsReport.models?.find((model) => model.isDefault);
       if (defaultModel) requiredElement<HTMLSelectElement>("#statisticsDetector").value = defaultModel.id;
       loading.hidden = true;
@@ -1364,6 +1417,7 @@ const initialDspDetector = new DspDetectorAdapter();
 const detectorAdapters = new Map<string, DetectorAdapter>([[initialDspDetector.id, initialDspDetector]]);
 let selectedDetector: DetectorAdapter = initialDspDetector;
 let mlDetectorPromise: Promise<DetectorAdapter> | undefined;
+let crnnDetectorPromise: Promise<DetectorAdapter> | undefined;
 
 async function loadMlDetector(): Promise<DetectorAdapter> {
   const loaded = detectorAdapters.get("ml-onnx-v1");
@@ -1379,6 +1433,28 @@ async function loadMlDetector(): Promise<DetectorAdapter> {
       throw error;
     });
   return mlDetectorPromise;
+}
+
+async function loadCrnnDetector(): Promise<DetectorAdapter> {
+  const loaded = detectorAdapters.get("crnn-pretrained-v1");
+  if (loaded) return loaded;
+  crnnDetectorPromise ??= import("./detectors/crnn-adapter")
+    .then(({ PretrainedCrnnDetectorAdapter }) => PretrainedCrnnDetectorAdapter.create())
+    .then((detector) => {
+      detectorAdapters.set(detector.id, detector);
+      return detector;
+    })
+    .catch((error) => {
+      crnnDetectorPromise = undefined;
+      throw error;
+    });
+  return crnnDetectorPromise;
+}
+
+async function loadSelectedDetector(id: string): Promise<DetectorAdapter> {
+  if (id === "ml-onnx-v1") return loadMlDetector();
+  if (id === "crnn-pretrained-v1") return loadCrnnDetector();
+  return initialDspDetector;
 }
 
 void (async () => {
@@ -1575,20 +1651,22 @@ labDetectorSelect.addEventListener("change", async () => {
   const analyzeButton = requiredElement<HTMLButtonElement>("#labAnalyzeButton");
   labDetectorSelect.disabled = true;
   analyzeButton.disabled = true;
-  setText("#labDetectorStatus", "Loading the experimental ML runtime…");
+  setText("#labDetectorStatus", requestedId === "crnn-pretrained-v1"
+    ? "Loading the external pretrained CRNN…"
+    : "Loading the experimental ML runtime…");
   try {
-    const detector = await loadMlDetector();
+    const detector = await loadSelectedDetector(requestedId);
     if (labDetectorSelect.value === requestedId) selectedDetector = detector;
     setText(
       "#labDetectorStatus",
       detector.isOperational
-        ? "Experimental ML detector ready."
-        : "The ML runtime could not start; analysis will fall back to DSP.",
+        ? `${detector.label} detector ready.`
+        : "The selected runtime could not start; analysis will fall back to DSP.",
     );
   } catch (error) {
     selectedDetector = initialDspDetector;
     labDetectorSelect.value = "dsp-v1";
-    setText("#labDetectorStatus", `ML could not be loaded: ${String(error)}. DSP is in use.`);
+    setText("#labDetectorStatus", `Detector could not be loaded: ${String(error)}. DSP is in use.`);
   } finally {
     labDetectorSelect.disabled = false;
     analyzeButton.disabled = false;

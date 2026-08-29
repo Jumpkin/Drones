@@ -1,0 +1,7 @@
+Pods/
+build/
+DerivedData/
+TaelDronesLab.xcodeproj/
+TaelDronesLab.xcworkspace/
+*.xcuserstate
+xcuserdata/

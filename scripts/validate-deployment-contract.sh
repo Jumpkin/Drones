@@ -25,10 +25,11 @@ require_workflow_text() {
 
 require_workflow_text 'cache-from type=gha' 'BuildKit read cache is required'
 require_workflow_text 'cache-to type=gha,mode=max' 'BuildKit write cache is required'
-require_workflow_text 'needs: validate' 'main must validate before publishing'
+require_workflow_text 'needs: [validate, ios]' 'main must validate web, server, and iOS before publishing'
 require_workflow_text 'Verify and scan the published digest' 'the published digest must be runtime-verified'
 require_workflow_text 'StrictHostKeyChecking=yes' 'strict SSH host-key checking is required'
-require_workflow_text 'Deploy and verify with automatic rollback' 'verified rollback deployment step is required'
+require_workflow_text 'Run reviewed migration or verified deployment' 'reviewed migration and verified deployment step is required'
+require_workflow_text 'DEPLOY_OPERATION: ${{ inputs.operation || '\''deploy'\'' }}' 'manual migration operation is required'
 require_workflow_text 'if: always()' 'failure-path logging is required'
 require_workflow_text './scripts/write-deployment-log.sh deployment-log.json' 'deployment receipt generation is required'
 require_workflow_text 'name: tael-deployment-log-${{ github.run_id }}' 'stable deployment artifact name is required'
@@ -44,6 +45,7 @@ require_workflow_text 'aquasecurity/trivy-action@' 'published image scanning is 
 require_workflow_text "'{{.Config.User}}'" 'non-root runtime verification is required'
 require_workflow_text "'{{.HostConfig.ReadonlyRootfs}}'" 'read-only runtime verification is required'
 require_workflow_text '/health/ready' 'runtime health verification is required'
+require_workflow_text 'docker compose run --rm migrate' 'database migrations must run before application startup'
 
 for expected in 'npm ci' 'npm test' 'npm run lint' 'npm run build' \
   'npm run data:validate' 'npm audit --omit=dev' 'docker compose config --quiet' \
@@ -51,6 +53,10 @@ for expected in 'npm ci' 'npm test' 'npm run lint' 'npm run build' \
   grep --fixed-strings --quiet -- "$expected" "$validation_workflow" || \
     fail "pull-request validation is missing: $expected"
 done
+
+grep --fixed-strings --quiet -- 'Test native detector parity and ONNX execution' "$validation_workflow" || \
+  fail 'pull-request validation must exercise the native iOS detectors'
+require_workflow_text 'Generate, resolve and test the iOS app' 'main validation must exercise the native iOS app'
 
 bash -n "$logger"
 echo "Tael deployment contract is valid."

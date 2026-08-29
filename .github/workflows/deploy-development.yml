@@ -7,6 +7,15 @@ on:
     paths-ignore:
       - "**/*.md"
   workflow_dispatch:
+    inputs:
+      operation:
+        description: Run an ordinary deploy or the separately reviewed schema migration
+        required: true
+        default: deploy
+        type: choice
+        options:
+          - deploy
+          - migrate
 
 permissions:
   contents: read
@@ -49,8 +58,36 @@ jobs:
           ./scripts/validate-deployment-contract.sh
           docker compose config --quiet
 
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install iOS project tools
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          sudo gem install cocoapods --version 1.17.0 --no-document
+
+      - name: Generate, resolve and test the iOS app
+        working-directory: mobile/ios
+        run: |
+          set -euo pipefail
+          xcodegen generate
+          pod install
+          destination_id="$(xcrun simctl list devices available --json | jq -r '.devices[][] | select(.isAvailable == true) | .udid' | head -1)"
+          test -n "$destination_id"
+          xcodebuild \
+            -workspace TaelDronesLab.xcworkspace \
+            -scheme TaelDronesLab \
+            -destination "id=$destination_id" \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
   publish:
-    needs: validate
+    needs: [validate, ios]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -112,18 +149,24 @@ jobs:
           DRONES_RUNTIME_IMAGE: ${{ steps.image.outputs.reference }}
         run: |
           set -euo pipefail
+          trap 'docker compose logs --no-color drones postgres migrate' ERR
           docker network create tael-platform-dev_edge
-          docker compose pull drones
+          docker compose pull drones postgres
+          docker compose up --detach --wait postgres
+          docker compose run --rm migrate
           docker compose up --detach --wait drones
           container_id="$(docker compose ps --quiet drones)"
           docker compose exec -T drones wget --quiet -O - http://127.0.0.1:8080/ | grep --quiet 'Drones · Acoustic Sensor Lab'
           docker compose exec -T drones wget --quiet --spider http://127.0.0.1:8080/health/ready
+          docker compose exec -T drones sh -c 'test ! -e /usr/local/bin/npm'
           test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = '65532:65532'
           test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' "$container_id")" = 'true'
           docker inspect --format '{{json .HostConfig.CapDrop}}' "$container_id" | grep --quiet 'ALL'
           docker inspect --format '{{json .HostConfig.SecurityOpt}}' "$container_id" | grep --quiet 'no-new-privileges'
           bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$container_id")"
           test "$bindings" = 'null' || test "$bindings" = '{}'
+          postgres_bindings="$(docker inspect --format '{{json .HostConfig.PortBindings}}' "$(docker compose ps --quiet postgres)")"
+          test "$postgres_bindings" = 'null' || test "$postgres_bindings" = '{}'
 
       - name: Scan published image for fixable critical vulnerabilities
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
@@ -165,9 +208,10 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" >"$HOME/.ssh/development_key"
           printf '%s\n' "$HOST_KEY" >"$HOME/.ssh/known_hosts"
 
-      - name: Deploy and verify with automatic rollback
+      - name: Run reviewed migration or verified deployment
         id: deploy
         env:
+          DEPLOY_OPERATION: ${{ inputs.operation || 'deploy' }}
           DEPLOY_HOST: ${{ vars.DEVELOPMENT_HOST }}
           DEPLOY_USER: ${{ vars.DEVELOPMENT_SSH_USER }}
           GHCR_TOKEN: ${{ github.token }}
@@ -187,12 +231,13 @@ jobs:
             -o ConnectTimeout=15 \
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
-            "$DEPLOY_USER@$DEPLOY_HOST" "deploy $RELEASE_SHA"
+            "$DEPLOY_USER@$DEPLOY_HOST" "$DEPLOY_OPERATION $RELEASE_SHA"
           deploy_status=$?
           server_seconds="$(($(date +%s) - started_epoch))"
           if [[ $deploy_status -eq 0 ]]; then result=success; else result=failure; fi
           {
             echo "result=$result"
+            echo "operation=$DEPLOY_OPERATION"
             echo "server_seconds=$server_seconds"
             echo "attempted_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           } >> "$GITHUB_OUTPUT"
@@ -205,7 +250,7 @@ jobs:
           DEPLOY_ENVIRONMENT: development
           DEPLOY_COMMIT: ${{ needs.publish.outputs.release_sha }}
           DEPLOY_IMAGE: ${{ needs.publish.outputs.drones_image }}
-          DEPLOY_METHOD: restricted-ssh-docker-compose
+          DEPLOY_METHOD: restricted-ssh-docker-compose-${{ steps.deploy.outputs.operation }}
           DEPLOY_RUN_ID: ${{ github.run_id }}
           DEPLOY_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           DEPLOY_ATTEMPTED_AT: ${{ steps.deploy.outputs.attempted_at }}
@@ -240,11 +285,16 @@ jobs:
 
       - name: Record deployment summary
         env:
+          DEPLOY_OPERATION: ${{ steps.deploy.outputs.operation }}
           RELEASE_SHA: ${{ needs.publish.outputs.release_sha }}
         run: |
           {
-            echo '### Drones development deployment'
+            echo "### Drones development $DEPLOY_OPERATION"
             echo
-            echo "Deployed immutable release \`$RELEASE_SHA\`."
-            echo 'Open it at `https://drones.tael.se`.'
+            if [[ "$DEPLOY_OPERATION" == "migrate" ]]; then
+              echo "Migrated the database with immutable release \`$RELEASE_SHA\`; the application image was not switched."
+            else
+              echo "Deployed immutable release \`$RELEASE_SHA\`."
+              echo 'Open it at `https://drones.tael.se`.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"

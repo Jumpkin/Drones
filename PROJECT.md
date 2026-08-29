@@ -14,8 +14,8 @@ undetectable, energy-efficient, and cost-effective.
 The public interface and generated report labels are English-only so the
 experiment can be shared consistently with an international audience.
 
-The first product is a deterministic browser research environment with five
-views:
+The product now combines a deterministic browser research environment with a
+native iOS hardware-in-the-loop client. The browser has five views:
 
 - **City simulation** starts with one phone and one drone, and demonstrates
   detection, sensor limits, spoofing, fusion, and reaction time.
@@ -115,3 +115,58 @@ classification path, not real drone range or sound pressure.
 Multiple simultaneous drones are deliberately outside the current simulator
 contract. They require source-separation and track-association metrics rather
 than reusing a single-drone confidence value for several aircraft.
+
+## Native iOS test client
+
+`mobile/ios` contains **Tael Drones Lab**, a SwiftUI iOS 16 app derived from the
+native operational patterns in the Status project. It is installed directly
+from Xcode and has four tabs: Listener, Sounds, Session, and Settings.
+
+The Listener uses `AVAudioEngine` in foreground-only measurement mode. It
+resamples overlapping one-second windows to 16 kHz and runs all three detector
+families on the same window: the FFT/harmonic DSP baseline, Feature Conv ONNX,
+and the imported pretrained CRNN ONNX. The two learned models run with the
+official `onnxruntime-objc` 1.29.0 package. Each detector keeps the latest five
+probabilities and uses the same three-positive-window vote as the web adapters;
+the displayed consensus requires at least two of the three detectors.
+
+The bundled Sounds library contains the same three Batear drone fixtures and
+rural negative control documented in `public/audio/README.md`. In a shared
+six-character test session one phone is a Source and separate phones are
+Listeners. A Source schedules playback three seconds against server time and
+never records while playing. Listeners upload every inference window during a
+scheduled test so the app can derive TP, FP, TN, FN, recall, false-positive
+rate, precision, and F1 overall, by listener, and by playback. Outside a test
+session only positive consensus events are retained.
+
+The app requests precise foreground location for test metadata. Denying the
+permission does not stop acoustic detection; the event then has no location.
+It persists an idempotent metadata queue across network failures and batches at
+most 50 observations. It never queues or uploads PCM, WAV files, clips, sample
+arrays, or microphone buffers.
+
+## Metadata API and database
+
+The production image is now a non-root Node/Fastify service that serves the
+existing Vite build and `/api/drones/v1`. A shared first-launch setup code can
+enroll an owner test phone once. The server then returns a random per-device
+capability; only its HMAC hash is stored, while iOS keeps the capability in
+Keychain. The API provides clock synchronization, session create/join/close,
+scheduled playback, idempotent observation batches, and session results. It
+limits JSON requests to 64 KB, validates every field, rate-limits requests, and
+explicitly rejects audio-shaped payload keys.
+
+PostgreSQL 17 stores devices, memberships, sessions, playbacks and observation
+metadata on a private network with no host port. Schema migration is an
+explicit `workflow_dispatch` operation separate from ordinary image deployment;
+selecting `migrate` runs the restricted migration command without switching the
+application image. This owner-device
+experiment deliberately has no backups and retains rows until an explicit
+owner reset; there is no public reset endpoint. The owner-only CLI requires
+both `DRONES_ALLOW_RESET=true` and the literal
+`--confirm-disposable-drones-data` argument. Add backups and a reviewed data
+lifecycle before treating the database as valuable or moving beyond testing.
+
+Run the complete web/API checks with `npm test`, `npm run lint`, and
+`npm run build`. Generate and open the mobile workspace with the commands in
+`mobile/ios/README.md`.

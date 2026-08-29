@@ -5,6 +5,7 @@ dist
 node_modules
 npm-debug.log*
 coverage
+mobile
 data/raw
 data/processed
 public/reports/headless/failures.csv

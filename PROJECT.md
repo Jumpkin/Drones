@@ -158,7 +158,9 @@ explicitly rejects audio-shaped payload keys.
 
 PostgreSQL 17 stores devices, memberships, sessions, playbacks and observation
 metadata on a private network with no host port. Schema migration is an
-explicit operation separate from ordinary image deployment. This owner-device
+explicit `workflow_dispatch` operation separate from ordinary image deployment;
+selecting `migrate` runs the restricted migration command without switching the
+application image. This owner-device
 experiment deliberately has no backups and retains rows until an explicit
 owner reset; there is no public reset endpoint. The owner-only CLI requires
 both `DRONES_ALLOW_RESET=true` and the literal

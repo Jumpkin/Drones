@@ -7,6 +7,15 @@ on:
     paths-ignore:
       - "**/*.md"
   workflow_dispatch:
+    inputs:
+      operation:
+        description: Run an ordinary deploy or the separately reviewed schema migration
+        required: true
+        default: deploy
+        type: choice
+        options:
+          - deploy
+          - migrate
 
 permissions:
   contents: read
@@ -199,9 +208,10 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" >"$HOME/.ssh/development_key"
           printf '%s\n' "$HOST_KEY" >"$HOME/.ssh/known_hosts"
 
-      - name: Deploy and verify with automatic rollback
+      - name: Run reviewed migration or verified deployment
         id: deploy
         env:
+          DEPLOY_OPERATION: ${{ inputs.operation || 'deploy' }}
           DEPLOY_HOST: ${{ vars.DEVELOPMENT_HOST }}
           DEPLOY_USER: ${{ vars.DEVELOPMENT_SSH_USER }}
           GHCR_TOKEN: ${{ github.token }}
@@ -221,12 +231,13 @@ jobs:
             -o ConnectTimeout=15 \
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
-            "$DEPLOY_USER@$DEPLOY_HOST" "deploy $RELEASE_SHA"
+            "$DEPLOY_USER@$DEPLOY_HOST" "$DEPLOY_OPERATION $RELEASE_SHA"
           deploy_status=$?
           server_seconds="$(($(date +%s) - started_epoch))"
           if [[ $deploy_status -eq 0 ]]; then result=success; else result=failure; fi
           {
             echo "result=$result"
+            echo "operation=$DEPLOY_OPERATION"
             echo "server_seconds=$server_seconds"
             echo "attempted_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           } >> "$GITHUB_OUTPUT"
@@ -239,7 +250,7 @@ jobs:
           DEPLOY_ENVIRONMENT: development
           DEPLOY_COMMIT: ${{ needs.publish.outputs.release_sha }}
           DEPLOY_IMAGE: ${{ needs.publish.outputs.drones_image }}
-          DEPLOY_METHOD: restricted-ssh-docker-compose
+          DEPLOY_METHOD: restricted-ssh-docker-compose-${{ steps.deploy.outputs.operation }}
           DEPLOY_RUN_ID: ${{ github.run_id }}
           DEPLOY_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           DEPLOY_ATTEMPTED_AT: ${{ steps.deploy.outputs.attempted_at }}
@@ -274,11 +285,16 @@ jobs:
 
       - name: Record deployment summary
         env:
+          DEPLOY_OPERATION: ${{ steps.deploy.outputs.operation }}
           RELEASE_SHA: ${{ needs.publish.outputs.release_sha }}
         run: |
           {
-            echo '### Drones development deployment'
+            echo "### Drones development $DEPLOY_OPERATION"
             echo
-            echo "Deployed immutable release \`$RELEASE_SHA\`."
-            echo 'Open it at `https://drones.tael.se`.'
+            if [[ "$DEPLOY_OPERATION" == "migrate" ]]; then
+              echo "Migrated the database with immutable release \`$RELEASE_SHA\`; the application image was not switched."
+            else
+              echo "Deployed immutable release \`$RELEASE_SHA\`."
+              echo 'Open it at `https://drones.tael.se`.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"

@@ -14,7 +14,7 @@ undetectable, energy-efficient, and cost-effective.
 The public interface and generated report labels are English-only so the
 experiment can be shared consistently with an international audience.
 
-The first product is a deterministic browser research environment with four
+The first product is a deterministic browser research environment with five
 views:
 
 - **City simulation** starts with one phone and one drone, and demonstrates
@@ -31,6 +31,11 @@ views:
   registry shows positive, negative, and total test counts plus TP/FP/TN/FN for
   every compared model. Percentages and the highest-F1 winner are derived from
   those integer counts rather than copied into the interface.
+- **About** provides a public technical record of the architecture, detector
+  and localization flows, report-derived simulation parameters, limitations,
+  privacy behavior, source relationships, and license status. It lists only
+  code, models, and data used or supported by the project; it does not present
+  unrelated companies or patents as implementation sources.
 
 The detection layer exposes the same asynchronous adapter contract for the
 FFT baseline, the project-trained experimental ONNX binary classifier, and an

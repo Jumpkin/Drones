@@ -23,11 +23,11 @@ Preserve these rules in every change:
   user data in it.
 - Run `scripts/validate-deployment-contract.sh` before changing deployment
   files. CI must reject a workflow that removes this contract.
-- The approved test contract permits a product-private PostgreSQL database,
-  shared first-launch setup code, per-device capability tokens, session and
-  detector metadata, and optional precise foreground GPS. It explicitly
-  forbids raw-audio uploads and has no backups; do not expand that contract to
-  customer authentication, valuable data, analytics, payments, or paid
+- The approved disposable test contract permits a product-private PostgreSQL
+  database, anonymous device registration with non-secret device identifiers,
+  session and detector metadata, and optional precise foreground GPS. It
+  explicitly forbids raw-audio uploads and has no backups; do not expand that
+  contract to customer authentication, valuable data, analytics, payments, or paid
   infrastructure without a new product decision.
 - Preserve the product disclaimer: simulated distances are not field-validated
   operational detection ranges.

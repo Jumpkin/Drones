@@ -3,13 +3,13 @@ import rateLimit from "@fastify/rate-limit";
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
 import { resolve } from "node:path";
 import type { Database } from "./database.js";
-import { DronesRepository, type AuthenticatedDevice } from "./repository.js";
-import { constantTimeEqual, containsRawAudio, hashCapability, issueCapability } from "./security.js";
+import { DronesRepository, type DeviceIdentity } from "./repository.js";
+import { containsRawAudio } from "./security.js";
 import type { AppConfig, DetectorId, ExpectedLabel, ObservationEvent, SessionRole } from "./types.js";
 
 declare module "fastify" {
   interface FastifyRequest {
-    dronesDevice?: AuthenticatedDevice;
+    dronesDevice?: DeviceIdentity;
   }
 }
 
@@ -126,10 +126,6 @@ function parseObservation(value: unknown): ObservationEvent | undefined {
   };
 }
 
-function unauthorized(reply: FastifyReply): FastifyReply {
-  return reply.code(401).send({ error: "unauthorized" });
-}
-
 export async function buildApp(
   database: Database,
   config: AppConfig,
@@ -152,16 +148,14 @@ export async function buildApp(
     }
   });
 
-  const authenticate = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const match = request.headers.authorization?.match(/^Bearer ([A-Za-z0-9_-]{32,128})$/);
-    if (!match) {
-      unauthorized(reply);
-      return;
+  const identifyDevice = async (request: FastifyRequest, reply: FastifyReply) => {
+    const deviceId = request.headers["x-drones-device-id"];
+    if (typeof deviceId !== "string" || !UUID_PATTERN.test(deviceId)) {
+      return reply.code(400).send({ error: "device_id_required" });
     }
-    const device = await repository.authenticate(hashCapability(match[1], config.tokenPepper));
+    const device = await repository.identify(deviceId);
     if (!device) {
-      unauthorized(reply);
-      return;
+      return reply.code(404).send({ error: "device_not_found" });
     }
     request.dronesDevice = device;
   };
@@ -180,10 +174,6 @@ export async function buildApp(
   app.post("/api/drones/v1/devices/enroll", {
     config: { rateLimit: { max: 10, timeWindow: "1 minute" } },
   }, async (request, reply) => {
-    const setupCode = request.headers["x-drones-setup-code"];
-    if (typeof setupCode !== "string" || !constantTimeEqual(setupCode, config.setupCode)) {
-      return unauthorized(reply);
-    }
     if (!object(request.body) || !hasOnlyKeys(request.body, ["label", "appVersion", "platform"])) {
       return reply.code(400).send({ error: "invalid_body" });
     }
@@ -192,16 +182,15 @@ export async function buildApp(
     if (!label || !appVersion || request.body.platform !== "ios") {
       return reply.code(400).send({ error: "invalid_device" });
     }
-    const capability = issueCapability();
     const device = await repository.createDevice({
-      label, appVersion, tokenHash: hashCapability(capability, config.tokenPepper),
+      label, appVersion,
     });
     return reply.code(201).send({
-      device: { id: device.id, label: device.label, platform: device.platform }, capability,
+      device: { id: device.id, label: device.label, platform: device.platform },
     });
   });
 
-  app.post("/api/drones/v1/sessions", { preHandler: authenticate }, async (request, reply) => {
+  app.post("/api/drones/v1/sessions", { preHandler: identifyDevice }, async (request, reply) => {
     if (!request.dronesDevice || !object(request.body) || !hasOnlyKeys(request.body, ["role"])) {
       return reply.code(400).send({ error: "invalid_body" });
     }
@@ -210,7 +199,7 @@ export async function buildApp(
     return reply.code(201).send({ session: await repository.createSession(request.dronesDevice.id, role) });
   });
 
-  app.post("/api/drones/v1/sessions/join", { preHandler: authenticate }, async (request, reply) => {
+  app.post("/api/drones/v1/sessions/join", { preHandler: identifyDevice }, async (request, reply) => {
     if (!request.dronesDevice || !object(request.body) || !hasOnlyKeys(request.body, ["code", "role"])) {
       return reply.code(400).send({ error: "invalid_body" });
     }
@@ -226,7 +215,7 @@ export async function buildApp(
 
   app.post<{ Params: { id: string } }>(
     "/api/drones/v1/sessions/:id/playbacks",
-    { preHandler: authenticate },
+    { preHandler: identifyDevice },
     async (request, reply) => {
       if (!request.dronesDevice || !UUID_PATTERN.test(request.params.id) || !object(request.body) ||
           !hasOnlyKeys(request.body, ["soundId", "expectedLabel", "scheduledAt", "durationMs"])) {
@@ -257,7 +246,7 @@ export async function buildApp(
     },
   );
 
-  app.post("/api/drones/v1/events/batch", { preHandler: authenticate }, async (request, reply) => {
+  app.post("/api/drones/v1/events/batch", { preHandler: identifyDevice }, async (request, reply) => {
     if (!request.dronesDevice || !object(request.body) || !hasOnlyKeys(request.body, ["events"]) ||
         !Array.isArray(request.body.events) ||
         request.body.events.length < 1 || request.body.events.length > 50) {
@@ -291,7 +280,7 @@ export async function buildApp(
 
   app.get<{ Params: { id: string } }>(
     "/api/drones/v1/sessions/:id",
-    { preHandler: authenticate },
+    { preHandler: identifyDevice },
     async (request, reply) => {
       if (!request.dronesDevice || !UUID_PATTERN.test(request.params.id)) {
         return reply.code(400).send({ error: "invalid_session" });
@@ -303,7 +292,7 @@ export async function buildApp(
 
   app.post<{ Params: { id: string } }>(
     "/api/drones/v1/sessions/:id/close",
-    { preHandler: authenticate },
+    { preHandler: identifyDevice },
     async (request, reply) => {
       if (!request.dronesDevice || !UUID_PATTERN.test(request.params.id)) {
         return reply.code(400).send({ error: "invalid_session" });

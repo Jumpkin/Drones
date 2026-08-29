@@ -40,8 +40,6 @@ export interface ObservationEvent {
 
 export interface AppConfig {
   databaseUrl: string;
-  setupCode: string;
-  tokenPepper: string;
   host: string;
   port: number;
   staticDir?: string;

@@ -54,7 +54,7 @@ export interface DeviceRow {
   last_seen_at: Date | string;
 }
 
-export interface AuthenticatedDevice {
+export interface DeviceIdentity {
   id: string;
   label: string;
 }
@@ -69,22 +69,21 @@ export class DronesRepository {
   async createDevice(input: {
     label: string;
     appVersion: string;
-    tokenHash: string;
   }): Promise<DeviceRow> {
     const result = await this.database.query<DeviceRow>(
-      `INSERT INTO drones_devices (id, label, token_hash, app_version, platform)
-       VALUES ($1, $2, $3, $4, 'ios')
+      `INSERT INTO drones_devices (id, label, app_version, platform)
+       VALUES ($1, $2, $3, 'ios')
        RETURNING id, label, app_version, platform, created_at, last_seen_at`,
-      [randomUUID(), input.label, input.tokenHash, input.appVersion],
+      [randomUUID(), input.label, input.appVersion],
     );
     return result.rows[0];
   }
 
-  async authenticate(tokenHash: string): Promise<AuthenticatedDevice | undefined> {
-    const result = await this.database.query<AuthenticatedDevice>(
+  async identify(deviceId: string): Promise<DeviceIdentity | undefined> {
+    const result = await this.database.query<DeviceIdentity>(
       `UPDATE drones_devices SET last_seen_at = now()
-       WHERE token_hash = $1 RETURNING id, label`,
-      [tokenHash],
+       WHERE id = $1 RETURNING id, label`,
+      [deviceId],
     );
     return result.rows[0];
   }

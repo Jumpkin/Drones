@@ -148,13 +148,13 @@ arrays, or microphone buffers.
 ## Metadata API and database
 
 The production image is now a non-root Node/Fastify service that serves the
-existing Vite build and `/api/drones/v1`. A shared first-launch setup code can
-enroll an owner test phone once. The server then returns a random per-device
-capability; only its HMAC hash is stored, while iOS keeps the capability in
-Keychain. The API provides clock synchronization, session create/join/close,
-scheduled playback, idempotent observation batches, and session results. It
-limits JSON requests to 64 KB, validates every field, rate-limits requests, and
-explicitly rejects audio-shaped payload keys.
+existing Vite build and `/api/drones/v1`. This disposable experiment has no
+login, setup code, or secret device capability. The iOS client registers
+automatically and sends a non-secret device identifier so the backend can
+associate phones with shared sessions. The API provides clock synchronization,
+session create/join/close, scheduled playback, idempotent observation batches,
+and session results. It limits JSON requests to 64 KB, validates every field,
+rate-limits requests, and explicitly rejects audio-shaped payload keys.
 
 PostgreSQL 17 stores devices, memberships, sessions, playbacks and observation
 metadata on a private network with no host port. Schema migration is an

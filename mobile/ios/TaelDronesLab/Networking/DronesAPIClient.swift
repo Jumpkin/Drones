@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 
 private struct EnrollRequest: Encodable { let label: String; let appVersion: String; let platform = "ios" }
-private struct EnrollResponse: Decodable { let device: Device; let capability: String; struct Device: Decodable { let id: UUID; let label: String } }
+private struct EnrollResponse: Decodable { let device: Device; struct Device: Decodable { let id: UUID; let label: String } }
 private struct SessionEnvelope: Decodable { let session: SessionSnapshot }
 private struct CreatedSessionEnvelope: Decodable { let session: CreatedSession; struct CreatedSession: Decodable { let id: UUID; let code: String } }
 private struct JoinResponse: Decodable { let sessionId: UUID }
@@ -13,13 +13,11 @@ private struct BatchResponse: Decodable { let accepted: Int; let duplicates: Int
 
 enum APIClientError: LocalizedError {
     case invalidServer
-    case notEnrolled
     case rejected(Int, String)
 
     var errorDescription: String? {
         switch self {
         case .invalidServer: return "Enter a valid HTTPS server URL."
-        case .notEnrolled: return "This phone has not been enrolled."
         case let .rejected(status, message): return "Server rejected the request (\(status)): \(message)"
         }
     }
@@ -27,7 +25,6 @@ enum APIClientError: LocalizedError {
 
 @MainActor
 final class DronesAPIClient: ObservableObject {
-    @Published private(set) var isEnrolled: Bool
     @Published private(set) var pendingCount = 0
     @Published private(set) var deviceId: UUID?
     @Published var lastError: String?
@@ -43,7 +40,6 @@ final class DronesAPIClient: ObservableObject {
     private static let queueKey = "TaelDronesLab.EventQueue.v1"
     private static let deviceKey = "TaelDronesLab.DeviceID.v1"
     private let defaults: UserDefaults
-    private let keychain = KeychainStore(service: "se.tael.drones.mobile")
     private let logger = Logger(subsystem: "se.tael.drones.mobile", category: "api")
     private var queue: [ObservationEvent]
     private var flushing = false
@@ -56,7 +52,6 @@ final class DronesAPIClient: ObservableObject {
         queue = defaults.data(forKey: Self.queueKey).flatMap { try? JSONDecoder().decode([ObservationEvent].self, from: $0) } ?? []
         let storedDeviceId = defaults.string(forKey: Self.deviceKey).flatMap(UUID.init(uuidString:))
         deviceId = storedDeviceId
-        isEnrolled = KeychainStore(service: "se.tael.drones.mobile").string(for: "device_capability") != nil && storedDeviceId != nil
         pendingCount = queue.count
     }
 
@@ -78,12 +73,12 @@ final class DronesAPIClient: ObservableObject {
         return decoder
     }
 
-    private func authorizedRequest(path: String, method: String = "GET") throws -> URLRequest {
-        guard let token = keychain.string(for: "device_capability") else { throw APIClientError.notEnrolled }
+    private func deviceRequest(path: String, method: String = "GET") async throws -> URLRequest {
+        let deviceId = try await ensureDevice()
         var request = URLRequest(url: try url(path))
         request.httpMethod = method
         request.timeoutInterval = 15
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue(deviceId.uuidString.lowercased(), forHTTPHeaderField: "X-Drones-Device-ID")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         return request
     }
@@ -98,20 +93,20 @@ final class DronesAPIClient: ObservableObject {
         return try decoder().decode(type, from: data)
     }
 
-    func enroll(setupCode: String) async throws {
+    @discardableResult
+    func ensureDevice() async throws -> UUID {
+        if let deviceId { return deviceId }
         var request = URLRequest(url: try url("/api/drones/v1/devices/enroll"))
         request.httpMethod = "POST"
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(setupCode, forHTTPHeaderField: "X-Drones-Setup-Code")
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "dev"
         request.httpBody = try JSONEncoder().encode(EnrollRequest(label: deviceLabel, appVersion: version))
         let response = try await send(request, as: EnrollResponse.self)
-        try keychain.set(response.capability, for: "device_capability")
         defaults.set(response.device.id.uuidString, forKey: Self.deviceKey)
         deviceId = response.device.id
-        isEnrolled = true
         lastError = nil
+        return response.device.id
     }
 
     func syncClock() async throws {
@@ -127,20 +122,20 @@ final class DronesAPIClient: ObservableObject {
     func localDate(forServer value: String) -> Date? { ISO8601.date(value)?.addingTimeInterval(-serverClockOffset) }
 
     func createSession(role: SessionRole) async throws -> (UUID, String) {
-        var request = try authorizedRequest(path: "/api/drones/v1/sessions", method: "POST")
+        var request = try await deviceRequest(path: "/api/drones/v1/sessions", method: "POST")
         request.httpBody = try JSONEncoder().encode(["role": role.rawValue])
         let response = try await send(request, as: CreatedSessionEnvelope.self)
         return (response.session.id, response.session.code)
     }
 
     func joinSession(code: String, role: SessionRole) async throws -> UUID {
-        var request = try authorizedRequest(path: "/api/drones/v1/sessions/join", method: "POST")
+        var request = try await deviceRequest(path: "/api/drones/v1/sessions/join", method: "POST")
         request.httpBody = try JSONEncoder().encode(["code": code.uppercased(), "role": role.rawValue])
         return try await send(request, as: JoinResponse.self).sessionId
     }
 
     func createPlayback(sessionId: UUID, fixture: SoundFixture, scheduledAt: Date) async throws -> SessionPlayback {
-        var request = try authorizedRequest(path: "/api/drones/v1/sessions/\(sessionId.uuidString.lowercased())/playbacks", method: "POST")
+        var request = try await deviceRequest(path: "/api/drones/v1/sessions/\(sessionId.uuidString.lowercased())/playbacks", method: "POST")
         struct Payload: Encodable { let soundId: String; let expectedLabel: ExpectedLabel; let scheduledAt: String; let durationMs: Int }
         request.httpBody = try JSONEncoder().encode(Payload(soundId: fixture.id, expectedLabel: fixture.expected,
             scheduledAt: ISO8601.string(serverDate(for: scheduledAt)), durationMs: fixture.durationMs))
@@ -148,12 +143,12 @@ final class DronesAPIClient: ObservableObject {
     }
 
     func fetchSession(_ id: UUID) async throws -> SessionSnapshot {
-        try await send(authorizedRequest(path: "/api/drones/v1/sessions/\(id.uuidString.lowercased())"), as: SessionEnvelope.self).session
+        try await send(deviceRequest(path: "/api/drones/v1/sessions/\(id.uuidString.lowercased())"), as: SessionEnvelope.self).session
     }
 
     func closeSession(_ id: UUID) async throws {
         struct Response: Decodable { let closed: Bool }
-        _ = try await send(authorizedRequest(path: "/api/drones/v1/sessions/\(id.uuidString.lowercased())/close", method: "POST"), as: Response.self)
+        _ = try await send(deviceRequest(path: "/api/drones/v1/sessions/\(id.uuidString.lowercased())/close", method: "POST"), as: Response.self)
     }
 
     func enqueue(_ event: ObservationEvent) {
@@ -165,13 +160,13 @@ final class DronesAPIClient: ObservableObject {
     }
 
     func flush() async {
-        guard isEnrolled, !flushing, !queue.isEmpty else { return }
+        guard !flushing, !queue.isEmpty else { return }
         flushing = true
         defer { flushing = false }
         while !queue.isEmpty {
             do {
                 let batch = Array(queue.prefix(50))
-                var request = try authorizedRequest(path: "/api/drones/v1/events/batch", method: "POST")
+                var request = try await deviceRequest(path: "/api/drones/v1/events/batch", method: "POST")
                 request.httpBody = try JSONEncoder().encode(BatchEnvelope(events: batch))
                 _ = try await send(request, as: BatchResponse.self)
                 queue.removeFirst(batch.count)
@@ -187,12 +182,10 @@ final class DronesAPIClient: ObservableObject {
 
     func clearQueue() { queue.removeAll(); persistQueue() }
 
-    func resetEnrollment() {
-        keychain.remove("device_capability")
+    func forgetDevice() {
         defaults.removeObject(forKey: Self.deviceKey)
         clearQueue()
         deviceId = nil
-        isEnrolled = false
     }
 
     private func persistQueue() {

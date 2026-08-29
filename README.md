@@ -79,10 +79,11 @@ or a trusted HTTPS development endpoint.
 
 The reviewed public target is `https://drones.tael.se`. The browser remains an
 unauthenticated experiment and sends no microphone PCM. The native test app
-uses a setup code once and then a device-scoped capability to send detector and
-session metadata. The API rejects raw-audio payloads and limits request bodies
-to 64 KB. The Tael gateway permits same-origin browser microphone access and
-applies a restrictive content security policy.
+registers automatically without a setup code, login, or secret token. Requests
+carry only a non-secret device identifier so sessions can distinguish phones.
+The API rejects raw-audio payloads and limits request bodies to 64 KB. The Tael
+gateway permits same-origin browser microphone access and applies a restrictive
+content security policy.
 
 Recommended first session:
 

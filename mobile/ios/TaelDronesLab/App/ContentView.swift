@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var state: AppState
-    @State private var showEnrollment = false
 
     var body: some View {
         TabView {
@@ -16,9 +15,6 @@ struct ContentView: View {
                 .tabItem { Label("Settings", systemImage: "gearshape") }
         }
         .tint(.orange)
-        .onAppear { showEnrollment = !state.api.isEnrolled }
-        .onChange(of: state.api.isEnrolled) { enrolled in showEnrollment = !enrolled }
-        .sheet(isPresented: $showEnrollment) { EnrollmentView() }
         .alert("Drones Lab", isPresented: Binding(get: { state.message != nil }, set: { if !$0 { state.message = nil } })) {
             Button("OK", role: .cancel) { state.message = nil }
         } message: { Text(state.message ?? "") }
@@ -227,7 +223,6 @@ struct SessionView: View {
 
 struct SettingsView: View {
     @EnvironmentObject private var state: AppState
-    @State private var showReset = false
     var body: some View {
         Form {
             Section("Connection") {
@@ -235,13 +230,13 @@ struct SettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                     .keyboardType(.URL)
                 TextField("Device label", text: Binding(get: { state.api.deviceLabel }, set: { state.api.deviceLabel = $0 }))
-                LabeledContent("Enrollment", value: state.api.isEnrolled ? "Ready" : "Required")
+                LabeledContent("Device ID", value: state.api.deviceId?.uuidString.lowercased() ?? "Registers automatically")
                 Button("Sync and upload now") { Task { try? await state.api.syncClock(); await state.api.flush() } }
             }
             Section("Local data") {
                 LabeledContent("Pending metadata events", value: "\(state.api.pendingCount)")
                 Button("Clear pending queue", role: .destructive) { state.api.clearQueue() }
-                Button("Reset device enrollment", role: .destructive) { state.api.resetEnrollment() }
+                Button("Forget local device ID", role: .destructive) { state.api.forgetDevice() }
             }
             Section("Detector versions") {
                 LabeledContent("DSP", value: "1.0.0")
@@ -254,33 +249,5 @@ struct SettingsView: View {
             }
             if let error = state.api.lastError { Section("Last network error") { Text(error).foregroundStyle(.red) } }
         }.navigationTitle("Settings")
-    }
-}
-
-struct EnrollmentView: View {
-    @EnvironmentObject private var state: AppState
-    @Environment(\.dismiss) private var dismiss
-    @State private var setupCode = ""
-    @State private var working = false
-    @State private var error: String?
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Test enrollment") {
-                    Text("Enter the shared setup code once. This phone then receives its own capability token stored in Keychain.")
-                    SecureField("Setup code", text: $setupCode)
-                    TextField("Phone label", text: Binding(get: { state.api.deviceLabel }, set: { state.api.deviceLabel = $0 }))
-                }
-                if let error { Section { Text(error).foregroundStyle(.red) } }
-                Button(working ? "Enrolling…" : "Enroll phone") {
-                    working = true
-                    Task {
-                        do { try await state.api.enroll(setupCode: setupCode); dismiss() }
-                        catch { self.error = error.localizedDescription }
-                        working = false
-                    }
-                }.disabled(working || setupCode.isEmpty || state.api.deviceLabel.isEmpty)
-            }.navigationTitle("Tael Drones Lab").interactiveDismissDisabled(!state.api.isEnrolled)
-        }
     }
 }

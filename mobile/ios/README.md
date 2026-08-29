@@ -19,8 +19,8 @@ open TaelDronesLab.xcworkspace
 ```
 
 Select an attached iPhone, keep the `K6GVLS864D` development team (or select
-your own team), and press Run. On first launch enter the shared setup code; the
-server returns a device capability that is stored in Keychain.
+your own team), and press Run. The test phone registers automatically with no
+setup code, login, or secret token.
 
 The checked-in sounds retain the provenance and licence notes from
 `public/audio/README.md`. The imported CRNN retains its MIT notice in the app

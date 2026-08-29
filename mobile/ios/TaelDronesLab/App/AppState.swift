@@ -27,7 +27,7 @@ final class AppState: ObservableObject {
         detection.onObservation = { [weak self] results, classification in
             self?.record(results: results, classification: classification)
         }
-        Task { try? await api.syncClock(); await api.flush() }
+        Task { try? await api.ensureDevice(); try? await api.syncClock(); await api.flush() }
     }
 
     var consensusDetected: Bool { detection.results.filter(\.detected).count >= 2 }
@@ -53,7 +53,6 @@ final class AppState: ObservableObject {
     }
 
     func createSession() async {
-        guard api.isEnrolled else { message = "Enroll this phone first."; return }
         do {
             try await api.syncClock()
             let created = try await api.createSession(role: selectedRole)
@@ -67,7 +66,6 @@ final class AppState: ObservableObject {
     }
 
     func joinSession() async {
-        guard api.isEnrolled else { message = "Enroll this phone first."; return }
         do {
             try await api.syncClock()
             let id = try await api.joinSession(code: joinCode, role: selectedRole)

@@ -8,11 +8,8 @@ import { buildApp } from "./app.js";
 import type { Database } from "./database.js";
 import type { AppConfig } from "./types.js";
 
-const setupCode = "drones-test-setup";
 const config: AppConfig = {
   databaseUrl: "postgresql://unused",
-  setupCode,
-  tokenPepper: "test-token-pepper-with-at-least-thirty-two-characters",
   host: "127.0.0.1",
   port: 8080,
   rateLimitMax: 120,
@@ -49,8 +46,10 @@ describe("Drones API", () => {
       returns: DataType.text,
       implementation: (value: unknown) => Array.isArray(value) ? "array" : typeof value,
     });
-    const migrationUrl = new URL("./migrations/001_initial.sql", import.meta.url);
-    memory.public.none(await readFile(fileURLToPath(migrationUrl), "utf8"));
+    for (const migration of ["001_initial.sql", "002_remove_device_capabilities.sql"]) {
+      const migrationUrl = new URL(`./migrations/${migration}`, import.meta.url);
+      memory.public.none(await readFile(fileURLToPath(migrationUrl), "utf8"));
+    }
     const adapter = memory.adapters.createPg();
     const pool = new adapter.Pool();
     database = pool as unknown as Database;
@@ -59,23 +58,33 @@ describe("Drones API", () => {
 
   afterEach(async () => app?.close());
 
-  async function enroll(label: string, code = setupCode) {
+  async function enroll(label: string) {
     const response = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/devices/enroll",
-      headers: { "x-drones-setup-code": code },
       payload: { label, appVersion: "0.1.0", platform: "ios" },
     });
-    return { response, body: response.json() as { device: { id: string }; capability: string } };
+    return { response, body: response.json() as { device: { id: string } } };
   }
 
-  it("requires the shared setup code and stores a per-device capability", async () => {
-    const denied = await enroll("Phone A", "wrong-code");
-    expect(denied.response.statusCode).toBe(401);
+  it("registers a test device without credentials", async () => {
     const enrolled = await enroll("Phone A");
     expect(enrolled.response.statusCode).toBe(201);
-    expect(enrolled.body.capability).toMatch(/^[A-Za-z0-9_-]+$/);
     expect(enrolled.body.device.id).toMatch(/^[0-9a-f-]{36}$/);
+
+    const missingId = await app!.inject({
+      method: "POST", url: "/api/drones/v1/sessions", payload: { role: "listener" },
+    });
+    expect(missingId.statusCode).toBe(400);
+    expect(missingId.json()).toEqual({ error: "device_id_required" });
+
+    const unknownId = await app!.inject({
+      method: "POST", url: "/api/drones/v1/sessions",
+      headers: { "x-drones-device-id": crypto.randomUUID() },
+      payload: { role: "listener" },
+    });
+    expect(unknownId.statusCode).toBe(404);
+    expect(unknownId.json()).toEqual({ error: "device_not_found" });
   });
 
   it("serves the built web shell and SPA fallback without duplicate routes", async () => {
@@ -98,7 +107,7 @@ describe("Drones API", () => {
     const created = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/sessions",
-      headers: { authorization: `Bearer ${source.body.capability}` },
+      headers: { "x-drones-device-id": source.body.device.id },
       payload: { role: "source" },
     });
     expect(created.statusCode).toBe(201);
@@ -108,7 +117,7 @@ describe("Drones API", () => {
     const joined = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/sessions/join",
-      headers: { authorization: `Bearer ${listener.body.capability}` },
+      headers: { "x-drones-device-id": listener.body.device.id },
       payload: { code: createdBody.session.code, role: "listener" },
     });
     expect(joined.statusCode).toBe(200);
@@ -117,7 +126,7 @@ describe("Drones API", () => {
     const playback = await app!.inject({
       method: "POST",
       url: `/api/drones/v1/sessions/${createdBody.session.id}/playbacks`,
-      headers: { authorization: `Bearer ${source.body.capability}` },
+      headers: { "x-drones-device-id": source.body.device.id },
       payload: {
         soundId: "batear-mavic-pro",
         expectedLabel: "drone",
@@ -143,7 +152,7 @@ describe("Drones API", () => {
     const first = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/events/batch",
-      headers: { authorization: `Bearer ${listener.body.capability}` },
+      headers: { "x-drones-device-id": listener.body.device.id },
       payload: { events: [observation] },
     });
     expect(first.statusCode).toBe(200);
@@ -151,14 +160,14 @@ describe("Drones API", () => {
     const duplicate = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/events/batch",
-      headers: { authorization: `Bearer ${listener.body.capability}` },
+      headers: { "x-drones-device-id": listener.body.device.id },
       payload: { events: [observation] },
     });
     expect(duplicate.json()).toEqual({ accepted: 0, duplicates: 1 });
     const outsidePlayback = await app!.inject({
       method: "POST",
       url: "/api/drones/v1/events/batch",
-      headers: { authorization: `Bearer ${listener.body.capability}` },
+      headers: { "x-drones-device-id": listener.body.device.id },
       payload: { events: [{
         ...observation,
         id: crypto.randomUUID(),
@@ -171,7 +180,7 @@ describe("Drones API", () => {
     const result = await app!.inject({
       method: "GET",
       url: `/api/drones/v1/sessions/${createdBody.session.id}`,
-      headers: { authorization: `Bearer ${listener.body.capability}` },
+      headers: { "x-drones-device-id": listener.body.device.id },
     });
     expect(result.statusCode).toBe(200);
     const snapshot = (result.json() as { session: {
@@ -191,7 +200,7 @@ describe("Drones API", () => {
 
   it("rejects raw audio, malformed consensus, and standalone negatives", async () => {
     const listener = await enroll("Listener");
-    const headers = { authorization: `Bearer ${listener.body.capability}` };
+    const headers = { "x-drones-device-id": listener.body.device.id };
     const raw = await app!.inject({
       method: "POST", url: "/api/drones/v1/events/batch", headers,
       payload: { audioSamples: [0.1, 0.2] },
